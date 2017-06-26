@@ -1,0 +1,39 @@
+
+syntax = "proto2";
+
+// 股票信息
+message StockInfo {
+    optional string stock_id = 1;
+    message StockSummaryInfo {
+        // 市场标识：A股，美股
+        optional string market_place = 1 [default = "us"];
+        // ipo日期
+        optional string ipo_date = 2;
+        // 是否支持期权交易
+        optional bool has_option_trade = 3 [default=true];
+        // 市值: billion
+        optional double market_value_b = 4;
+        optional bool is_etf = 5;
+        // 中概股
+        optional bool is_china = 6;
+    }
+    optional StockSummaryInfo summary_info = 2;
+    message StockDailyInfo {
+        optional string date = 12;
+        optional double open = 2;
+        optional double close = 3;
+        optional double high = 4;
+        optional double low = 5;
+        optional double volumn = 6;
+        // 3个月到期的put期权价值比目前少1%的价格
+        optional double option_put_price_for_1_cut_3_month = 7;
+        // 是否拆股
+        optional bool dividend = 8;
+        // 是否派发股息
+        optional bool yield = 9;
+        // 财报时间点
+        optional string last_revenue_report_date = 10;
+        optional string next_revenue_report_date = 11;
+    }
+    repeated StockDailyInfo daily_info = 3;
+}

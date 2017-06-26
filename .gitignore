@@ -1,0 +1,7 @@
+out.*
+*.sqlite
+.idea
+*.pyc
+*.swp
+err.*
+model_out

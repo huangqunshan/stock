@@ -1,0 +1,88 @@
+
+syntax = "proto2";
+
+// import "proto/stock_info.proto";
+
+// 买入卖出策略
+message Policy {
+    optional string id = 5;
+    // 偏好的资金分几次入场
+    optional int32 prefer_max_splited_trade_unit = 1[default=1];
+    // 倾向于持有的股票数
+    optional int32 prefer_max_stock_count = 2[default=1];
+    message TradePolicy {
+        // 观察天数
+        optional int32 days_watch = 1;
+        message Percent {
+            enum PercentMode {
+                LOW = 1;
+                HIGH = 2;
+                MEDIUM = 3;
+                OPEN = 4;
+                CLOSE = 5;
+            }
+            optional PercentMode mode = 1;
+            optional int32 percent_n = 2;
+        }
+        optional Percent at_percent = 2;
+        enum Trend {
+            // 上升 >=4/6
+            GROWP_UP = 1;
+            // 下降 >=4/6
+            FAIL_DOWN = 3;
+            // 上升逆转: >=4/6且最后1/4时间降>=4/6
+            GROWP_UP_THEN_FAIL_DOWN = 2;
+            // 下降逆转 降>=4/6,且最后1/4时间升>=4/6
+            FAIL_DOWN_THEN_GROWP_UP = 4;
+            // 黑天鹅
+            SUDDEN_GRATE_GROWP_UP = 5;
+            SUDDEN_GRATE_FAIL_DOWN = 6;
+        }
+        optional Trend at_trend = 3;
+        // buy periodically and then
+        // 多久交易1次：1, 3, 7, 15, 30天1次
+        optional int32 buy_at_every_days = 4;
+        // hold until loss percent n
+        optional int32 sell_at_loss_percent = 5;
+        // sell at profit
+        optional int32 sell_at_profit_percent = 6;
+        // TODO： 如何用上？？后续考虑
+        message StockChange {
+            // 是否拆股
+            optional bool dividend = 2;
+            // 是否派发股息
+            optional bool yield = 3;
+            // 成交量中位数: 流动性
+            optional double market_capacity = 4;
+            // 波动幅度中位数 (风险)
+            optional double medium_price_volatility = 5;
+            // 最大波动幅度
+            optional double max_price_volatility = 6;
+        }
+        optional StockChange at_stock_change = 7;
+    }
+    optional TradePolicy buy = 3;
+    optional TradePolicy sell = 4;
+}
+
+message PolicyReport {
+    // 投资回报比
+    optional double roi = 1 [default=1];
+    optional double cash_taken_in = 2;
+    // 预期回归资金：包含已卖的和未卖的股票价值
+    optional double cash_taken_out = 3;
+    // 买的次数
+    optional double stock_buy_times = 6;
+    // 卖的次数
+    optional double stock_sell_times = 7;
+    // 有效持仓天数
+    optional double stock_hold_days = 11;
+    // 有效持仓亏损天数
+    optional double stock_hold_loss_days = 12;
+    // 有效持仓盈利天数
+    optional double stock_hold_profit_days = 13;
+    // 交易盈利次数（最终一天仍持有股票则按当天股价估算价值）
+    optional double trade_profit_times = 16;
+    // 交易亏损次数（最终一天仍持有股票则按当天股价估算价值）
+    optional double trade_loss_times = 17;
+}

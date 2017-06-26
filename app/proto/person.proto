@@ -1,0 +1,72 @@
+
+syntax = "proto2";
+
+import "proto/stock_info.proto";
+import "proto/policy.proto";
+
+
+message Person {
+    // 资金规模
+    optional double cash_taken_in = 1;
+    // 训练数据观察期（120天）, 希望跨财报
+    optional int32 max_train_watch_days = 2 [default=120];
+    // 预测最长观察周期 (120天)
+    optional int32 max_predict_watch_days = 3 [default=120];
+    optional int32 max_hold_days = 18 [default=360];
+    // 允许多策略， TODO： 如何融合
+    optional int32 max_policy_count = 4 [default=1];
+    // 交易券商给定，手续费固定: 按照ib计算
+    optional string stock_holder = 5 [default="ib"];
+    optional string stock_start_date = 16;
+    optional string stock_end_date = 17;
+    repeated StockInfo stock_info = 6;
+    repeated Policy policy_info = 7;
+    message StockPolicyActionsItem {
+        optional double cash_taken_in = 1;
+        optional string stock_id = 2;
+        optional string policy_id = 3;
+        // 交易观察起始日期
+        optional string trade_watch_start_date = 4;
+        // 满足日内交易规则： 5天最多3次同股票交易
+        message StockAction {
+            optional string date = 1;
+            // 买入或卖出价格
+            optional double at_price = 2;
+            // 头寸规模(股数)
+            optional double volumn = 3;
+            // 股票交易手续费
+            optional double stock_trade_cost = 4;
+            // put期权等各种费用
+            optional double option_trade_cost = 5;
+        }
+        repeated StockAction buy_stock_action = 5;
+        repeated StockAction sell_stock_action = 6;
+        optional PolicyReport report = 7;
+    }
+    repeated StockPolicyActionsItem action_items = 8;
+    repeated StockPolicyActionsItem sorted_action_items = 9;
+    message PercentPolicyReport {
+        optional int32 position = 1;
+        optional PolicyReport report = 2;
+    }
+    message StockPolicyReport {
+        optional string stock_id = 1;
+        optional string policy_id = 3;
+        repeated PercentPolicyReport reports = 4;
+    }
+    repeated StockPolicyReport stock_policy_report = 10;
+    repeated StockPolicyReport sorted_stock_policy_report = 11;
+    message PolicySummaryReport {
+        optional string policy_id = 3;
+        repeated PercentPolicyReport reports = 4;
+    }
+    repeated PolicySummaryReport policy_summary_report = 12;
+    repeated PolicySummaryReport sorted_policy_summary_report = 13;
+    message PolicyGroupReport {
+        optional string policy_group_type = 1;
+        optional string policy_group_value = 2;
+        repeated PercentPolicyReport reports = 3;
+    }
+    repeated PolicyGroupReport policy_group_report = 14;
+    repeated PolicyGroupReport sorted_policy_group_report = 15;
+}

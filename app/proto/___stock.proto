@@ -1,0 +1,82 @@
+
+//## URL: /api/stock_info/list
+//描述: 0. 根据一批条件筛选出符合条件的股票列表
+//
+//message StockListRequest {
+//    // 市值过滤
+//    optional double minimum_market_value_b = 1 [default=10];
+//    // 市场标识：A股，美股
+//    optional string market_place = 2 [default = "us"];
+//    optional bool is_etf = 3;
+//    // 股票列表
+//    repeated string stock_id = 4;
+//    // 只考虑中概股
+//    optional bool is_china = 5;
+//}
+//
+//message StockListResponse {
+//    repeated StockInfo stock_item = 1;
+//}
+//
+//## URL: /api/policy/get_one_stock_one_policy_one_startdate
+//描述: 单只股票 + 单个策略 + 单个观察起始日期
+//message PolicyCheckRequest {
+//    optional string stock_id = 1;
+//    optional Policy policy = 2;
+//    // 交易观察起始日期
+//    optional string trade_watch_start_date = 3;
+//    // 带入资金规模
+//    optional double asset_value = 4;
+//}
+//
+//## URL: /api/policy/get_ordered_policy_for_one_stock_one_startdate
+//描述: 单只股票 + 多个策略 + 单个观察起始日期, 结果按照最佳收益排序
+//message PolicyCheckRequests {
+//    optional string stock_id = 1;
+//    repeated Policy policies = 2;
+//    // 交易观察起始日期
+//    optional string trade_watch_start_date = 3;
+//    // 最佳策略靠前, 最终收益, 交易次数，亏损次数
+//    optional string order = 4;
+//    // 带入资金规模
+//    optional double asset_value = 5;
+//}
+//
+//message PolicyActionss {
+//    repeated PolicyActions stock_policy_item = 1;
+//}
+//
+//## URL: /api/policy/get_ordered_policy_for_one_stock_multi_startdate
+//描述: 单只股票 + 多个策略 + 多个观察起始日期, 结果按照千分位n最佳收益排序
+//message OneStockForBestPolicyWithDifferentDaysRequest {
+//    optional string stock_id = 1;
+//    repeated Policy policies = 2;
+//    // 交易观察起始日期
+//    repeated string trade_watch_start_date = 3;
+//    // 最佳策略靠前, 最终收益, 交易次数，亏损次数
+//    optional string order = 4;
+//    // 带入资金规模
+//    optional double asset_value = 7;
+//}
+//
+//message PolicyActionsAccumulated {
+//    message PolicyActionsWithPosition{
+//        // 百分位 10, 20, 30, 40, 50 .. 100
+//        optional int32 position_percent = 1;
+//        repeated PolicyActions stock_policy_item = 2;
+//    }
+//    repeated PolicyActionsWithPosition item = 1;
+//}
+//
+//## URL: /api/policy/get_ordered_policy_for_multi_stocks_multi_startdate
+//描述: 多只股票 + 多个策略 + 多个观察起始日期, 结果按照千分位n最佳收益排序
+//message MultiStockForBestPolicyWithDifferentDaysRequest {
+//    repeated string stock_id = 1;
+//    repeated Policy policies = 2;
+//    // 交易观察起始日期
+//    repeated string trade_watch_start_date = 3;
+//    // 最佳策略靠前, 最终收益, 交易次数，亏损次数
+//    optional string order = 4;
+//    // 带入资金规模
+//    optional double asset_value = 7;
+//}
