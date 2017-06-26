@@ -44,7 +44,6 @@ message Person {
         optional PolicyReport report = 7;
     }
     repeated StockPolicyActionsItem action_items = 8;
-    repeated StockPolicyActionsItem sorted_action_items = 9;
     message PercentPolicyReport {
         optional int32 position = 1;
         optional PolicyReport report = 2;

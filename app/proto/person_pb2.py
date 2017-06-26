@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='proto/person.proto',
   package='',
   syntax='proto2',
-  serialized_pb=_b('\n\x12proto/person.proto\x1a\x16proto/stock_info.proto\x1a\x12proto/policy.proto\"\xa3\x0c\n\x06Person\x12\x15\n\rcash_taken_in\x18\x01 \x01(\x01\x12!\n\x14max_train_watch_days\x18\x02 \x01(\x05:\x03\x31\x32\x30\x12#\n\x16max_predict_watch_days\x18\x03 \x01(\x05:\x03\x31\x32\x30\x12\x1a\n\rmax_hold_days\x18\x12 \x01(\x05:\x03\x33\x36\x30\x12\x1b\n\x10max_policy_count\x18\x04 \x01(\x05:\x01\x31\x12\x18\n\x0cstock_holder\x18\x05 \x01(\t:\x02ib\x12\x18\n\x10stock_start_date\x18\x10 \x01(\t\x12\x16\n\x0estock_end_date\x18\x11 \x01(\t\x12\x1e\n\nstock_info\x18\x06 \x03(\x0b\x32\n.StockInfo\x12\x1c\n\x0bpolicy_info\x18\x07 \x03(\x0b\x32\x07.Policy\x12\x34\n\x0c\x61\x63tion_items\x18\x08 \x03(\x0b\x32\x1e.Person.StockPolicyActionsItem\x12;\n\x13sorted_action_items\x18\t \x03(\x0b\x32\x1e.Person.StockPolicyActionsItem\x12\x36\n\x13stock_policy_report\x18\n \x03(\x0b\x32\x19.Person.StockPolicyReport\x12=\n\x1asorted_stock_policy_report\x18\x0b \x03(\x0b\x32\x19.Person.StockPolicyReport\x12:\n\x15policy_summary_report\x18\x0c \x03(\x0b\x32\x1b.Person.PolicySummaryReport\x12\x41\n\x1csorted_policy_summary_report\x18\r \x03(\x0b\x32\x1b.Person.PolicySummaryReport\x12\x36\n\x13policy_group_report\x18\x0e \x03(\x0b\x32\x19.Person.PolicyGroupReport\x12=\n\x1asorted_policy_group_report\x18\x0f \x03(\x0b\x32\x19.Person.PolicyGroupReport\x1a\x94\x03\n\x16StockPolicyActionsItem\x12\x15\n\rcash_taken_in\x18\x01 \x01(\x01\x12\x10\n\x08stock_id\x18\x02 \x01(\t\x12\x11\n\tpolicy_id\x18\x03 \x01(\t\x12\x1e\n\x16trade_watch_start_date\x18\x04 \x01(\t\x12\x44\n\x10\x62uy_stock_action\x18\x05 \x03(\x0b\x32*.Person.StockPolicyActionsItem.StockAction\x12\x45\n\x11sell_stock_action\x18\x06 \x03(\x0b\x32*.Person.StockPolicyActionsItem.StockAction\x12\x1d\n\x06report\x18\x07 \x01(\x0b\x32\r.PolicyReport\x1ar\n\x0bStockAction\x12\x0c\n\x04\x64\x61te\x18\x01 \x01(\t\x12\x10\n\x08\x61t_price\x18\x02 \x01(\x01\x12\x0e\n\x06volumn\x18\x03 \x01(\x01\x12\x18\n\x10stock_trade_cost\x18\x04 \x01(\x01\x12\x19\n\x11option_trade_cost\x18\x05 \x01(\x01\x1a\x46\n\x13PercentPolicyReport\x12\x10\n\x08position\x18\x01 \x01(\x05\x12\x1d\n\x06report\x18\x02 \x01(\x0b\x32\r.PolicyReport\x1a\x66\n\x11StockPolicyReport\x12\x10\n\x08stock_id\x18\x01 \x01(\t\x12\x11\n\tpolicy_id\x18\x03 \x01(\t\x12,\n\x07reports\x18\x04 \x03(\x0b\x32\x1b.Person.PercentPolicyReport\x1aV\n\x13PolicySummaryReport\x12\x11\n\tpolicy_id\x18\x03 \x01(\t\x12,\n\x07reports\x18\x04 \x03(\x0b\x32\x1b.Person.PercentPolicyReport\x1ax\n\x11PolicyGroupReport\x12\x19\n\x11policy_group_type\x18\x01 \x01(\t\x12\x1a\n\x12policy_group_value\x18\x02 \x01(\t\x12,\n\x07reports\x18\x03 \x03(\x0b\x32\x1b.Person.PercentPolicyReport')
+  serialized_pb=_b('\n\x12proto/person.proto\x1a\x16proto/stock_info.proto\x1a\x12proto/policy.proto\"\xe6\x0b\n\x06Person\x12\x15\n\rcash_taken_in\x18\x01 \x01(\x01\x12!\n\x14max_train_watch_days\x18\x02 \x01(\x05:\x03\x31\x32\x30\x12#\n\x16max_predict_watch_days\x18\x03 \x01(\x05:\x03\x31\x32\x30\x12\x1a\n\rmax_hold_days\x18\x12 \x01(\x05:\x03\x33\x36\x30\x12\x1b\n\x10max_policy_count\x18\x04 \x01(\x05:\x01\x31\x12\x18\n\x0cstock_holder\x18\x05 \x01(\t:\x02ib\x12\x18\n\x10stock_start_date\x18\x10 \x01(\t\x12\x16\n\x0estock_end_date\x18\x11 \x01(\t\x12\x1e\n\nstock_info\x18\x06 \x03(\x0b\x32\n.StockInfo\x12\x1c\n\x0bpolicy_info\x18\x07 \x03(\x0b\x32\x07.Policy\x12\x34\n\x0c\x61\x63tion_items\x18\x08 \x03(\x0b\x32\x1e.Person.StockPolicyActionsItem\x12\x36\n\x13stock_policy_report\x18\n \x03(\x0b\x32\x19.Person.StockPolicyReport\x12=\n\x1asorted_stock_policy_report\x18\x0b \x03(\x0b\x32\x19.Person.StockPolicyReport\x12:\n\x15policy_summary_report\x18\x0c \x03(\x0b\x32\x1b.Person.PolicySummaryReport\x12\x41\n\x1csorted_policy_summary_report\x18\r \x03(\x0b\x32\x1b.Person.PolicySummaryReport\x12\x36\n\x13policy_group_report\x18\x0e \x03(\x0b\x32\x19.Person.PolicyGroupReport\x12=\n\x1asorted_policy_group_report\x18\x0f \x03(\x0b\x32\x19.Person.PolicyGroupReport\x1a\x94\x03\n\x16StockPolicyActionsItem\x12\x15\n\rcash_taken_in\x18\x01 \x01(\x01\x12\x10\n\x08stock_id\x18\x02 \x01(\t\x12\x11\n\tpolicy_id\x18\x03 \x01(\t\x12\x1e\n\x16trade_watch_start_date\x18\x04 \x01(\t\x12\x44\n\x10\x62uy_stock_action\x18\x05 \x03(\x0b\x32*.Person.StockPolicyActionsItem.StockAction\x12\x45\n\x11sell_stock_action\x18\x06 \x03(\x0b\x32*.Person.StockPolicyActionsItem.StockAction\x12\x1d\n\x06report\x18\x07 \x01(\x0b\x32\r.PolicyReport\x1ar\n\x0bStockAction\x12\x0c\n\x04\x64\x61te\x18\x01 \x01(\t\x12\x10\n\x08\x61t_price\x18\x02 \x01(\x01\x12\x0e\n\x06volumn\x18\x03 \x01(\x01\x12\x18\n\x10stock_trade_cost\x18\x04 \x01(\x01\x12\x19\n\x11option_trade_cost\x18\x05 \x01(\x01\x1a\x46\n\x13PercentPolicyReport\x12\x10\n\x08position\x18\x01 \x01(\x05\x12\x1d\n\x06report\x18\x02 \x01(\x0b\x32\r.PolicyReport\x1a\x66\n\x11StockPolicyReport\x12\x10\n\x08stock_id\x18\x01 \x01(\t\x12\x11\n\tpolicy_id\x18\x03 \x01(\t\x12,\n\x07reports\x18\x04 \x03(\x0b\x32\x1b.Person.PercentPolicyReport\x1aV\n\x13PolicySummaryReport\x12\x11\n\tpolicy_id\x18\x03 \x01(\t\x12,\n\x07reports\x18\x04 \x03(\x0b\x32\x1b.Person.PercentPolicyReport\x1ax\n\x11PolicyGroupReport\x12\x19\n\x11policy_group_type\x18\x01 \x01(\t\x12\x1a\n\x12policy_group_value\x18\x02 \x01(\t\x12,\n\x07reports\x18\x03 \x03(\x0b\x32\x1b.Person.PercentPolicyReport')
   ,
   dependencies=[proto_dot_stock__info__pb2.DESCRIPTOR,proto_dot_policy__pb2.DESCRIPTOR,])
 
@@ -82,8 +82,8 @@ _PERSON_STOCKPOLICYACTIONSITEM_STOCKACTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1138,
-  serialized_end=1252,
+  serialized_start=1077,
+  serialized_end=1191,
 )
 
 _PERSON_STOCKPOLICYACTIONSITEM = _descriptor.Descriptor(
@@ -154,8 +154,8 @@ _PERSON_STOCKPOLICYACTIONSITEM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=848,
-  serialized_end=1252,
+  serialized_start=787,
+  serialized_end=1191,
 )
 
 _PERSON_PERCENTPOLICYREPORT = _descriptor.Descriptor(
@@ -191,8 +191,8 @@ _PERSON_PERCENTPOLICYREPORT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1254,
-  serialized_end=1324,
+  serialized_start=1193,
+  serialized_end=1263,
 )
 
 _PERSON_STOCKPOLICYREPORT = _descriptor.Descriptor(
@@ -235,8 +235,8 @@ _PERSON_STOCKPOLICYREPORT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1326,
-  serialized_end=1428,
+  serialized_start=1265,
+  serialized_end=1367,
 )
 
 _PERSON_POLICYSUMMARYREPORT = _descriptor.Descriptor(
@@ -272,8 +272,8 @@ _PERSON_POLICYSUMMARYREPORT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1430,
-  serialized_end=1516,
+  serialized_start=1369,
+  serialized_end=1455,
 )
 
 _PERSON_POLICYGROUPREPORT = _descriptor.Descriptor(
@@ -316,8 +316,8 @@ _PERSON_POLICYGROUPREPORT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1518,
-  serialized_end=1638,
+  serialized_start=1457,
+  serialized_end=1577,
 )
 
 _PERSON = _descriptor.Descriptor(
@@ -405,49 +405,42 @@ _PERSON = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='sorted_action_items', full_name='Person.sorted_action_items', index=11,
-      number=9, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='stock_policy_report', full_name='Person.stock_policy_report', index=12,
+      name='stock_policy_report', full_name='Person.stock_policy_report', index=11,
       number=10, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='sorted_stock_policy_report', full_name='Person.sorted_stock_policy_report', index=13,
+      name='sorted_stock_policy_report', full_name='Person.sorted_stock_policy_report', index=12,
       number=11, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='policy_summary_report', full_name='Person.policy_summary_report', index=14,
+      name='policy_summary_report', full_name='Person.policy_summary_report', index=13,
       number=12, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='sorted_policy_summary_report', full_name='Person.sorted_policy_summary_report', index=15,
+      name='sorted_policy_summary_report', full_name='Person.sorted_policy_summary_report', index=14,
       number=13, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='policy_group_report', full_name='Person.policy_group_report', index=16,
+      name='policy_group_report', full_name='Person.policy_group_report', index=15,
       number=14, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='sorted_policy_group_report', full_name='Person.sorted_policy_group_report', index=17,
+      name='sorted_policy_group_report', full_name='Person.sorted_policy_group_report', index=16,
       number=15, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -466,7 +459,7 @@ _PERSON = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=67,
-  serialized_end=1638,
+  serialized_end=1577,
 )
 
 _PERSON_STOCKPOLICYACTIONSITEM_STOCKACTION.containing_type = _PERSON_STOCKPOLICYACTIONSITEM
@@ -485,7 +478,6 @@ _PERSON_POLICYGROUPREPORT.containing_type = _PERSON
 _PERSON.fields_by_name['stock_info'].message_type = proto_dot_stock__info__pb2._STOCKINFO
 _PERSON.fields_by_name['policy_info'].message_type = proto_dot_policy__pb2._POLICY
 _PERSON.fields_by_name['action_items'].message_type = _PERSON_STOCKPOLICYACTIONSITEM
-_PERSON.fields_by_name['sorted_action_items'].message_type = _PERSON_STOCKPOLICYACTIONSITEM
 _PERSON.fields_by_name['stock_policy_report'].message_type = _PERSON_STOCKPOLICYREPORT
 _PERSON.fields_by_name['sorted_stock_policy_report'].message_type = _PERSON_STOCKPOLICYREPORT
 _PERSON.fields_by_name['policy_summary_report'].message_type = _PERSON_POLICYSUMMARYREPORT
