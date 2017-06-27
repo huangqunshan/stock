@@ -41,13 +41,15 @@ BUY_MODE_LIST = [Policy.TradePolicy.Percent.MEDIUM]
 SELL_MODE_LIST = [Policy.TradePolicy.Percent.MEDIUM]
 
 
-# # for test
+# for test
 # start_date_str = "20170101"
 # select_stock_name_list = ["BABA"]
-# WATCH_DAYS_LIST =  [10]
-# PRICE_PERCENT_LIST = range(0, 120 + 1, 100)
+# max_hold_days = 30
+# BUY_WATCH_DAYS_LIST = [5]
+# SELL_WATCH_DAYS_LIST = [5]
+# BUY_PRICE_PERCENT_LIST = range(0, 40 + 1, 10)
+# SELL_PRICE_PERCENT_LIST = range(80, 120 + 1, 10)
 # POSITION_PERCENT_LIST = range(0, 100+1, 10)
 # BUY_MODE_LIST = [Policy.TradePolicy.Percent.MEDIUM]
 # SELL_MODE_LIST = [Policy.TradePolicy.Percent.MEDIUM]
-# max_hold_days = 30
 
