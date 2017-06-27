@@ -162,9 +162,42 @@ class PolicyUtil:
         # clear other empty
         del person.stock_info[:]
         del person.policy_info[:]
+        PolicyUtil.print_summary(person)
         logging.info("end train")
         return
 
+
+    @staticmethod
+    def print_summary(person):
+        for item_report in person.sorted_policy_group_report:
+            logging.info("policy_group_report:policy_group_type:%s,policy_group_value:%s,10_roi:%s,10_stock_buy_times:%s,30_roi:%s,30_stock_buy_times:%s,50_roi:%s,50_stock_buy_times:%s",
+                         item_report.policy_group_type, item_report.policy_group_type,
+                         item_report.reports[1].report.roi,
+                         item_report.reports[1].report.stock_sell_times,
+                         item_report.reports[3].report.roi,
+                         item_report.reports[3].report.stock_sell_times,
+                         item_report.reports[5].report.roi,
+                         item_report.reports[5].report.stock_sell_times)
+
+        for item_report in person.sorted_policy_group_report:
+            logging.info("policy_summary_report:policy_id:%s,10_roi:%s,10_stock_buy_times:%s,30_roi:%s,30_stock_buy_times:%s,50_roi:%s,50_stock_buy_times:%s",
+                         item_report.policy_id,
+                         item_report.reports[1].report.roi,
+                         item_report.reports[1].report.stock_sell_times,
+                         item_report.reports[3].report.roi,
+                         item_report.reports[3].report.stock_sell_times,
+                         item_report.reports[5].report.roi,
+                         item_report.reports[5].report.stock_sell_times)
+        for item_report in person.sorted_stock_policy_report:
+            logging.info("stock_policy_report:stock_id:%s,policy_id:%s,10_roi:%s,10_stock_buy_times:%s,30_roi:%s,30_stock_buy_times:%s,50_roi:%s,50_stock_buy_times:%s",
+                         item_report.stock_id,
+                         item_report.policy_id,
+                         item_report.reports[1].report.roi,
+                         item_report.reports[1].report.stock_sell_times,
+                         item_report.reports[3].report.roi,
+                         item_report.reports[3].report.stock_sell_times,
+                         item_report.reports[5].report.roi,
+                         item_report.reports[5].report.stock_sell_times)
 
     @staticmethod
     def get_trade_watch_date_str_list(start_date_str, end_date_str, pre_train_watch_days, post_train_watch_days):

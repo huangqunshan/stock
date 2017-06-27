@@ -31,10 +31,10 @@ class PolicyFactory:
     @staticmethod
     def generate_policy_list_for_percent(prefer_max_splited_trade_unit, prefer_max_stock_count, repeated_policy):
         logging.debug("begin generate_policy_list_for_percent")
-        for buy_days_watch in localconfig.WATCH_DAYS_LIST:
-            for sell_days_watch in localconfig.WATCH_DAYS_LIST:
-                for buy_percent_n in localconfig.PRICE_PERCENT_LIST:
-                    for sell_percent_n in localconfig.PRICE_PERCENT_LIST:
+        for buy_days_watch in localconfig.BUY_WATCH_DAYS_LIST:
+            for sell_days_watch in localconfig.SELL_WATCH_DAYS_LIST:
+                for buy_percent_n in localconfig.BUY_PRICE_PERCENT_LIST:
+                    for sell_percent_n in localconfig.SELL_PRICE_PERCENT_LIST:
                         for buy_mode in localconfig.BUY_MODE_LIST:
                             for sell_mode in localconfig.SELL_MODE_LIST:
                                 policy = repeated_policy.add()
