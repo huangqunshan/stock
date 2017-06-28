@@ -48,6 +48,7 @@ class PolicyUtil:
             logging.info("end train for stock_id:%s", stock_info.stock_id)
         PolicyUtil.build_percent_policy_report_for_policy(person)
         PolicyUtil.build_percent_policy_report_for_policy_group(person)
+        PolicyUtil.build_percent_policy_report_for_stock_policy_group(person)
         PolicyUtil.build_sort_report(person)
         # clear other empty
         del person.stock_info[:]
@@ -70,7 +71,6 @@ class PolicyUtil:
                          item_report.reports[3].report.stock_sell_times,
                          item_report.reports[5].report.roi,
                          item_report.reports[5].report.stock_sell_times)
-
         for item_report in person.sorted_policy_summary_report:
             logging.info("policy_summary_report:\t%s\t10_roi:%s\t10_stock_buy_times:%s\t30_roi:%s\t30_stock_buy_times:%s\t50_roi:%s\t50_stock_buy_times:%s",
                          item_report.policy_id,
@@ -80,8 +80,19 @@ class PolicyUtil:
                          item_report.reports[3].report.stock_sell_times,
                          item_report.reports[5].report.roi,
                          item_report.reports[5].report.stock_sell_times)
+        for item_report in person.sorted_stock_policy_group_report:
+            logging.info("stock_policy_group_report:\t%s\t%s:%s\t10_roi:%s\t10_stock_buy_times:%s\t30_roi:%s\t30_stock_buy_times:%s\t50_roi:%s\t50_stock_buy_times:%s",
+                         item_report.stock_id,
+                         item_report.policy_group_type,
+                         item_report.policy_group_value,
+                         item_report.reports[1].report.roi,
+                         item_report.reports[1].report.stock_sell_times,
+                         item_report.reports[3].report.roi,
+                         item_report.reports[3].report.stock_sell_times,
+                         item_report.reports[5].report.roi,
+                         item_report.reports[5].report.stock_sell_times)
         for item_report in person.sorted_stock_policy_report:
-            logging.info("stock_policy_report:\t%s@%s\t10_roi:%s\t10_stock_buy_times:%s\t30_roi:%s\t30_stock_buy_times:%s\t50_roi:%s\t50_stock_buy_times:%s",
+            logging.info("stock_policy_report:\t%s\t%s\t10_roi:%s\t10_stock_buy_times:%s\t30_roi:%s\t30_stock_buy_times:%s\t50_roi:%s\t50_stock_buy_times:%s",
                          item_report.stock_id,
                          item_report.policy_id,
                          item_report.reports[1].report.roi,
@@ -90,6 +101,7 @@ class PolicyUtil:
                          item_report.reports[3].report.stock_sell_times,
                          item_report.reports[5].report.roi,
                          item_report.reports[5].report.stock_sell_times)
+
 
     @staticmethod
     def get_trade_watch_date_str_list(start_date_str, end_date_str, pre_train_watch_days, post_train_watch_days):
@@ -323,6 +335,29 @@ class PolicyUtil:
         logging.info("end build_percent_policy_report_for_policy_group")
 
     @staticmethod
+    def build_percent_policy_report_for_stock_policy_group(person):
+        logging.info("begin build_percent_policy_report_for_stock_policy_group")
+        # [stock_id][policy_group_type][policy_group_value] = [PolicyReport]
+        stock_policy_group_to_report_dict = {}
+        for stock_policy_report in person.stock_policy_report:
+            stock_policy_group_to_report_dict.setdefault(stock_policy_report.stock_id, {})
+            for policy_group in stock_policy_report.policy_id.split(","):
+                policy_group_type, policy_group_value = policy_group.split(":")
+                stock_policy_group_to_report_dict[stock_policy_report.stock_id].setdefault(policy_group_type, {})
+                stock_policy_group_to_report_dict[stock_policy_report.stock_id][policy_group_type].setdefault(policy_group_value, [])
+                for report in stock_policy_report.reports:
+                    stock_policy_group_to_report_dict[stock_policy_report.stock_id][policy_group_type][policy_group_value].append(report.report)
+        for stock_id, policy_group_item in stock_policy_group_to_report_dict.iteritems():
+            for policy_group_type, policy_group_value_item in policy_group_item.iteritems():
+                for policy_group_value, policy_report_list in policy_group_value_item.iteritems():
+                    report = person.stock_policy_group_report.add()
+                    report.stock_id = stock_id
+                    report.policy_group_type = policy_group_type
+                    report.policy_group_value = policy_group_value
+                    PolicyUtil.build_percent_policy_report(policy_report_list, report.reports)
+        logging.info("end build_percent_policy_report_for_stock_policy_group")
+
+    @staticmethod
     def build_sort_report(person):
         logging.info("begin build_sort_report")
         sorted_stock_policy_report_list = sorted(person.stock_policy_report, key=PolicyUtil.get_percent_policy_report_roi_50, reverse=True)
@@ -341,6 +376,13 @@ class PolicyUtil:
         sorted_policy_group_report_list = sorted(sorted_policy_group_report_list, key=attrgetter('policy_group_type'), reverse=False)
         person.sorted_policy_group_report.extend(sorted_policy_group_report_list)
         del sorted_policy_group_report_list[:]
+
+        sorted_stock_policy_group_report_list = sorted(person.stock_policy_group_report, key=PolicyUtil.get_percent_policy_report_roi_50, reverse=True)
+        del person.stock_policy_group_report[:]
+        sorted_stock_policy_group_report_list = sorted(sorted_stock_policy_group_report_list, key=attrgetter('policy_group_type'), reverse=False)
+        sorted_stock_policy_group_report_list = sorted(sorted_stock_policy_group_report_list, key=attrgetter('stock_id'), reverse=False)
+        person.sorted_stock_policy_group_report.extend(sorted_stock_policy_group_report_list)
+        del sorted_stock_policy_group_report_list[:]
         logging.info("end build_sort_report")
 
 

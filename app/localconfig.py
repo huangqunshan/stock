@@ -32,24 +32,28 @@ cash_taken_in = 30000
 max_train_watch_days = 0
 max_predict_watch_days = 0
 max_hold_days = 30
-BUY_WATCH_DAYS_LIST = [5, 10, 20, 40, 60]
-SELL_WATCH_DAYS_LIST = [5, 10, 15, 20, 30]
-BUY_PRICE_PERCENT_LIST = range(0, 40 + 1, 10)
-SELL_PRICE_PERCENT_LIST = range(80, 120 + 1, 10)
+# BUY_WATCH_DAYS_LIST = [5, 10, 20, 40, 60]
+BUY_WATCH_DAYS_LIST = [10, 15, 20, 25]
+# SELL_WATCH_DAYS_LIST = [5, 10, 15, 20, 30]
+SELL_WATCH_DAYS_LIST = [15, 20, 25, 30]
+# BUY_PRICE_PERCENT_LIST = range(0, 40 + 1, 10)
+BUY_PRICE_PERCENT_LIST = range(10, 40 + 1, 10)
+# SELL_PRICE_PERCENT_LIST = range(80, 120 + 1, 10)
+SELL_PRICE_PERCENT_LIST = range(90, 110 + 1, 10)
 POSITION_PERCENT_LIST = range(0, 100+1, 10)
-BUY_MODE_LIST = [Policy.TradePolicy.Percent.MEDIUM]
-SELL_MODE_LIST = [Policy.TradePolicy.Percent.MEDIUM]
+BUY_MODE_LIST = [Policy.TradePolicy.Percent.LOW, Policy.TradePolicy.Percent.MEDIUM]
+SELL_MODE_LIST = [Policy.TradePolicy.Percent.MEDIUM, Policy.TradePolicy.Percent.HIGH]
 
 
-# for test
+# # for test
 # start_date_str = "20170101"
 # select_stock_name_list = ["BABA"]
 # max_hold_days = 30
 # BUY_WATCH_DAYS_LIST = [5]
 # SELL_WATCH_DAYS_LIST = [5]
-# BUY_PRICE_PERCENT_LIST = range(0, 40 + 1, 10)
-# SELL_PRICE_PERCENT_LIST = range(80, 120 + 1, 10)
+# BUY_PRICE_PERCENT_LIST = range(0, 40 + 1, 20)
+# SELL_PRICE_PERCENT_LIST = range(90, 110 + 1, 20)
 # POSITION_PERCENT_LIST = range(0, 100+1, 10)
-# BUY_MODE_LIST = [Policy.TradePolicy.Percent.MEDIUM]
-# SELL_MODE_LIST = [Policy.TradePolicy.Percent.MEDIUM]
+# BUY_MODE_LIST = [Policy.TradePolicy.Percent.LOW]
+# SELL_MODE_LIST = [Policy.TradePolicy.Percent.HIGH]
 
