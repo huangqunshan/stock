@@ -35,8 +35,8 @@ message Policy {
             // 下降逆转 降>=4/6,且最后1/4时间升>=4/6
             FAIL_DOWN_THEN_GROWP_UP = 4;
             // 黑天鹅
-            SUDDEN_GRATE_GROWP_UP = 5;
-            SUDDEN_GRATE_FAIL_DOWN = 6;
+            SUDDEN_GREATE_GROWP_UP = 5;
+            SUDDEN_GREATE_FAIL_DOWN = 6;
         }
         optional Trend at_trend = 3;
         // buy periodically and then

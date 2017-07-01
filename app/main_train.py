@@ -31,17 +31,12 @@ def main():
                                             person.stock_info)
     PolicyUtil.train(person)
     logging.info("begin write person to file")
-    fout = open('model_out', 'w')
-    fout.write(person.SerializeToString())
-    fout.close()
+    # fout = open('model_out', 'w')
+    # fout.write(person.SerializeToString())
+    # fout.close()
     logging.info("end write person to file")
-    logging.info("begin logging person")
-    logging.info("after train, person:%s", person)
-    logging.info("end logging person")
-    ordered_policy_list = PolicyUtil.get_ordered_policy_list(person, "BABA")
-    predict_date_str = "20170616"
-    policy_actions = PolicyUtil.predict(person, ordered_policy_list, predict_date_str)
-    logging.info("predict with best policy at date:%s, actions:%s", predict_date_str, policy_actions)
+    logging.info("end train, person:%s", person)
+    logging.info("end train all")
 
 
 if __name__ == "__main__":

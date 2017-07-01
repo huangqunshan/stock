@@ -55,14 +55,15 @@ class PercentPriceUtil:
             return percent_map.get(at_percent.percent_n)
         #return PercentPriceUtil.generate_percent(stock_daily_info_list, at_percent.mode, at_percent.percent_n)
         # cost time: at least 30:26
-        percent_map = PercentPriceUtil.generate_percent_map(stock_daily_info_list, at_percent.mode)
+        price_percent_list = localconfig.BUY_PRICE_PERCENT_LIST + localconfig.SELL_PRICE_PERCENT_LIST
+        percent_map = PercentPriceUtil.generate_percent_map(stock_daily_info_list, at_percent.mode, price_percent_list)
         PercentPriceUtil.put(stock_id, days_watch, current_date_str, at_percent.mode, percent_map)
         logging.debug("end get_percent_price")
         assert at_percent.percent_n in percent_map, "%s vs %s" % (at_percent.percent_n, percent_map)
         return percent_map.get(at_percent.percent_n)
 
     @staticmethod
-    def generate_percent_map(stock_daily_info_list, percent_mode):
+    def generate_percent_map(stock_daily_info_list, percent_mode, price_percent_list):
         logging.debug("begin generate_percent_map, stock_daily_info_list:%s, percent_mode:%s",
                       stock_daily_info_list, percent_mode)
         stock_price_list = []
@@ -81,7 +82,7 @@ class PercentPriceUtil:
                 assert False, "unknown mode"
         percent_map = {}
         numpy_array = np.array(stock_price_list)
-        for percent_n in localconfig.PRICE_PERCENT_LIST:
+        for percent_n in price_percent_list:
             if percent_n <= 100:
                 percent_map[percent_n] = np.percentile(numpy_array, percent_n)
             else:
@@ -91,6 +92,7 @@ class PercentPriceUtil:
 
     @staticmethod
     def generate_percent(stock_daily_info_list, percent_mode, percent_n):
+        assert stock_daily_info_list
         logging.debug("begin generate_percent, stock_daily_info_list:%s, percent_mode:%s",
                       stock_daily_info_list, percent_mode)
         stock_price_list = []
@@ -107,8 +109,8 @@ class PercentPriceUtil:
                 stock_price_list.append(stock_daily_info.open)
             else:
                 assert False, "unknown mode"
-        percent_map = {}
         numpy_array = np.array(stock_price_list)
+        # logging.info("test: %s, %s", percent_n, stock_price_list)
         result = None
         if percent_n <= 100:
             result = np.percentile(numpy_array, percent_n)

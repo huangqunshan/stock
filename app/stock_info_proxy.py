@@ -32,7 +32,10 @@ class StockInfoProxy:
         # TODO(#P1) cache result for future use, and split multi range
         logging.info("begin generate stock list:%s, start_date:%s, end_date:%s", stock_name_list, start_date, end_date)
         for stock_name in stock_name_list:
-            StockInfoProxy.generate_stock(stock_name, start_date, end_date, repeated_stock_info)
+            try:
+                StockInfoProxy.generate_stock(stock_name, start_date, end_date, repeated_stock_info)
+            except Exception as e:
+                logging.error("fail to get stock %s, e:%s", stock_name, e)
         logging.info("end generate stock list")
 
     @staticmethod

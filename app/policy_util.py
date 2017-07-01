@@ -6,6 +6,7 @@ import numpy as np
 from operator import attrgetter
 from datetime_util import DatetimeUtil
 from price_util import PercentPriceUtil
+from proto.policy_pb2 import Policy
 import localconfig
 
 
@@ -29,7 +30,8 @@ class PolicyUtil:
                 trade_watch_date_str_list = PolicyUtil.get_trade_watch_date_str_list(person.stock_start_date,
                                                                                      person.stock_end_date,
                                                                                      max(policy.buy.days_watch, policy.sell.days_watch),
-                                                                                     min_sell_watch_days)
+                                                                                     min_sell_watch_days,
+                                                                                     localconfig.max_watch_jump_times)
                 for trade_watch_start_date in trade_watch_date_str_list:
                     action_item = person.action_items.add()
                     action_item.cash_taken_in = person.cash_taken_in
@@ -45,7 +47,7 @@ class PolicyUtil:
                 logging.info("end train for policy_id, stock_id")
                 PolicyUtil.build_percent_policy_report_for_stock_policy(person)
                 del person.action_items[:]
-            logging.info("end train for stock_id:%s", stock_info.stock_id)
+                logging.info("end train for stock_id:%s", stock_info.stock_id)
         PolicyUtil.build_percent_policy_report_for_policy(person)
         PolicyUtil.build_percent_policy_report_for_policy_group(person)
         PolicyUtil.build_percent_policy_report_for_stock_policy_group(person)
@@ -63,57 +65,66 @@ class PolicyUtil:
     @staticmethod
     def print_summary(person):
         for item_report in person.sorted_policy_group_report:
-            logging.info("policy_group_report:\t%s:%s\t10_roi:%s\t10_stock_buy_times:%s\t30_roi:%s\t30_stock_buy_times:%s\t50_roi:%s\t50_stock_buy_times:%s",
+            logging.info("policy_group_report:\t%s:%s\t2-5-8-9:\t%s # %s, %s # %s, %s # %s, %s # %s",
                          item_report.policy_group_type, item_report.policy_group_value,
-                         item_report.reports[1].report.roi,
-                         item_report.reports[1].report.stock_sell_times,
-                         item_report.reports[3].report.roi,
-                         item_report.reports[3].report.stock_sell_times,
+                         item_report.reports[2].report.roi,
+                         item_report.reports[2].report.stock_sell_times,
                          item_report.reports[5].report.roi,
-                         item_report.reports[5].report.stock_sell_times)
+                         item_report.reports[5].report.stock_sell_times,
+                         item_report.reports[8].report.roi,
+                         item_report.reports[8].report.stock_sell_times,
+                         item_report.reports[9].report.roi,
+                         item_report.reports[9].report.stock_sell_times)
         for item_report in person.sorted_policy_summary_report:
-            logging.info("policy_summary_report:\t%s\t10_roi:%s\t10_stock_buy_times:%s\t30_roi:%s\t30_stock_buy_times:%s\t50_roi:%s\t50_stock_buy_times:%s",
+            logging.info("policy_summary_report:\t%s\t2-5-8-9:\t%s # %s, %s # %s, %s # %s, %s # %s",
                          item_report.policy_id,
-                         item_report.reports[1].report.roi,
-                         item_report.reports[1].report.stock_sell_times,
-                         item_report.reports[3].report.roi,
-                         item_report.reports[3].report.stock_sell_times,
+                         item_report.reports[2].report.roi,
+                         item_report.reports[2].report.stock_sell_times,
                          item_report.reports[5].report.roi,
-                         item_report.reports[5].report.stock_sell_times)
+                         item_report.reports[5].report.stock_sell_times,
+                         item_report.reports[8].report.roi,
+                         item_report.reports[8].report.stock_sell_times,
+                         item_report.reports[9].report.roi,
+                         item_report.reports[9].report.stock_sell_times)
         for item_report in person.sorted_stock_policy_group_report:
-            logging.info("stock_policy_group_report:\t%s\t%s:%s\t10_roi:%s\t10_stock_buy_times:%s\t30_roi:%s\t30_stock_buy_times:%s\t50_roi:%s\t50_stock_buy_times:%s",
+            logging.info("stock_policy_group_report:\t%s\t%s:%s\t2-5-8-9:\t%s # %s, %s # %s, %s # %s, %s # %s",
                          item_report.stock_id,
                          item_report.policy_group_type,
                          item_report.policy_group_value,
-                         item_report.reports[1].report.roi,
-                         item_report.reports[1].report.stock_sell_times,
-                         item_report.reports[3].report.roi,
-                         item_report.reports[3].report.stock_sell_times,
+                         item_report.reports[2].report.roi,
+                         item_report.reports[2].report.stock_sell_times,
                          item_report.reports[5].report.roi,
-                         item_report.reports[5].report.stock_sell_times)
+                         item_report.reports[5].report.stock_sell_times,
+                         item_report.reports[8].report.roi,
+                         item_report.reports[8].report.stock_sell_times,
+                         item_report.reports[9].report.roi,
+                         item_report.reports[9].report.stock_sell_times)
         for item_report in person.sorted_stock_policy_report:
-            logging.info("stock_policy_report:\t%s\t%s\t10_roi:%s\t10_stock_buy_times:%s\t30_roi:%s\t30_stock_buy_times:%s\t50_roi:%s\t50_stock_buy_times:%s",
+            logging.info("stock_policy_report:\t%s\t%s\t2-5-8-9:\t%s # %s, %s # %s, %s # %s, %s # %s",
                          item_report.stock_id,
                          item_report.policy_id,
-                         item_report.reports[1].report.roi,
-                         item_report.reports[1].report.stock_sell_times,
-                         item_report.reports[3].report.roi,
-                         item_report.reports[3].report.stock_sell_times,
+                         item_report.reports[2].report.roi,
+                         item_report.reports[2].report.stock_sell_times,
                          item_report.reports[5].report.roi,
-                         item_report.reports[5].report.stock_sell_times)
+                         item_report.reports[5].report.stock_sell_times,
+                         item_report.reports[8].report.roi,
+                         item_report.reports[8].report.stock_sell_times,
+                         item_report.reports[9].report.roi,
+                         item_report.reports[9].report.stock_sell_times)
 
 
     @staticmethod
-    def get_trade_watch_date_str_list(start_date_str, end_date_str, pre_train_watch_days, post_train_watch_days):
-        logging.debug("begin get_trade_watch_date_str_list, start_date_str:%s, end_date_str:%s, pre_train_watch_days:%s, post_train_watch_days:%s",
-                    start_date_str, end_date_str, pre_train_watch_days, post_train_watch_days)
+    def get_trade_watch_date_str_list(start_date_str, end_date_str, pre_train_watch_days, post_train_watch_days, max_watch_jump_times):
+        logging.debug("begin get_trade_watch_date_str_list, start_date_str:%s, end_date_str:%s, pre_train_watch_days:%s, post_train_watch_days:%s, max_watch_jump_times:%s",
+                    start_date_str, end_date_str, pre_train_watch_days, post_train_watch_days, max_watch_jump_times)
         start_date = DatetimeUtil.from_date_str(start_date_str)
         end_date = DatetimeUtil.from_date_str(end_date_str)
+        max_days_interval = (end_date - start_date).days
         result = []
         while start_date + datetime.timedelta(days=pre_train_watch_days) <= end_date \
                 and start_date + datetime.timedelta(days=pre_train_watch_days + post_train_watch_days) <= end_date:
             result.append(DatetimeUtil.to_datetime_str(start_date+datetime.timedelta(days=pre_train_watch_days)))
-            start_date = start_date + datetime.timedelta(days=1)
+            start_date = start_date + datetime.timedelta(days=max_days_interval/max_watch_jump_times)
         logging.debug("end get_trade_watch_date_str_list")
         return result
 
@@ -139,6 +150,7 @@ class PolicyUtil:
             logging.debug("not allow trade for %s", current_date)
             logging.debug("end try_trade_by_policy")
             return
+        # TODO: 添加趋势的过滤条件
         if len(action_item.buy_stock_action) == len(action_item.sell_stock_action):
             PolicyUtil.check_if_buy(stock_info, action_item, action_item_policy, current_date_str)
         else:
@@ -450,17 +462,63 @@ class PolicyUtil:
 
 
     @staticmethod
-    def predict(person, ordered_policy_list, check_date):
-        pass
-
-    # @staticmethod
-    # def predict_policy(person, policy, check_date):
-    #     pass
+    def predict(stock_info, check_date):
+        # TODO: filter stock_info for old date
+        # [stock_id] = {(last_close, [price1, price2, ...], [price1, price2, ...])}
+        buy_policy_list = PolicyUtil.get_best_buy_policy_list()
+        stock_price_dict = {}
+        for stock in stock_info:
+            for policy in buy_policy_list:
+                if not stock.daily_info:
+                    logging.error("failed to get daily info for %s", stock.stock_id)
+                    continue
+                price = PercentPriceUtil.generate_percent(stock.daily_info[-policy.buy.days_watch:],
+                                                          policy.buy.at_percent.mode,
+                                                          policy.buy.at_percent.percent_n)
+                stock_price_dict.setdefault(stock.stock_id, [0, [], []])
+                stock_price_dict[stock.stock_id][0] = stock.daily_info[-1].close
+                stock_price_dict[stock.stock_id][1].append(price)
+        sell_policy_list = PolicyUtil.get_best_sell_policy_list()
+        for stock in stock_info:
+            for policy in sell_policy_list:
+                if not stock.daily_info:
+                    logging.error("failed to get daily info for %s", stock.stock_id)
+                    continue
+                price = PercentPriceUtil.generate_percent(stock.daily_info[-policy.sell.days_watch:],
+                                                          policy.sell.at_percent.mode,
+                                                          policy.sell.at_percent.percent_n)
+                stock_price_dict.setdefault(stock.stock_id, [0, [], []])
+                stock_price_dict[stock.stock_id][0] = stock.daily_info[-1].close
+                stock_price_dict[stock.stock_id][2].append(price)
+        return stock_price_dict
 
 
     @staticmethod
-    def get_ordered_policy_list(person, stock_id=None, limit_count=1):
-        pass
+    def get_best_buy_policy_list(limit_count=100):
+        best_policy_list = []
+        for day in [15]:
+            for percent in [20]:
+                for mode in [Policy.TradePolicy.Percent.LOW]:
+                    policy_best1 = Policy()
+                    policy_best1.buy.days_watch = day
+                    policy_best1.buy.at_percent.mode = mode
+                    policy_best1.buy.at_percent.percent_n = percent
+                    best_policy_list.append(policy_best1)
+        return best_policy_list[:limit_count]
+
+    @staticmethod
+    def get_best_sell_policy_list(limit_count=100):
+        best_policy_list = []
+        for day in [15]:
+            for percent in [90]:
+                for mode in [Policy.TradePolicy.Percent.HIGH]:
+                    policy_best1 = Policy()
+                    policy_best1.sell.days_watch = day
+                    policy_best1.sell.at_percent.mode = mode
+                    policy_best1.sell.at_percent.percent_n = percent
+                    best_policy_list.append(policy_best1)
+        return best_policy_list[:limit_count]
+    
 
     @staticmethod
     def get_date_range_list(start_date_str, days_watch):
