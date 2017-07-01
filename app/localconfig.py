@@ -34,12 +34,15 @@ SELL_WATCH_DAYS_LIST = [15]
 # buy_percent_n:30	2-5-8-10:	1.20617618691 # 14.0, 1.04500483541 # 8.725, 0.901410365332 # 3.72, 0.757108894934 # 2.0
 BUY_PRICE_PERCENT_LIST = range(20, 20 + 1, 10)
 
-# sell_percent_n:100	2-5-8-9:	1.21241721662 # 11.0, 1.05734287681 # 6.95, 0.917577729537 # 2.9, 0.799316641993 # 1.9
-# sell_percent_n:90	2-5-8-9:	1.2095552112 # 12.04, 1.04969172521 # 7.5, 0.921638938681 # 3.0, 0.791911808661 # 2.0
+# sell_percent_n:110	2-5-8-9:	1.26625731137 # 11.2, 1.13306259364 # 7.2, 1.04533893279 # 3.0, 1.02193602462 # 2.0
+# sell_percent_n:100	2-5-8-9:	1.26625731137 # 11.2, 1.13306259364 # 7.2, 1.04533893279 # 3.0, 1.02193602462 # 2.0
+# sell_percent_n:80	2-5-8-9:	1.26102344763 # 14.0, 1.12368146811 # 8.8, 1.04223373156 # 3.8, 1.01569045808 # 2.0
+# sell_percent_n:90	2-5-8-9:	1.26542120237 # 12.2, 1.12301105862 # 8.0, 1.04192526162 # 3.72, 1.01968853688 # 2.0
+# sell_percent_n:70	2-5-8-9:	1.23610520233 # 14.76, 1.12165929586 # 9.4, 1.04262850752 # 4.08, 1.01869211194 # 2.48
+# sell_percent_n:60	2-5-8-9:	1.21051657253 # 15.44, 1.1026040635 # 9.9, 1.03802631457 # 4.08, 1.01353593443 # 2.8
+# sell_percent_n:50	2-5-8-9:	1.20158110578 # 16.18, 1.08226989692 # 10.3, 1.02682962936 # 4.08, 1.00627234815 # 2.8
 
-# sell_percent_n:90	2-5-8-10:	1.20931288297 # 12.968, 1.04945347816 # 7.975, 0.907360658762 # 3.14, 0.776077122543 # 2.0
-# sell_percent_n:80	2-5-8-10:	1.19464504755 # 13.96, 1.04232528606 # 8.65, 0.904894180195 # 3.64, 0.758197685895 # 2.0
-SELL_PRICE_PERCENT_LIST = range(90, 90 + 1, 10)
+SELL_PRICE_PERCENT_LIST = range(80, 80 + 1, 10)
 
 # buy_mode:1; 2 - 5 - 8 - 10:    1.20042430959  # 14.92, 1.04264026959 # 9.25, 0.905355531836 # 3.892, 0.0261296704281 # 0.0
 # buy_mode:3; 2 - 5 - 8 - 10:    1.20547857769  # 20.434, 1.02425980384 # 12.16, 0.8800411176 # 5.0, 0.0215538388489 # 0.0
@@ -48,6 +51,8 @@ BUY_MODE_LIST = [Policy.TradePolicy.Percent.LOW]
 # sell_mode:3; 2 - 5 - 8 - 10:    1.16409161087  # 20.48, 1.02165842369 # 12.46, 0.883413927914 # 5.028, 0.0221897851161 # 0.0
 SELL_MODE_LIST = [Policy.TradePolicy.Percent.HIGH]
 
+LOSS_STOP_THOUSANDTH_LIST = range(5, 100+1, 10) + [990]
+SELL_PROFIT_THOUSANDTH_LIST = range(5, 100+1, 5) + [200, 1000]
 
 fin_stock = open('stock_list.easy')
 select_stock_name_list = fin_stock.read().split('\n')
@@ -58,15 +63,14 @@ end_date_str = DatetimeUtil.to_datetime_str(datetime.datetime.now())
 start_date_str = "20150101"
 
 
-select_stock_name_list = ["BABA", "JD", "WB", "AMZN", "BIDU", "MSFT", "FB", "GOOGL", "NTES", "TSLA", "MOMO",  "NVDA", "AAPL",
-                          "SPY", "QQQ", "IWM", "IWV"]
+# select_stock_name_list = ["BABA", "JD", "WB", "AMZN", "BIDU", "MSFT", "FB", "GOOGL", "NTES", "TSLA", "MOMO",  "NVDA", "AAPL",
+#                           "SPY", "QQQ", "IWM", "IWV"]
 start_date_str = "20160101"
 
 
 
-# # for test
-# start_date_str = "20170101"
 # select_stock_name_list = ["BABA"]
+# start_date_str = "20170101"
 # BUY_WATCH_DAYS_LIST = [10]
 # SELL_WATCH_DAYS_LIST = [10]
 

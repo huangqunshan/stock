@@ -202,20 +202,34 @@ class PolicyUtil:
         if the_stock_daily_info is None:
             logging.debug("no stock info for %s", current_date_str)
             return
-        percent_price = PolicyUtil.get_stock_percent_price(stock_info,
+        last_buy_price = action_item.buy_stock_action[-1].at_price
+        loss_stop_price = last_buy_price * (1000-action_item_policy.sell.sell_at_loss_thousandth)/1000
+        sell_price = last_buy_price * 100
+        if 0 < action_item_policy.sell.sell_at_loss_thousandth and the_stock_daily_info.low <= loss_stop_price:
+            sell_price = the_stock_daily_info.low + 0.0001
+        elif 0 < action_item_policy.sell.at_percent.percent_n:
+            sell_price = PolicyUtil.get_stock_percent_price(stock_info,
                                                            action_item_policy.sell.days_watch,
                                                            current_date_str,
                                                            action_item_policy.sell.at_percent)
-        if the_stock_daily_info.high <= percent_price:
+        elif 0 < action_item_policy.sell.sell_at_profit_thousandth:
+            sell_price = last_buy_price * (1 + action_item_policy.sell.sell_at_profit_thousandth/1000)
+        else:
+            assert False
+        if the_stock_daily_info.high <= sell_price:
             return
+        if sell_price <= the_stock_daily_info.low:
+            sell_price = the_stock_daily_info.low
         stock_action = action_item.sell_stock_action.add()
         stock_action.date = current_date_str
-        stock_action.at_price = percent_price
+        stock_action.at_price = sell_price
         stock_action.volumn = action_item.buy_stock_action[-1].volumn
         stock_action.stock_trade_cost = action_item.buy_stock_action[-1].stock_trade_cost
         stock_action.option_trade_cost = 0
-        logging.debug("do buy stock, id:%s, date:%s, at_price:%s, volumn:%s", stock_info.stock_id, stock_action.date,
+        logging.debug("do sell stock, id:%s, date:%s, at_price:%s, volumn:%s", stock_info.stock_id, stock_action.date,
                       stock_action.at_price, stock_action.volumn)
+
+        return
 
 
     @staticmethod

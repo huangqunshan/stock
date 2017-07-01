@@ -39,13 +39,10 @@ message Policy {
             SUDDEN_GREATE_FAIL_DOWN = 6;
         }
         optional Trend at_trend = 3;
-        // buy periodically and then
-        // 多久交易1次：1, 3, 7, 15, 30天1次
-        optional int32 buy_at_every_days = 4;
-        // hold until loss percent n
-        optional int32 sell_at_loss_percent = 5;
+        // hold until loss thousandth n
+        optional int32 sell_at_loss_thousandth = 5;
         // sell at profit
-        optional int32 sell_at_profit_percent = 6;
+        optional int32 sell_at_profit_thousandth = 6;
         // TODO： 如何用上？？后续考虑
         message StockChange {
             // 是否拆股
