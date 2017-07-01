@@ -39,7 +39,7 @@ class PolicyFactory:
                             for sell_loss_thousandth in localconfig.LOSS_STOP_THOUSANDTH_LIST:
                                 for sell_percent_n in localconfig.SELL_PRICE_PERCENT_LIST:
                                     policy = repeated_policy.add()
-                                    policy.id = "buy_days_watch:%s,sell_days_watch:%s,buy_percent_n:%s,sell_percent_n:%s,buy_mode:%s,sell_mode:%s,loss_thousandth:%s" % (
+                                    policy.id = "buy_days_watch:%s,sell_days_watch:%s,buy_percent_n:%s,sell_percent_n:%s,buy_mode:%s,sell_mode:%s,loss_stop_thousandth:%s" % (
                                         buy_days_watch, sell_days_watch, buy_percent_n, sell_percent_n, buy_mode, sell_mode, sell_loss_thousandth)
                                     policy.prefer_max_splited_trade_unit = prefer_max_splited_trade_unit
                                     policy.prefer_max_stock_count = prefer_max_stock_count
@@ -50,19 +50,19 @@ class PolicyFactory:
                                     policy.sell.at_percent.mode = sell_mode
                                     policy.sell.at_percent.percent_n = sell_percent_n
                                     policy.sell.sell_at_loss_thousandth = sell_loss_thousandth
-                                # for sell_profit_thousandth_n in localconfig.SELL_PRICE_PERCENT_LIST:
-                                #     policy = repeated_policy.add()
-                                #     policy.id = "buy_days_watch:%s,sell_days_watch:%s,buy_percent_n:%s,sell_profit_thousandth_n:%s,buy_mode:%s,sell_mode:%s,loss_thousandth:%s" % (
-                                #         buy_days_watch, sell_days_watch, buy_percent_n, sell_profit_thousandth_n, buy_mode, sell_mode, sell_loss_thousandth)
-                                #     policy.prefer_max_splited_trade_unit = prefer_max_splited_trade_unit
-                                #     policy.prefer_max_stock_count = prefer_max_stock_count
-                                #     policy.buy.days_watch = buy_days_watch
-                                #     policy.buy.at_percent.mode = buy_mode
-                                #     policy.buy.at_percent.percent_n = buy_percent_n
-                                #     policy.sell.days_watch = sell_days_watch
-                                #     policy.sell.at_percent.mode = sell_mode
-                                #     policy.sell.sell_at_profit_thousandth = sell_profit_thousandth_n
-                                #     policy.sell.sell_at_loss_thousandth = sell_loss_thousandth
+                                for sell_profit_thousandth_n in localconfig.SELL_PROFIT_THOUSANDTH_LIST:
+                                    policy = repeated_policy.add()
+                                    policy.id = "buy_days_watch:%s,sell_days_watch:%s,buy_percent_n:%s,sell_profit_thousandth_n:%s,buy_mode:%s,sell_mode:%s,loss_stop_thousandth:%s" % (
+                                        buy_days_watch, sell_days_watch, buy_percent_n, sell_profit_thousandth_n, buy_mode, sell_mode, sell_loss_thousandth)
+                                    policy.prefer_max_splited_trade_unit = prefer_max_splited_trade_unit
+                                    policy.prefer_max_stock_count = prefer_max_stock_count
+                                    policy.buy.days_watch = buy_days_watch
+                                    policy.buy.at_percent.mode = buy_mode
+                                    policy.buy.at_percent.percent_n = buy_percent_n
+                                    policy.sell.days_watch = sell_days_watch
+                                    policy.sell.at_percent.mode = sell_mode
+                                    policy.sell.sell_at_profit_thousandth = sell_profit_thousandth_n
+                                    policy.sell.sell_at_loss_thousandth = sell_loss_thousandth
         logging.debug("end generate_policy_list_for_percent")
 
 

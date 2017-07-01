@@ -15,12 +15,6 @@ class PolicyUtil:
     @staticmethod
     def train(person):
         logging.info("begin train, stock info size:%s, policy info size:%s", len(person.stock_info), len(person.policy_info))
-        # generate policy dict
-        # [policy_id] = Policy()
-        policy_dict = {}
-        for policy in person.policy_info:
-            policy_dict[policy.id] = policy
-        logging.info("policy_dict size:%s", len(policy_dict))
         for policy in person.policy_info:
             logging.info("begin train for policy_id:%s", policy.id)
             for stock_info in person.stock_info:
@@ -38,8 +32,8 @@ class PolicyUtil:
                     action_item.stock_id = stock_info.stock_id
                     action_item.policy_id = policy.id
                     action_item.trade_watch_start_date = trade_watch_start_date
-                    PolicyUtil.generate_policy_actions(stock_info, action_item, policy_dict[policy.id], person.stock_end_date)
-                    PolicyUtil.build_action_item_report(stock_info, action_item, action_item.report, policy_dict[policy.id],
+                    PolicyUtil.generate_policy_actions(stock_info, action_item, policy, person.stock_end_date)
+                    PolicyUtil.build_action_item_report(stock_info.daily_info, action_item, action_item.report, policy,
                                                         DatetimeUtil.from_date_str(person.stock_end_date))
                     # clear memory now
                     del action_item.buy_stock_action[:]
@@ -64,6 +58,7 @@ class PolicyUtil:
 
     @staticmethod
     def print_summary(person):
+        logging.info("-----------------------")
         for item_report in person.sorted_policy_group_report:
             logging.info("policy_group_report:\t%s:%s\t2-5-8-9:\t%s # %s, %s # %s, %s # %s, %s # %s",
                          item_report.policy_group_type, item_report.policy_group_value,
@@ -75,6 +70,7 @@ class PolicyUtil:
                          item_report.reports[8].report.stock_sell_times,
                          item_report.reports[9].report.roi,
                          item_report.reports[9].report.stock_sell_times)
+        logging.info("-----------------------")
         for item_report in person.sorted_policy_summary_report:
             logging.info("policy_summary_report:\t%s\t2-5-8-9:\t%s # %s, %s # %s, %s # %s, %s # %s",
                          item_report.policy_id,
@@ -86,6 +82,7 @@ class PolicyUtil:
                          item_report.reports[8].report.stock_sell_times,
                          item_report.reports[9].report.roi,
                          item_report.reports[9].report.stock_sell_times)
+        logging.info("-----------------------")
         for item_report in person.sorted_stock_policy_group_report:
             logging.info("stock_policy_group_report:\t%s\t%s:%s\t2-5-8-9:\t%s # %s, %s # %s, %s # %s, %s # %s",
                          item_report.stock_id,
@@ -99,6 +96,7 @@ class PolicyUtil:
                          item_report.reports[8].report.stock_sell_times,
                          item_report.reports[9].report.roi,
                          item_report.reports[9].report.stock_sell_times)
+        logging.info("-----------------------")
         for item_report in person.sorted_stock_policy_report:
             logging.info("stock_policy_report:\t%s\t%s\t2-5-8-9:\t%s # %s, %s # %s, %s # %s, %s # %s",
                          item_report.stock_id,
@@ -111,6 +109,7 @@ class PolicyUtil:
                          item_report.reports[8].report.stock_sell_times,
                          item_report.reports[9].report.roi,
                          item_report.reports[9].report.stock_sell_times)
+        logging.info("-----------------------")
 
 
     @staticmethod
@@ -150,70 +149,78 @@ class PolicyUtil:
             logging.debug("not allow trade for %s", current_date)
             logging.debug("end try_trade_by_policy")
             return
+        filtered_stock_daily_list = stock_info.daily_info
         # TODO: 添加趋势的过滤条件
+        # TODO: 优化， 提前计算percent list， 以及有效的序列
         if len(action_item.buy_stock_action) == len(action_item.sell_stock_action):
-            PolicyUtil.check_if_buy(stock_info, action_item, action_item_policy, current_date_str)
+            PolicyUtil.check_if_buy(stock_info.stock_id, filtered_stock_daily_list, action_item, action_item_policy, current_date_str)
         else:
             assert len(action_item.buy_stock_action) == len(action_item.sell_stock_action) + 1
-            PolicyUtil.check_if_sell(stock_info, action_item, action_item_policy, current_date_str)
+            PolicyUtil.check_if_sell(stock_info.stock_id, filtered_stock_daily_list, action_item, action_item_policy, current_date_str)
         logging.debug("end try_trade_by_policy")
 
+
     @staticmethod
-    def check_if_buy(stock_info, action_item, action_item_policy, current_date_str):
+    def check_if_buy(stock_id, repeated_stock_daily_info, action_item, action_item_policy, current_date_str):
         if len(action_item.sell_stock_action) < len(action_item.buy_stock_action):
             return
         assert len(action_item.buy_stock_action) == len(action_item.sell_stock_action)
         # TODO: only process at percent now policy
         if not action_item_policy.buy.HasField("at_percent"):
             return
-        the_day_stock_info = PolicyUtil.get_the_stock_daily_info(stock_info, current_date_str)
-        if the_day_stock_info is None:
-            logging.debug("no stock info for %s", current_date_str)
-            return
-        percent_price = PolicyUtil.get_stock_percent_price(stock_info,
+        percent_price = PolicyUtil.get_stock_percent_price(stock_id,
+                                                           repeated_stock_daily_info,
                                                            action_item_policy.buy.days_watch,
                                                            current_date_str,
                                                            action_item_policy.buy.at_percent)
         if percent_price is None:
             # empty stock list
             return
+        the_day_stock_info = PolicyUtil.get_the_stock_daily_info(repeated_stock_daily_info, current_date_str)
+        if the_day_stock_info is None:
+            logging.debug("no stock info for %s", current_date_str)
+            return
         if percent_price <= the_day_stock_info.low:
             return
-        cash_value_left_to_buy = PolicyUtil.get_cash_value_available(stock_info, action_item)
+        cash_value_left_to_buy = PolicyUtil.get_cash_value_available(action_item)
         logging.debug("cash value left:%s", cash_value_left_to_buy)
         stock_action = action_item.buy_stock_action.add()
         stock_action.date = current_date_str
         stock_action.at_price = percent_price
         stock_action.volumn, stock_action.stock_trade_cost = PolicyUtil.get_volumn_and_trade_cost(cash_value_left_to_buy, percent_price)
         stock_action.option_trade_cost = 0
-        logging.debug("do buy stock, id:%s, date:%s, at_price:%s, volumn:%s", stock_info.stock_id, stock_action.date,
+        logging.debug("do buy stock, id:%s, date:%s, at_price:%s, volumn:%s", stock_id, stock_action.date,
                       stock_action.at_price, stock_action.volumn)
 
 
     @staticmethod
-    def check_if_sell(stock_info, action_item, action_item_policy, current_date_str):
+    def check_if_sell(stock_id, repeated_stock_daily_info, action_item, action_item_policy, current_date_str):
         if len(action_item.buy_stock_action) <= len(action_item.sell_stock_action):
             return
         assert len(action_item.buy_stock_action) == len(action_item.sell_stock_action) + 1
         # TODO: only process at percent now policy
         if not action_item_policy.sell.HasField("at_percent"):
             return
-        the_stock_daily_info = PolicyUtil.get_the_stock_daily_info(stock_info, current_date_str)
+        last_buy_price = action_item.buy_stock_action[-1].at_price
+        loss_stop_price = last_buy_price * (1000-action_item_policy.sell.sell_at_loss_thousandth)/1000.0
+        sell_price = last_buy_price * 100
+        the_stock_daily_info = PolicyUtil.get_the_stock_daily_info(repeated_stock_daily_info, current_date_str)
         if the_stock_daily_info is None:
             logging.debug("no stock info for %s", current_date_str)
             return
-        last_buy_price = action_item.buy_stock_action[-1].at_price
-        loss_stop_price = last_buy_price * (1000-action_item_policy.sell.sell_at_loss_thousandth)/1000
-        sell_price = last_buy_price * 100
         if 0 < action_item_policy.sell.sell_at_loss_thousandth and the_stock_daily_info.low <= loss_stop_price:
+            # 悲观假设： 卖在最低
             sell_price = the_stock_daily_info.low + 0.0001
+            # 乐观假设： 卖在最高
+            sell_price = loss_stop_price
         elif 0 < action_item_policy.sell.at_percent.percent_n:
-            sell_price = PolicyUtil.get_stock_percent_price(stock_info,
+            sell_price = PolicyUtil.get_stock_percent_price(stock_id,
+                                                            repeated_stock_daily_info,
                                                            action_item_policy.sell.days_watch,
                                                            current_date_str,
                                                            action_item_policy.sell.at_percent)
         elif 0 < action_item_policy.sell.sell_at_profit_thousandth:
-            sell_price = last_buy_price * (1 + action_item_policy.sell.sell_at_profit_thousandth/1000)
+            sell_price = last_buy_price * (1 + action_item_policy.sell.sell_at_profit_thousandth/1000.0)
         else:
             assert False
         if the_stock_daily_info.high <= sell_price:
@@ -226,18 +233,18 @@ class PolicyUtil:
         stock_action.volumn = action_item.buy_stock_action[-1].volumn
         stock_action.stock_trade_cost = action_item.buy_stock_action[-1].stock_trade_cost
         stock_action.option_trade_cost = 0
-        logging.debug("do sell stock, id:%s, date:%s, at_price:%s, volumn:%s", stock_info.stock_id, stock_action.date,
+        logging.debug("do sell stock, id:%s, date:%s, at_price:%s, volumn:%s", stock_id, stock_action.date,
                       stock_action.at_price, stock_action.volumn)
 
         return
 
 
     @staticmethod
-    def get_asset_value_out(stock_info, action_item, action_item_policy, stock_end_date):
-        cash_value = PolicyUtil.get_cash_value_available(stock_info, action_item)
+    def get_asset_value_out(repeated_stock_daily_info, action_item, action_item_policy, stock_end_date):
+        cash_value = PolicyUtil.get_cash_value_available(action_item)
         asset_value_taken_out = cash_value
         if len(action_item.sell_stock_action) < len(action_item.buy_stock_action):
-            the_stock_daily_info = PolicyUtil.get_the_last_stock_daily_info(stock_info, action_item, action_item_policy, stock_end_date)
+            the_stock_daily_info = PolicyUtil.get_the_last_stock_daily_info(repeated_stock_daily_info, action_item, action_item_policy, stock_end_date)
             the_stock_mean_price = (the_stock_daily_info.high + the_stock_daily_info.low) / 2.0
             # 最后一笔持有的仍然计算手续费
             asset_value_taken_out += (the_stock_mean_price * action_item.buy_stock_action[-1].volumn - action_item.buy_stock_action[-1].stock_trade_cost)
@@ -246,7 +253,7 @@ class PolicyUtil:
 
 
     @staticmethod
-    def get_cash_value_available(stock_info, action_item):
+    def get_cash_value_available(action_item):
         cash_buy = 0
         cash_sell = 0
         for stock_action in action_item.buy_stock_action:
@@ -260,10 +267,10 @@ class PolicyUtil:
 
 
     @staticmethod
-    def get_the_last_stock_daily_info(stock_info, action_item, action_item_policy, stock_end_date):
+    def get_the_last_stock_daily_info(repeated_stock_daily_info, action_item, action_item_policy, stock_end_date):
         begin_date = DatetimeUtil.from_date_str(action_item.trade_watch_start_date)
         while begin_date <= stock_end_date:
-            the_daily_stock_info = PolicyUtil.get_the_stock_daily_info(stock_info, DatetimeUtil.to_datetime_str(stock_end_date))
+            the_daily_stock_info = PolicyUtil.get_the_stock_daily_info(repeated_stock_daily_info, DatetimeUtil.to_datetime_str(stock_end_date))
             if the_daily_stock_info:
                 return the_daily_stock_info
             else:
@@ -272,33 +279,38 @@ class PolicyUtil:
 
 
     @staticmethod
-    def get_stock_percent_price(stock_info, days_watch, current_date_str, at_percent):
+    def get_stock_percent_price(stock_id, repeated_stock_daily_info, days_watch, current_date_str, at_percent):
         """
         get sotck percent price
-        :param stock_info:
         :param days_watch:
         :param current_date_str:
         :param at_percent:
         :return: percent price, may return None for empty list
         """
-        begin_date_str = DatetimeUtil.to_datetime_str(DatetimeUtil.from_date_str(current_date_str) - datetime.timedelta(days=days_watch))
-        select_stock_daily_info_list = []
-        for stock_daily_info in stock_info.daily_info:
-            if begin_date_str <= stock_daily_info.date and stock_daily_info.date < current_date_str:
-                select_stock_daily_info_list.append(stock_daily_info)
+        select_stock_daily_info_list = PolicyUtil.filter_stock_daily_info_list(repeated_stock_daily_info, days_watch, current_date_str)
         if not select_stock_daily_info_list:
             return None
-        return PercentPriceUtil.get_percent_price(stock_info.stock_id, days_watch, current_date_str, select_stock_daily_info_list, at_percent)
+        return PercentPriceUtil.get_percent_price(stock_id, days_watch, current_date_str, select_stock_daily_info_list, at_percent)
 
 
     @staticmethod
-    def get_the_stock_daily_info(stock_info, current_date_str):
+    def filter_stock_daily_info_list(repeated_stock_daily_info, days_watch, current_date_str):
+        begin_date_str = DatetimeUtil.to_datetime_str(DatetimeUtil.from_date_str(current_date_str) - datetime.timedelta(days=days_watch))
+        select_stock_daily_info_list = []
+        for stock_daily_info in repeated_stock_daily_info:
+            if begin_date_str <= stock_daily_info.date and stock_daily_info.date < current_date_str:
+                select_stock_daily_info_list.append(stock_daily_info)
+        return select_stock_daily_info_list
+
+
+    @staticmethod
+    def get_the_stock_daily_info(repeated_stock_daily_info, current_date_str):
         ''' get the stock info by current date str
         :param stock_info:
         :param current_date_str:
         :return: stock_info on success, otherwise return None
         '''
-        for stock_daily_info in stock_info.daily_info:
+        for stock_daily_info in repeated_stock_daily_info:
             if stock_daily_info.date == current_date_str:
                 return stock_daily_info
         return None
@@ -444,9 +456,9 @@ class PolicyUtil:
 
 
     @staticmethod
-    def build_action_item_report(stock_info, action_item, report, action_item_policy, stock_end_date):
+    def build_action_item_report(repeated_daily_info, action_item, report, action_item_policy, stock_end_date):
         report.cash_taken_in = action_item.cash_taken_in
-        report.cash_taken_out = PolicyUtil.get_asset_value_out(stock_info, action_item, action_item_policy, stock_end_date)
+        report.cash_taken_out = PolicyUtil.get_asset_value_out(repeated_daily_info, action_item, action_item_policy, stock_end_date)
         report.roi = report.cash_taken_out / report.cash_taken_in if report.cash_taken_in > 0 else 1
         report.stock_buy_times = len(action_item.buy_stock_action)
         report.stock_sell_times = len(action_item.sell_stock_action)
@@ -463,7 +475,7 @@ class PolicyUtil:
             report.stock_hold_days += (DatetimeUtil.from_date_str(action_item.sell_stock_action[i].date)
                                       - DatetimeUtil.from_date_str(action_item.buy_stock_action[i].date)).days
         if len(action_item.sell_stock_action) < len(action_item.buy_stock_action):
-            the_stock_daily_info = PolicyUtil.get_the_last_stock_daily_info(stock_info, action_item, action_item_policy, stock_end_date)
+            the_stock_daily_info = PolicyUtil.get_the_last_stock_daily_info(repeated_daily_info, action_item, action_item_policy, stock_end_date)
             the_stock_mean_price = (the_stock_daily_info.high + the_stock_daily_info.low) / 2.0
             if action_item.buy_stock_action[-1].at_price < the_stock_mean_price:
                 report.trade_profit_times += 1

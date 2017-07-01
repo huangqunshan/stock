@@ -25,20 +25,6 @@ message Policy {
             optional int32 percent_n = 2;
         }
         optional Percent at_percent = 2;
-        enum Trend {
-            // 上升 >=4/6
-            GROWP_UP = 1;
-            // 下降 >=4/6
-            FAIL_DOWN = 3;
-            // 上升逆转: >=4/6且最后1/4时间降>=4/6
-            GROWP_UP_THEN_FAIL_DOWN = 2;
-            // 下降逆转 降>=4/6,且最后1/4时间升>=4/6
-            FAIL_DOWN_THEN_GROWP_UP = 4;
-            // 黑天鹅
-            SUDDEN_GREATE_GROWP_UP = 5;
-            SUDDEN_GREATE_FAIL_DOWN = 6;
-        }
-        optional Trend at_trend = 3;
         // hold until loss thousandth n
         optional int32 sell_at_loss_thousandth = 5;
         // sell at profit
