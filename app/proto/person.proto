@@ -12,7 +12,7 @@ message Person {
     optional int32 max_train_watch_days = 2 [default=120];
     // 预测最长观察周期 (120天)
     optional int32 max_predict_watch_days = 3 [default=120];
-    optional int32 max_hold_days = 18 [default=360];
+//    optional int32 max_hold_days = 18 [default=360];
     // 允许多策略， TODO： 如何融合
     optional int32 max_policy_count = 4 [default=1];
     // 交易券商给定，手续费固定: 按照ib计算
@@ -39,7 +39,7 @@ message Person {
             // put期权等各种费用
             optional double option_trade_cost = 5;
             message Trend {
-                // 1: up, -1: down
+                // 1: up, 0: otherwise
                 repeated int32 flow_details = 5;
                 optional int32 growth_percent = 1;
                 optional int32 growth_percent_last_half_period = 2;

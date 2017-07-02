@@ -9,7 +9,7 @@ from policy_util import PolicyUtil
 from proto.person_pb2 import Person
 from stock_info_proxy import StockInfoProxy
 
-logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s', level=logging.INFO)
+logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s', level=logging.DEBUG)
 
 
 def main():
@@ -22,8 +22,6 @@ def main():
     person.stock_end_date = localconfig.end_date_str
     person.max_train_watch_days = localconfig.max_train_watch_days
     person.max_predict_watch_days = localconfig.max_predict_watch_days
-    if localconfig.max_hold_days:
-        person.max_hold_days = localconfig.max_hold_days
     PolicyFactory.generate_policy_list(person.policy_info)
     StockInfoProxy.generate_stock_info_list(select_stock_name_list,
                                             DatetimeUtil.from_date_str(person.stock_start_date),

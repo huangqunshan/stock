@@ -13,6 +13,7 @@ message Policy {
     message TradePolicy {
         // 观察天数
         optional int32 days_watch = 1;
+        optional int32 days_hold_for_sell = 8;
         message Percent {
             enum PercentMode {
                 LOW = 1;
