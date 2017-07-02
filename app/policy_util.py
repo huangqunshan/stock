@@ -2,6 +2,7 @@
 
 import datetime
 import logging
+import math
 import numpy as np
 from operator import attrgetter
 from datetime_util import DatetimeUtil
@@ -13,6 +14,8 @@ import localconfig
 class PolicyUtil:
     # [stock_id][date_str]
     stock_date_dict = {}
+    # [stock_id][current_date_str][days_watch] = trend
+    stock_trend_dict = {}
 
     @staticmethod
     def train(person):
@@ -187,6 +190,10 @@ class PolicyUtil:
             logging.debug("quit buy for wait sell")
             return
         assert len(action_item.buy_stock_action) == len(action_item.sell_stock_action)
+        current_trend = PolicyUtil.get_flow_trend_cachable(stock_id, current_date_str, action_item_policy.buy.days_watch,
+                                                           repeated_stock_daily_info)
+        if action_item_policy.buy.trend.growth_percent not in [-1, current_trend]:
+            return
         percent_price = PercentPriceUtil.get_percent_price(stock_id,
                                                            action_item_policy.buy.days_watch,
                                                            current_date_str,
@@ -200,7 +207,10 @@ class PolicyUtil:
             return
         percent_price = min(percent_price, the_high_price)
         cash_value_left_to_buy = PolicyUtil.get_cash_value_available(action_item)
+
         logging.debug("cash value left:%s", cash_value_left_to_buy)
+        if cash_value_left_to_buy <= 0:
+            return
         stock_action = action_item.buy_stock_action.add()
         stock_action.date = current_date_str
         stock_action.at_price = percent_price
@@ -217,6 +227,10 @@ class PolicyUtil:
             logging.debug("quit sell for empty stock hold list")
             return
         assert len(action_item.buy_stock_action) == len(action_item.sell_stock_action) + 1
+        current_trend = PolicyUtil.get_flow_trend_cachable(stock_id, current_date_str, action_item_policy.sell.days_watch,
+                                                           repeated_stock_daily_info)
+        if action_item_policy.sell.trend.growth_percent not in [-1, current_trend]:
+            return
         last_buy_price = action_item.buy_stock_action[-1].at_price
         loss_stop_price = last_buy_price * (1000-action_item_policy.sell.sell_at_loss_thousandth)/1000.0
         sell_price = last_buy_price * 100
@@ -250,6 +264,47 @@ class PolicyUtil:
 
         return
 
+
+    @staticmethod
+    def get_flow_trend_cachable(stock_id, current_date_str, days_watch, repeated_stock_daily_info):
+        # [stock_id][current_date_str][days_watch] = trend
+        PolicyUtil.stock_trend_dict.setdefault(stock_id, {})
+        PolicyUtil.stock_trend_dict[stock_id].setdefault(current_date_str, {})
+        if days_watch in PolicyUtil.stock_trend_dict[stock_id][current_date_str]:
+            return PolicyUtil.stock_trend_dict[stock_id][current_date_str][days_watch]
+        flow_detail_list = PolicyUtil.get_flow_detail_list(repeated_stock_daily_info)
+        current_trend = PolicyUtil.get_flow_trend(flow_detail_list)
+        PolicyUtil.stock_trend_dict[stock_id][current_date_str][days_watch] = current_trend
+        logging.debug("get trend:%s for %s", current_trend, flow_detail_list)
+        return current_trend
+
+    @staticmethod
+    def get_flow_trend(flow_detail_list):
+        # return 0 for empty list
+        if not flow_detail_list:
+            return 0
+        growth = 0.0
+        for flow in flow_detail_list:
+            if flow > 0:
+                growth = growth + 1.0
+        # logging.debug("growth:%s, flow_detail_list:%s", growth, flow_detail_list)
+        return int(10 * growth/len(flow_detail_list)) * 10
+
+
+    @staticmethod
+    def get_flow_detail_list(repeated_stock_daily_info):
+        result = []
+        # TODO:  复杂策略，如突破高点与低点权重变大
+        for i in range(1, len(repeated_stock_daily_info)):
+            current_info = repeated_stock_daily_info[i]
+            last_info = repeated_stock_daily_info[i-1]
+            current_medium = 0.5 * (current_info.high+current_info.low)
+            last_medium = 0.5 * (last_info.high + last_info.low)
+            if current_medium > last_medium:
+                result.append(1)
+            else:
+                result.append(-1)
+        return result
 
     @staticmethod
     def get_asset_value_out(stock_info, action_item, action_item_policy, stock_end_date):
@@ -288,21 +343,6 @@ class PolicyUtil:
             else:
                 stock_end_date = stock_end_date - datetime.timedelta(days=1)
         return None
-
-
-    # @staticmethod
-    # def get_stock_percent_price(stock_id, repeated_stock_daily_info, days_watch, current_date_str, at_percent):
-    #     """
-    #     get sotck percent price
-    #     :param days_watch:
-    #     :param current_date_str:
-    #     :param at_percent:
-    #     :return: percent price, may return None for empty list
-    #     """
-    #     select_stock_daily_info_list = PolicyUtil.filter_stock_daily_info_list(repeated_stock_daily_info, days_watch, current_date_str)
-    #     if not select_stock_daily_info_list:
-    #         return None
-    #     return PercentPriceUtil.get_percent_price(stock_id, days_watch, current_date_str, select_stock_daily_info_list, at_percent)
 
 
     @staticmethod
@@ -481,7 +521,7 @@ class PolicyUtil:
     def build_action_item_report(stock_info, action_item, report, action_item_policy, stock_end_date):
         report.cash_taken_in = action_item.cash_taken_in
         report.cash_taken_out = PolicyUtil.get_asset_value_out(stock_info, action_item, action_item_policy, stock_end_date)
-        report.roi = report.cash_taken_out / report.cash_taken_in if report.cash_taken_in > 0 else 1
+        report.roi = report.cash_taken_out / float(report.cash_taken_in) if report.cash_taken_in > 0 else 1
         report.stock_buy_times = len(action_item.buy_stock_action)
         report.stock_sell_times = len(action_item.sell_stock_action)
         report.stock_hold_days = 0

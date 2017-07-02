@@ -38,28 +38,6 @@ message Person {
             optional double stock_trade_cost = 4;
             // put期权等各种费用
             optional double option_trade_cost = 5;
-            message Trend {
-                // 1: up, 0: otherwise
-                repeated int32 flow_details = 5;
-                optional int32 growth_percent = 1;
-                optional int32 growth_percent_last_half_period = 2;
-                optional int32 growth_percent_last_quarter_period = 3;
-                enum TrendEnum {
-                    // 上升 >=4/6
-                    GROWP_UP = 1;
-                    // 下降 >=4/6
-                    FAIL_DOWN = 3;
-                    // 上升逆转: >=4/6且最后1/4时间降>=4/6
-                    GROWP_UP_THEN_FAIL_DOWN = 2;
-                    // 下降逆转 降>=4/6,且最后1/4时间升>=4/6
-                    FAIL_DOWN_THEN_GROWP_UP = 4;
-                    // 黑天鹅
-                    SUDDEN_GREATE_GROWP_UP = 5;
-                    SUDDEN_GREATE_FAIL_DOWN = 6;
-                }
-                optional TrendEnum trend_enum = 4;
-            }
-            optional Trend trend = 6;
         }
         repeated StockAction buy_stock_action = 5;
         repeated StockAction sell_stock_action = 6;

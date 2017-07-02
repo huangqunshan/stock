@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='proto/policy.proto',
   package='',
   syntax='proto2',
-  serialized_pb=_b('\n\x12proto/policy.proto\"\xb7\x05\n\x06Policy\x12\n\n\x02id\x18\x05 \x01(\t\x12(\n\x1dprefer_max_splited_trade_unit\x18\x01 \x01(\x05:\x01\x31\x12!\n\x16prefer_max_stock_count\x18\x02 \x01(\x05:\x01\x31\x12 \n\x03\x62uy\x18\x03 \x01(\x0b\x32\x13.Policy.TradePolicy\x12!\n\x04sell\x18\x04 \x01(\x0b\x32\x13.Policy.TradePolicy\x1a\x8e\x04\n\x0bTradePolicy\x12\x12\n\ndays_watch\x18\x01 \x01(\x05\x12\x1a\n\x12\x64\x61ys_hold_for_sell\x18\x08 \x01(\x05\x12/\n\nat_percent\x18\x02 \x01(\x0b\x32\x1b.Policy.TradePolicy.Percent\x12\x1f\n\x17sell_at_loss_thousandth\x18\x05 \x01(\x05\x12!\n\x19sell_at_profit_thousandth\x18\x06 \x01(\x05\x12\x38\n\x0f\x61t_stock_change\x18\x07 \x01(\x0b\x32\x1f.Policy.TradePolicy.StockChange\x1a\x96\x01\n\x07Percent\x12\x35\n\x04mode\x18\x01 \x01(\x0e\x32\'.Policy.TradePolicy.Percent.PercentMode\x12\x11\n\tpercent_n\x18\x02 \x01(\x05\"A\n\x0bPercentMode\x12\x07\n\x03LOW\x10\x01\x12\x08\n\x04HIGH\x10\x02\x12\n\n\x06MEDIUM\x10\x03\x12\x08\n\x04OPEN\x10\x04\x12\t\n\x05\x43LOSE\x10\x05\x1a\x86\x01\n\x0bStockChange\x12\x10\n\x08\x64ividend\x18\x02 \x01(\x08\x12\r\n\x05yield\x18\x03 \x01(\x08\x12\x17\n\x0fmarket_capacity\x18\x04 \x01(\x01\x12\x1f\n\x17medium_price_volatility\x18\x05 \x01(\x01\x12\x1c\n\x14max_price_volatility\x18\x06 \x01(\x01\"\x8d\x02\n\x0cPolicyReport\x12\x0e\n\x03roi\x18\x01 \x01(\x01:\x01\x31\x12\x15\n\rcash_taken_in\x18\x02 \x01(\x01\x12\x16\n\x0e\x63\x61sh_taken_out\x18\x03 \x01(\x01\x12\x17\n\x0fstock_buy_times\x18\x06 \x01(\x01\x12\x18\n\x10stock_sell_times\x18\x07 \x01(\x01\x12\x17\n\x0fstock_hold_days\x18\x0b \x01(\x01\x12\x1c\n\x14stock_hold_loss_days\x18\x0c \x01(\x01\x12\x1e\n\x16stock_hold_profit_days\x18\r \x01(\x01\x12\x1a\n\x12trade_profit_times\x18\x10 \x01(\x01\x12\x18\n\x10trade_loss_times\x18\x11 \x01(\x01')
+  serialized_pb=_b('\n\x12proto/policy.proto\"\xaf\x08\n\x06Policy\x12\n\n\x02id\x18\x05 \x01(\t\x12(\n\x1dprefer_max_splited_trade_unit\x18\x01 \x01(\x05:\x01\x31\x12!\n\x16prefer_max_stock_count\x18\x02 \x01(\x05:\x01\x31\x12 \n\x03\x62uy\x18\x03 \x01(\x0b\x32\x13.Policy.TradePolicy\x12!\n\x04sell\x18\x04 \x01(\x0b\x32\x13.Policy.TradePolicy\x1a\x86\x07\n\x0bTradePolicy\x12\x12\n\ndays_watch\x18\x01 \x01(\x05\x12\x1a\n\x12\x64\x61ys_hold_for_sell\x18\x08 \x01(\x05\x12/\n\nat_percent\x18\x02 \x01(\x0b\x32\x1b.Policy.TradePolicy.Percent\x12\x1f\n\x17sell_at_loss_thousandth\x18\x05 \x01(\x05\x12!\n\x19sell_at_profit_thousandth\x18\x06 \x01(\x05\x12\x38\n\x0f\x61t_stock_change\x18\x07 \x01(\x0b\x32\x1f.Policy.TradePolicy.StockChange\x12(\n\x05trend\x18\n \x01(\x0b\x32\x19.Policy.TradePolicy.Trend\x1a\x96\x01\n\x07Percent\x12\x35\n\x04mode\x18\x01 \x01(\x0e\x32\'.Policy.TradePolicy.Percent.PercentMode\x12\x11\n\tpercent_n\x18\x02 \x01(\x05\"A\n\x0bPercentMode\x12\x07\n\x03LOW\x10\x01\x12\x08\n\x04HIGH\x10\x02\x12\n\n\x06MEDIUM\x10\x03\x12\x08\n\x04OPEN\x10\x04\x12\t\n\x05\x43LOSE\x10\x05\x1a\x86\x01\n\x0bStockChange\x12\x10\n\x08\x64ividend\x18\x02 \x01(\x08\x12\r\n\x05yield\x18\x03 \x01(\x08\x12\x17\n\x0fmarket_capacity\x18\x04 \x01(\x01\x12\x1f\n\x17medium_price_volatility\x18\x05 \x01(\x01\x12\x1c\n\x14max_price_volatility\x18\x06 \x01(\x01\x1a\xcb\x02\n\x05Trend\x12\x16\n\x0egrowth_percent\x18\x01 \x01(\x05\x12\'\n\x1fgrowth_percent_last_half_period\x18\x02 \x01(\x05\x12*\n\"growth_percent_last_quarter_period\x18\x03 \x01(\x05\x12\x37\n\ntrend_enum\x18\x04 \x01(\x0e\x32#.Policy.TradePolicy.Trend.TrendEnum\"\x9b\x01\n\tTrendEnum\x12\x0c\n\x08GROWP_UP\x10\x01\x12\r\n\tFAIL_DOWN\x10\x03\x12\x1b\n\x17GROWP_UP_THEN_FAIL_DOWN\x10\x02\x12\x1b\n\x17\x46\x41IL_DOWN_THEN_GROWP_UP\x10\x04\x12\x1a\n\x16SUDDEN_GREATE_GROWP_UP\x10\x05\x12\x1b\n\x17SUDDEN_GREATE_FAIL_DOWN\x10\x06\"\x8d\x02\n\x0cPolicyReport\x12\x0e\n\x03roi\x18\x01 \x01(\x01:\x01\x31\x12\x15\n\rcash_taken_in\x18\x02 \x01(\x01\x12\x16\n\x0e\x63\x61sh_taken_out\x18\x03 \x01(\x01\x12\x17\n\x0fstock_buy_times\x18\x06 \x01(\x01\x12\x18\n\x10stock_sell_times\x18\x07 \x01(\x01\x12\x17\n\x0fstock_hold_days\x18\x0b \x01(\x01\x12\x1c\n\x14stock_hold_loss_days\x18\x0c \x01(\x01\x12\x1e\n\x16stock_hold_profit_days\x18\r \x01(\x01\x12\x1a\n\x12trade_profit_times\x18\x10 \x01(\x01\x12\x18\n\x10trade_loss_times\x18\x11 \x01(\x01')
 )
 
 
@@ -53,10 +53,48 @@ _POLICY_TRADEPOLICY_PERCENT_PERCENTMODE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=516,
-  serialized_end=581,
+  serialized_start=558,
+  serialized_end=623,
 )
 _sym_db.RegisterEnumDescriptor(_POLICY_TRADEPOLICY_PERCENT_PERCENTMODE)
+
+_POLICY_TRADEPOLICY_TREND_TRENDENUM = _descriptor.EnumDescriptor(
+  name='TrendEnum',
+  full_name='Policy.TradePolicy.Trend.TrendEnum',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='GROWP_UP', index=0, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FAIL_DOWN', index=1, number=3,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='GROWP_UP_THEN_FAIL_DOWN', index=2, number=2,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FAIL_DOWN_THEN_GROWP_UP', index=3, number=4,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='SUDDEN_GREATE_GROWP_UP', index=4, number=5,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='SUDDEN_GREATE_FAIL_DOWN', index=5, number=6,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=939,
+  serialized_end=1094,
+)
+_sym_db.RegisterEnumDescriptor(_POLICY_TRADEPOLICY_TREND_TRENDENUM)
 
 
 _POLICY_TRADEPOLICY_PERCENT = _descriptor.Descriptor(
@@ -93,8 +131,8 @@ _POLICY_TRADEPOLICY_PERCENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=431,
-  serialized_end=581,
+  serialized_start=473,
+  serialized_end=623,
 )
 
 _POLICY_TRADEPOLICY_STOCKCHANGE = _descriptor.Descriptor(
@@ -151,8 +189,60 @@ _POLICY_TRADEPOLICY_STOCKCHANGE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=584,
-  serialized_end=718,
+  serialized_start=626,
+  serialized_end=760,
+)
+
+_POLICY_TRADEPOLICY_TREND = _descriptor.Descriptor(
+  name='Trend',
+  full_name='Policy.TradePolicy.Trend',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='growth_percent', full_name='Policy.TradePolicy.Trend.growth_percent', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='growth_percent_last_half_period', full_name='Policy.TradePolicy.Trend.growth_percent_last_half_period', index=1,
+      number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='growth_percent_last_quarter_period', full_name='Policy.TradePolicy.Trend.growth_percent_last_quarter_period', index=2,
+      number=3, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='trend_enum', full_name='Policy.TradePolicy.Trend.trend_enum', index=3,
+      number=4, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=1,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+    _POLICY_TRADEPOLICY_TREND_TRENDENUM,
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=763,
+  serialized_end=1094,
 )
 
 _POLICY_TRADEPOLICY = _descriptor.Descriptor(
@@ -204,10 +294,17 @@ _POLICY_TRADEPOLICY = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='trend', full_name='Policy.TradePolicy.trend', index=6,
+      number=10, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
-  nested_types=[_POLICY_TRADEPOLICY_PERCENT, _POLICY_TRADEPOLICY_STOCKCHANGE, ],
+  nested_types=[_POLICY_TRADEPOLICY_PERCENT, _POLICY_TRADEPOLICY_STOCKCHANGE, _POLICY_TRADEPOLICY_TREND, ],
   enum_types=[
   ],
   options=None,
@@ -217,7 +314,7 @@ _POLICY_TRADEPOLICY = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=192,
-  serialized_end=718,
+  serialized_end=1094,
 )
 
 _POLICY = _descriptor.Descriptor(
@@ -275,7 +372,7 @@ _POLICY = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=23,
-  serialized_end=718,
+  serialized_end=1094,
 )
 
 
@@ -368,16 +465,20 @@ _POLICYREPORT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=721,
-  serialized_end=990,
+  serialized_start=1097,
+  serialized_end=1366,
 )
 
 _POLICY_TRADEPOLICY_PERCENT.fields_by_name['mode'].enum_type = _POLICY_TRADEPOLICY_PERCENT_PERCENTMODE
 _POLICY_TRADEPOLICY_PERCENT.containing_type = _POLICY_TRADEPOLICY
 _POLICY_TRADEPOLICY_PERCENT_PERCENTMODE.containing_type = _POLICY_TRADEPOLICY_PERCENT
 _POLICY_TRADEPOLICY_STOCKCHANGE.containing_type = _POLICY_TRADEPOLICY
+_POLICY_TRADEPOLICY_TREND.fields_by_name['trend_enum'].enum_type = _POLICY_TRADEPOLICY_TREND_TRENDENUM
+_POLICY_TRADEPOLICY_TREND.containing_type = _POLICY_TRADEPOLICY
+_POLICY_TRADEPOLICY_TREND_TRENDENUM.containing_type = _POLICY_TRADEPOLICY_TREND
 _POLICY_TRADEPOLICY.fields_by_name['at_percent'].message_type = _POLICY_TRADEPOLICY_PERCENT
 _POLICY_TRADEPOLICY.fields_by_name['at_stock_change'].message_type = _POLICY_TRADEPOLICY_STOCKCHANGE
+_POLICY_TRADEPOLICY.fields_by_name['trend'].message_type = _POLICY_TRADEPOLICY_TREND
 _POLICY_TRADEPOLICY.containing_type = _POLICY
 _POLICY.fields_by_name['buy'].message_type = _POLICY_TRADEPOLICY
 _POLICY.fields_by_name['sell'].message_type = _POLICY_TRADEPOLICY
@@ -402,6 +503,13 @@ Policy = _reflection.GeneratedProtocolMessageType('Policy', (_message.Message,),
       # @@protoc_insertion_point(class_scope:Policy.TradePolicy.StockChange)
       ))
     ,
+
+    Trend = _reflection.GeneratedProtocolMessageType('Trend', (_message.Message,), dict(
+      DESCRIPTOR = _POLICY_TRADEPOLICY_TREND,
+      __module__ = 'proto.policy_pb2'
+      # @@protoc_insertion_point(class_scope:Policy.TradePolicy.Trend)
+      ))
+    ,
     DESCRIPTOR = _POLICY_TRADEPOLICY,
     __module__ = 'proto.policy_pb2'
     # @@protoc_insertion_point(class_scope:Policy.TradePolicy)
@@ -415,6 +523,7 @@ _sym_db.RegisterMessage(Policy)
 _sym_db.RegisterMessage(Policy.TradePolicy)
 _sym_db.RegisterMessage(Policy.TradePolicy.Percent)
 _sym_db.RegisterMessage(Policy.TradePolicy.StockChange)
+_sym_db.RegisterMessage(Policy.TradePolicy.Trend)
 
 PolicyReport = _reflection.GeneratedProtocolMessageType('PolicyReport', (_message.Message,), dict(
   DESCRIPTOR = _POLICYREPORT,

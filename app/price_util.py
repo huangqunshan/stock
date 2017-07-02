@@ -73,7 +73,7 @@ class PercentPriceUtil:
             elif percent_mode == Policy.TradePolicy.Percent.HIGH:
                 stock_price_list.append(stock_daily_info.high)
             elif percent_mode == Policy.TradePolicy.Percent.MEDIUM:
-                stock_price_list.append((stock_daily_info.high+stock_daily_info.low)/2)
+                stock_price_list.append((stock_daily_info.high+stock_daily_info.low)/2.0)
             elif percent_mode == Policy.TradePolicy.Percent.CLOSE:
                 stock_price_list.append(stock_daily_info.close)
             elif percent_mode == Policy.TradePolicy.Percent.OPEN:
@@ -86,7 +86,7 @@ class PercentPriceUtil:
             if percent_n <= 100:
                 percent_map[percent_n] = np.percentile(numpy_array, percent_n)
             else:
-                percent_map[percent_n] = np.percentile(numpy_array, 100) * (percent_n/100)
+                percent_map[percent_n] = np.percentile(numpy_array, 100) * (percent_n/100.0)
         logging.debug("end generate_percent_map")
         return percent_map
 
@@ -102,7 +102,7 @@ class PercentPriceUtil:
             elif percent_mode == Policy.TradePolicy.Percent.HIGH:
                 stock_price_list.append(stock_daily_info.high)
             elif percent_mode == Policy.TradePolicy.Percent.MEDIUM:
-                stock_price_list.append((stock_daily_info.high+stock_daily_info.low)/2)
+                stock_price_list.append((stock_daily_info.high+stock_daily_info.low)/2.0)
             elif percent_mode == Policy.TradePolicy.Percent.CLOSE:
                 stock_price_list.append(stock_daily_info.close)
             elif percent_mode == Policy.TradePolicy.Percent.OPEN:
@@ -115,6 +115,6 @@ class PercentPriceUtil:
         if percent_n <= 100:
             result = np.percentile(numpy_array, percent_n)
         else:
-            result = np.percentile(numpy_array, 100) * (percent_n/100)
+            result = np.percentile(numpy_array, 100) * (percent_n/100.0)
         logging.debug("end generate_percent")
         return result
