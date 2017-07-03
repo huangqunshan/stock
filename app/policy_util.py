@@ -286,15 +286,18 @@ class PolicyUtil:
         growth = 0.0
         for flow in flow_detail_list:
             if flow > 0:
-                growth = growth + 1.0
+                growth = growth + 1
+            # elif flow < -1.1:
+            #     growth -= 1
         # logging.debug("growth:%s, flow_detail_list:%s", growth, flow_detail_list)
         return int(10 * growth/len(flow_detail_list)) * 10
 
 
     @staticmethod
     def get_flow_detail_list(repeated_stock_daily_info):
+        # return PolicyUtil.get_flow_detail_list_weighted(repeated_stock_daily_info)
+
         result = []
-        # TODO:  复杂策略，如突破高点与低点权重变大
         for i in range(1, len(repeated_stock_daily_info)):
             current_info = repeated_stock_daily_info[i]
             last_info = repeated_stock_daily_info[i-1]
@@ -304,6 +307,32 @@ class PolicyUtil:
                 result.append(1)
             else:
                 result.append(-1)
+        return result
+
+
+    @staticmethod
+    # 复杂策略，如突破高点与低点权重变大
+    def get_flow_detail_list_weighted(repeated_stock_daily_info):
+        result = []
+        the_max = -1
+        the_min = repeated_stock_daily_info[0].high * 100
+        for i in range(1, len(repeated_stock_daily_info)):
+            current_info = repeated_stock_daily_info[i]
+            last_info = repeated_stock_daily_info[i-1]
+            current_medium = 0.5 * (current_info.high+current_info.low)
+            last_medium = 0.5 * (last_info.high + last_info.low)
+            if current_medium > last_medium:
+                if the_max == -1 or current_medium < the_max:
+                    result.append(1)
+                else:
+                    result.append(2)
+            else:
+                if the_min == -1 or the_min < current_medium:
+                    result.append(-1)
+                else:
+                    result.append(-2)
+            the_max = max(the_max, current_medium)
+            the_min = min(the_min, current_medium)
         return result
 
     @staticmethod
@@ -552,10 +581,9 @@ class PolicyUtil:
     @staticmethod
     def predict(stock_info, check_date):
         # TODO: filter stock_info for old date
-        # [stock_id] = {(last_close, [price1, price2, ...], [price1, price2, ...])}
+        # [stock_id] = {(trend, trend_buy, trend_sell, last_close, [price1, price2, ...], [price1, price2, ...])}
         buy_policy_list = PolicyUtil.get_best_buy_policy_list()
         stock_price_dict = {}
-        weight = 1.1
         for stock in stock_info:
             if not stock.daily_info:
                 logging.error("failed to get daily info for %s", stock.stock_id)
@@ -566,12 +594,13 @@ class PolicyUtil:
                 price = PercentPriceUtil.generate_percent(stock.daily_info[-policy.buy.days_watch:],
                                                           policy.buy.at_percent.mode,
                                                           policy.buy.at_percent.percent_n)
-                stock_price_dict.setdefault(stock.stock_id, [0, [], []])
-                stock_price_dict[stock.stock_id][0] = stock.daily_info[-1].close
+                stock_price_dict.setdefault(stock.stock_id, [current_trend, 1, 1, 0, [], []])
+                stock_price_dict[stock.stock_id][3] = stock.daily_info[-1].close
+                stock_price_dict[stock.stock_id][4].append(price)
                 if current_trend in [40, 50, 60]:
-                    stock_price_dict[stock.stock_id][1].append(price)
+                    stock_price_dict[stock.stock_id][1] = 1
                 else:
-                    stock_price_dict[stock.stock_id][1].append(price/weight)
+                    stock_price_dict[stock.stock_id][1] = 0
         sell_policy_list = PolicyUtil.get_best_sell_policy_list()
         for stock in stock_info:
             if not stock.daily_info:
@@ -583,12 +612,13 @@ class PolicyUtil:
                 price = PercentPriceUtil.generate_percent(stock.daily_info[-policy.sell.days_watch:],
                                                           policy.sell.at_percent.mode,
                                                           policy.sell.at_percent.percent_n)
-                stock_price_dict.setdefault(stock.stock_id, [0, [], []])
-                stock_price_dict[stock.stock_id][0] = stock.daily_info[-1].close
+                stock_price_dict.setdefault(stock.stock_id, [current_trend, 1,1, 0, [], []])
+                stock_price_dict[stock.stock_id][3] = stock.daily_info[-1].close
+                stock_price_dict[stock.stock_id][5].append(price)
                 if current_trend in [0, 10, 20] + [90, 100]:
-                    stock_price_dict[stock.stock_id][2].append(price)
+                    stock_price_dict[stock.stock_id][2] = 1
                 else:
-                    stock_price_dict[stock.stock_id][2].append(price * weight)
+                    stock_price_dict[stock.stock_id][2] = 0
         return stock_price_dict
 
 

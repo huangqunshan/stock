@@ -38,7 +38,7 @@ def main():
     stock_price_dict = PolicyUtil.predict(person.stock_info, predict_date_str)
     result = []
     for stock_id, item in stock_price_dict.iteritems():
-        last_close_price, buy_price_list, sell_price_list = item
+        trend, trend_buy, trend_sell, last_close_price, buy_price_list, sell_price_list = item
         buy_price_list = sorted(buy_price_list)
         buy_np_array = np.array(buy_price_list)
         buy_min = np.percentile(buy_np_array, 0)
@@ -54,15 +54,16 @@ def main():
         sell_max = np.percentile(sell_np_array, 100)
         sell_profit = sell_final / float(last_close_price)
         
-        buy_msg = "%s\tbuy_prob:%s\tprofit_rate:%s\t%s\tbuy:f-0-100\t%s@%s:%s" % (
-            stock_id, buy_prob, sell_profit, predict_date_str, buy_final, buy_min, buy_max)
+        buy_msg = "%s\ttrend:%s-buy:%s-sell:%s\tbuy_prob:%s\tprofit_rate:%s\t%s\tbuy:f-0-100\t%s@%s:%s" % (
+            stock_id, trend, trend_buy, trend_sell, buy_prob, sell_profit, predict_date_str, buy_final, buy_min, buy_max)
         sell_msg = "\tsell:f-0-100\t%s@%s:%s" % (
             sell_final, sell_min, sell_max)
-        # TODO: 添加趋势的标识
-        result.append((sell_profit, buy_msg, sell_msg))
+        result.append((sell_profit, trend_buy, trend_sell, buy_msg, sell_msg))
     result = sorted(result, key=itemgetter(0), reverse=True)
     for item in result:
-        print item[1], item[2]
+        sell_profit, trend_buy, trend_sell, buy_msg, sell_msg = item
+        if trend_buy or trend_sell:
+            print buy_msg, sell_msg
 
 
 if __name__ == "__main__":
