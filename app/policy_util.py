@@ -216,7 +216,7 @@ class PolicyUtil:
         stock_action.at_price = percent_price
         stock_action.volumn, stock_action.stock_trade_cost = PolicyUtil.get_volumn_and_trade_cost(cash_value_left_to_buy, percent_price)
         stock_action.option_trade_cost = 0
-        logging.info("do buy stock, id:%s, date:%s, at_price:%s(%s-%s), volumn:%s", stock_id, stock_action.date,
+        logging.debug("do buy stock, id:%s, date:%s, at_price:%s(%s-%s), volumn:%s", stock_id, stock_action.date,
                       stock_action.at_price, the_low_price, the_high_price, stock_action.volumn)
 
 
@@ -259,7 +259,7 @@ class PolicyUtil:
         stock_action.volumn = action_item.buy_stock_action[-1].volumn
         stock_action.stock_trade_cost = action_item.buy_stock_action[-1].stock_trade_cost
         stock_action.option_trade_cost = 0
-        logging.info("do sell stock, id:%s, date:%s, at_price:%s(%s-%s), volumn:%s", stock_id, stock_action.date,
+        logging.debug("do sell stock, id:%s, date:%s, at_price:%s(%s-%s), volumn:%s", stock_id, stock_action.date,
                       stock_action.at_price, the_low_price, the_high_price, stock_action.volumn)
 
         return
@@ -555,29 +555,40 @@ class PolicyUtil:
         # [stock_id] = {(last_close, [price1, price2, ...], [price1, price2, ...])}
         buy_policy_list = PolicyUtil.get_best_buy_policy_list()
         stock_price_dict = {}
+        weight = 1.1
         for stock in stock_info:
+            if not stock.daily_info:
+                logging.error("failed to get daily info for %s", stock.stock_id)
+                continue
+            flow_detail_list = PolicyUtil.get_flow_detail_list(stock.daily_info)
+            current_trend = PolicyUtil.get_flow_trend(flow_detail_list)
             for policy in buy_policy_list:
-                if not stock.daily_info:
-                    logging.error("failed to get daily info for %s", stock.stock_id)
-                    continue
                 price = PercentPriceUtil.generate_percent(stock.daily_info[-policy.buy.days_watch:],
                                                           policy.buy.at_percent.mode,
                                                           policy.buy.at_percent.percent_n)
                 stock_price_dict.setdefault(stock.stock_id, [0, [], []])
                 stock_price_dict[stock.stock_id][0] = stock.daily_info[-1].close
-                stock_price_dict[stock.stock_id][1].append(price)
+                if current_trend in [40, 50, 60]:
+                    stock_price_dict[stock.stock_id][1].append(price)
+                else:
+                    stock_price_dict[stock.stock_id][1].append(price/weight)
         sell_policy_list = PolicyUtil.get_best_sell_policy_list()
         for stock in stock_info:
+            if not stock.daily_info:
+                logging.error("failed to get daily info for %s", stock.stock_id)
+                continue
+            flow_detail_list = PolicyUtil.get_flow_detail_list(stock.daily_info)
+            current_trend = PolicyUtil.get_flow_trend(flow_detail_list)
             for policy in sell_policy_list:
-                if not stock.daily_info:
-                    logging.error("failed to get daily info for %s", stock.stock_id)
-                    continue
                 price = PercentPriceUtil.generate_percent(stock.daily_info[-policy.sell.days_watch:],
                                                           policy.sell.at_percent.mode,
                                                           policy.sell.at_percent.percent_n)
                 stock_price_dict.setdefault(stock.stock_id, [0, [], []])
                 stock_price_dict[stock.stock_id][0] = stock.daily_info[-1].close
-                stock_price_dict[stock.stock_id][2].append(price)
+                if current_trend in [0, 10, 20] + [90, 100]:
+                    stock_price_dict[stock.stock_id][2].append(price)
+                else:
+                    stock_price_dict[stock.stock_id][2].append(price * weight)
         return stock_price_dict
 
 
@@ -585,7 +596,7 @@ class PolicyUtil:
     def get_best_buy_policy_list(limit_count=100):
         best_policy_list = []
         for day in [15]:
-            for percent in [20]:
+            for percent in [50]:
                 for mode in [Policy.TradePolicy.Percent.LOW]:
                     policy_best1 = Policy()
                     policy_best1.buy.days_watch = day
@@ -597,9 +608,8 @@ class PolicyUtil:
     @staticmethod
     def get_best_sell_policy_list(limit_count=100):
         best_policy_list = []
-        # TODO: days_hold_for_sell, etc...
         for day in [15]:
-            for percent in [90]:
+            for percent in [50]:
                 for mode in [Policy.TradePolicy.Percent.HIGH]:
                     policy_best1 = Policy()
                     policy_best1.sell.days_watch = day

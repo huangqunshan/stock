@@ -28,7 +28,7 @@ def main():
     current_date = datetime.datetime.now()
     person = Person()
     person.cash_taken_in = localconfig.cash_taken_in
-    stock_start_date = current_date - datetime.timedelta(days=50)
+    stock_start_date = current_date - datetime.timedelta(days=15)
     stock_end_date = current_date
     predict_date_str = DatetimeUtil.to_datetime_str(current_date)
     StockInfoProxy.generate_stock_info_list(select_stock_name_list,
@@ -42,7 +42,7 @@ def main():
         buy_price_list = sorted(buy_price_list)
         buy_np_array = np.array(buy_price_list)
         buy_min = np.percentile(buy_np_array, 0)
-        buy_final = np.percentile(buy_np_array, 20)
+        buy_final = np.percentile(buy_np_array, 50)
         buy_max = np.percentile(buy_np_array, 100)
         buy_prob = buy_final / float(last_close_price)
 
@@ -50,7 +50,7 @@ def main():
         sell_price_list = sorted(sell_price_list)
         sell_np_array = np.array(sell_price_list)
         sell_min = np.percentile(sell_np_array, 0)
-        sell_final = np.percentile(sell_np_array, 40)
+        sell_final = np.percentile(sell_np_array, 50)
         sell_max = np.percentile(sell_np_array, 100)
         sell_profit = sell_final / float(last_close_price)
         
