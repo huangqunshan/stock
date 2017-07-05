@@ -16,7 +16,7 @@ logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s', level=loggin
 
 
 def main():
-    fin_stock = open('stock_list.easy')
+    fin_stock = sys.stdin
     select_stock_name_list = fin_stock.read().split('\n')
     fin_stock.close()
 
@@ -55,15 +55,16 @@ def main():
         sell_profit = sell_final / float(last_close_price)
         
         buy_msg = "%s\ttrend:%s-buy:%s-sell:%s\tbuy_prob:%s\tprofit_rate:%s\t%s\tbuy:f-0-100\t%s@%s:%s" % (
-            stock_id, trend, trend_buy, trend_sell, buy_prob, sell_profit, predict_date_str, buy_final, buy_min, buy_max)
+            stock_id, trend, trend_buy, trend_sell, buy_prob, sell_profit, predict_date_str, buy_min, buy_final, buy_max)
         sell_msg = "\tsell:f-0-100\t%s@%s:%s" % (
-            sell_final, sell_min, sell_max)
+            sell_min, sell_final, sell_max)
         result.append((sell_profit, trend_buy, trend_sell, buy_msg, sell_msg))
+    result = sorted(result, key=itemgetter(2), reverse=True)
     result = sorted(result, key=itemgetter(0), reverse=True)
+    result = sorted(result, key=itemgetter(1), reverse=True)
     for item in result:
         sell_profit, trend_buy, trend_sell, buy_msg, sell_msg = item
-        if trend_buy or trend_sell:
-            print buy_msg, sell_msg
+        print buy_msg, sell_msg
 
 
 if __name__ == "__main__":
