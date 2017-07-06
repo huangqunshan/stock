@@ -8,7 +8,7 @@ import numpy as np
 from datetime_util import DatetimeUtil
 from operator import attrgetter, itemgetter
 from policy_factory import PolicyFactory
-from policy_util import PolicyUtil
+from policy_predict_util import PolicyPredictUtil
 from proto.person_pb2 import Person
 from stock_info_proxy import StockInfoProxy
 
@@ -35,7 +35,7 @@ def main():
                                             stock_start_date,
                                             stock_end_date,
                                             person.stock_info)
-    stock_price_dict = PolicyUtil.predict(person.stock_info, predict_date_str)
+    stock_price_dict = PolicyPredictUtil.predict(person.stock_info, predict_date_str)
     result = []
     for stock_id, item in stock_price_dict.iteritems():
         trend, trend_buy, trend_sell, last_close_price, buy_price_list, sell_price_list = item

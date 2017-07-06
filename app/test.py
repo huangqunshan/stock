@@ -1,17 +1,43 @@
 # coding=utf8
 
+import datetime
+import logging
 import sys
-from policy_util import PolicyUtil
+import localconfig
+import numpy as np
+from datetime_util import DatetimeUtil
+from operator import attrgetter, itemgetter
+from policy_factory import PolicyFactory
+from policy_predict_util import PolicyPredictUtil
 from proto.person_pb2 import Person
+from stock_info_proxy import StockInfoProxy
+
+logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s', level=logging.INFO)
 
 
-# person = Person()
-# person.cash_taken_in = 100
-# person_string = person.SerializeToString()
-# print "person:%s" % person
+def main():
+    fin_stock = sys.stdin
+    select_stock_name_list = fin_stock.read().split('\n')
+    fin_stock.close()
 
-new_person = Person()
-new_person.ParseFromString(sys.stdin.read())
-print "sorted_policy_group_report:%s" % new_person.sorted_policy_group_report
-print "sorted_policy_summary_report:%s" % new_person.sorted_policy_summary_report
-print "sorted_stock_policy_report:%s" % new_person.sorted_stock_policy_report
+    select_stock_name_list = select_stock_name_list[:]
+
+    # select_stock_name_list = localconfig.select_stock_name_list
+    # if not select_stock_name_list:
+    #     select_stock_name_list = StockInfoProxy.get_stock_name_list()
+    current_date = datetime.datetime.now()
+    person = Person()
+    person.cash_taken_in = localconfig.cash_taken_in
+    stock_start_date = current_date - datetime.timedelta(days=15)
+    stock_end_date = current_date
+    predict_date_str = DatetimeUtil.to_datetime_str(current_date)
+    StockInfoProxy.generate_stock_info_list(select_stock_name_list,
+                                            stock_start_date,
+                                            stock_end_date,
+                                            person.stock_info)
+    for stock in person.stock_info:
+        if stock.daily_info and stock.daily_info[-1].close > 20:
+            print stock.stock_id
+
+if __name__ == "__main__":
+    main()
