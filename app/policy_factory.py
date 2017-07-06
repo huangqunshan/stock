@@ -37,11 +37,11 @@ class PolicyFactory:
                     for buy_mode in localconfig.BUY_MODE_LIST:
                         for buy_percent_n in localconfig.BUY_PRICE_PERCENT_LIST:
                             for sell_mode in localconfig.SELL_MODE_LIST:
-                                for buy_grow_percent_n in localconfig.BUY_TREND_GROW_PERCENT_LIST:
-                                    for sell_grow_percent_n in localconfig.SELL_TREND_GROW_RECENT_LIST:
+                                for buy_grow_percent_n in [-1]:
+                                    for sell_grow_percent_n in [-1]:
                                         for sell_loss_thousandth in localconfig.LOSS_STOP_THOUSANDTH_LIST:
-                                            for last_half_buy_grow_percent_n in localconfig.LAST_HALF_BUY_TREND_GROW_PERCENT_LIST:
-                                                for last_half_sell_grow_percent_n in localconfig.LAST_HALF_SELL_TREND_GROW_PERCENT_LIST:
+                                            for last_half_buy_grow_percent_n in [-1]:
+                                                for last_half_sell_grow_percent_n in [-1]:
                                                     for sell_percent_n in localconfig.SELL_PRICE_PERCENT_LIST:
                                                         policy = repeated_policy.add()
                                                         policy.id = "buy_days_watch:%s,sell_days_watch:%s,days_hold_for_sell:%s,"  \

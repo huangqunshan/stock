@@ -12,7 +12,7 @@ import localconfig
 
 
 class PolicyUtil:
-    # [stock_id][date_str]
+    # [stock_id][date_str] = (stock_daily_info, last_stock_daily_info)
     stock_date_dict = {}
     # [stock_id][current_date_str][days_watch] = trend
     stock_trend_dict = {}
@@ -67,7 +67,7 @@ class PolicyUtil:
     def print_summary(person):
         logging.info("-----------------------")
         for item_report in person.sorted_policy_group_report:
-            logging.info("policy_group_report:\t%s:%s\t2|%s|%s\t5|%s|%s\t8|%s|%s\t9|%s|%s",
+            logging.info("policy_group_report:\t%s:%s\t2|%s|%s\t5|%s|%s\t8|%s|%s\t0|%s|%s",
                          item_report.policy_group_type, item_report.policy_group_value,
                          item_report.reports[2].report.roi,
                          item_report.reports[2].report.stock_sell_times,
@@ -75,11 +75,11 @@ class PolicyUtil:
                          item_report.reports[5].report.stock_sell_times,
                          item_report.reports[8].report.roi,
                          item_report.reports[8].report.stock_sell_times,
-                         item_report.reports[9].report.roi,
-                         item_report.reports[9].report.stock_sell_times)
+                         item_report.reports[0].report.roi,
+                         item_report.reports[0].report.stock_sell_times)
         logging.info("-----------------------")
         for item_report in person.sorted_policy_summary_report:
-            logging.info("policy_summary_report:\t%s\t2|%s|%s\t5|%s|%s\t8|%s|%s\t9|%s|%s",
+            logging.info("policy_summary_report:\t%s\t2|%s|%s\t5|%s|%s\t8|%s|%s\t0|%s|%s",
                          item_report.policy_id,
                          item_report.reports[2].report.roi,
                          item_report.reports[2].report.stock_sell_times,
@@ -87,11 +87,11 @@ class PolicyUtil:
                          item_report.reports[5].report.stock_sell_times,
                          item_report.reports[8].report.roi,
                          item_report.reports[8].report.stock_sell_times,
-                         item_report.reports[9].report.roi,
-                         item_report.reports[9].report.stock_sell_times)
+                         item_report.reports[0].report.roi,
+                         item_report.reports[0].report.stock_sell_times)
         logging.info("-----------------------")
         for item_report in person.sorted_stock_policy_group_report:
-            logging.info("stock_policy_group_report:\t%s\t%s:%s\t2|%s|%s\t5|%s|%s\t8|%s|%s\t9|%s|%s",
+            logging.info("stock_policy_group_report:\t%s\t%s:%s\t2|%s|%s\t5|%s|%s\t8|%s|%s\t0|%s|%s",
                          item_report.stock_id,
                          item_report.policy_group_type,
                          item_report.policy_group_value,
@@ -101,11 +101,11 @@ class PolicyUtil:
                          item_report.reports[5].report.stock_sell_times,
                          item_report.reports[8].report.roi,
                          item_report.reports[8].report.stock_sell_times,
-                         item_report.reports[9].report.roi,
-                         item_report.reports[9].report.stock_sell_times)
+                         item_report.reports[0].report.roi,
+                         item_report.reports[0].report.stock_sell_times)
         logging.info("-----------------------")
         for item_report in person.sorted_stock_policy_report:
-            logging.info("stock_policy_report:\t%s\t%s\t2|%s|%s\t5|%s|%s\t8|%s|%s\t9|%s|%s",
+            logging.info("stock_policy_report:\t%s\t%s\t2|%s|%s\t5|%s|%s\t8|%s|%s\t0|%s|%s",
                          item_report.stock_id,
                          item_report.policy_id,
                          item_report.reports[2].report.roi,
@@ -114,8 +114,8 @@ class PolicyUtil:
                          item_report.reports[5].report.stock_sell_times,
                          item_report.reports[8].report.roi,
                          item_report.reports[8].report.stock_sell_times,
-                         item_report.reports[9].report.roi,
-                         item_report.reports[9].report.stock_sell_times)
+                         item_report.reports[0].report.roi,
+                         item_report.reports[0].report.stock_sell_times)
         logging.info("-----------------------")
 
 
@@ -159,7 +159,7 @@ class PolicyUtil:
             logging.debug("end try_trade_by_policy")
             return
         # TODO: optimize speed here
-        the_day_stock_price_info = PolicyUtil.get_the_stock_daily_info(stock_info, current_date_str)
+        the_day_stock_price_info, last_daily_info = PolicyUtil.get_the_stock_daily_info_with_last(stock_info, current_date_str)
         if the_day_stock_price_info is None:
             logging.debug("no stock info for %s", current_date_str)
             return
@@ -171,7 +171,8 @@ class PolicyUtil:
                                                                         current_date_str)
             if stock_daily_list:
                 PolicyUtil.check_if_buy(stock_info.stock_id, stock_daily_list, action_item, action_item_policy,
-                                        current_date_str, the_day_stock_price_info.low, the_day_stock_price_info.high)
+                                        current_date_str, the_day_stock_price_info.low, the_day_stock_price_info.high,
+                                        last_daily_info)
         else:
             assert len(action_item.buy_stock_action) == len(action_item.sell_stock_action) + 1
             stock_daily_list = PolicyUtil.filter_stock_daily_info_list(stock_info.daily_info,
@@ -185,31 +186,41 @@ class PolicyUtil:
 
     @staticmethod
     def check_if_buy(stock_id, repeated_stock_daily_info, action_item, action_item_policy, current_date_str,
-                     the_low_price, the_high_price):
+                     the_low_price, the_high_price, last_daily_info):
         if len(action_item.sell_stock_action) < len(action_item.buy_stock_action):
             logging.debug("quit buy for wait sell")
             return
         assert len(action_item.buy_stock_action) == len(action_item.sell_stock_action)
         full_trend = PolicyUtil.get_flow_trend_cachable(stock_id, current_date_str, action_item_policy.buy.days_watch,
                                                            repeated_stock_daily_info)
-        if action_item_policy.buy.trend.growth_percent not in [-1, full_trend]:
+        # if action_item_policy.buy.trend.growth_percent not in [-1, full_trend]:
+        #     return
+        if full_trend not in localconfig.BUY_TREND_GROW_PERCENT_LIST:
             return
         last_half_trend = PolicyUtil.get_flow_trend_cachable(stock_id, current_date_str, action_item_policy.buy.days_watch,
-                                                           repeated_stock_daily_info[len(repeated_stock_daily_info)/2:])
-        if action_item_policy.buy.trend.growth_percent_last_half not in [-1, last_half_trend]:
+                                                           repeated_stock_daily_info[-len(repeated_stock_daily_info)/localconfig.LAST_GROWTH_PART:])
+        # if action_item_policy.buy.trend.growth_percent_last_half not in [-1, last_half_trend]:
+        #     return
+        if last_half_trend not in localconfig.LAST_HALF_BUY_TREND_GROW_PERCENT_LIST:
             return
-        percent_price = PercentPriceUtil.get_percent_price(stock_id,
+
+
+        current_price = PercentPriceUtil.get_percent_price(stock_id,
                                                            action_item_policy.buy.days_watch,
                                                            current_date_str,
                                                            repeated_stock_daily_info,
                                                            action_item_policy.buy.at_percent)
-        if percent_price is None:
+        if current_price is None:
             logging.debug("quit buy for empty percent price")
             return
-        if percent_price <= the_low_price:
-            logging.debug("quit buy for too low percent_price:%s < low_price:%s", percent_price, the_low_price)
+
+        # current_price = (last_daily_info.low + last_daily_info.high)/2.0
+
+
+        if current_price <= the_low_price:
+            logging.debug("quit buy for too low percent_price:%s < low_price:%s", current_price, the_low_price)
             return
-        percent_price = min(percent_price, the_high_price)
+        current_price = min(current_price, the_high_price)
         cash_value_left_to_buy = PolicyUtil.get_cash_value_available(action_item)
 
         logging.debug("cash value left:%s", cash_value_left_to_buy)
@@ -217,8 +228,8 @@ class PolicyUtil:
             return
         stock_action = action_item.buy_stock_action.add()
         stock_action.date = current_date_str
-        stock_action.at_price = percent_price
-        stock_action.volumn, stock_action.stock_trade_cost = PolicyUtil.get_volumn_and_trade_cost(cash_value_left_to_buy, percent_price)
+        stock_action.at_price = current_price
+        stock_action.volumn, stock_action.stock_trade_cost = PolicyUtil.get_volumn_and_trade_cost(cash_value_left_to_buy, current_price)
         stock_action.option_trade_cost = 0
         logging.debug("do buy stock, id:%s, date:%s, at_price:%s(%s-%s), volumn:%s", stock_id, stock_action.date,
                       stock_action.at_price, the_low_price, the_high_price, stock_action.volumn)
@@ -233,11 +244,15 @@ class PolicyUtil:
         assert len(action_item.buy_stock_action) == len(action_item.sell_stock_action) + 1
         full_trend = PolicyUtil.get_flow_trend_cachable(stock_id, current_date_str, action_item_policy.sell.days_watch,
                                                            repeated_stock_daily_info)
-        if action_item_policy.sell.trend.growth_percent not in [-1, full_trend]:
+        # if action_item_policy.sell.trend.growth_percent not in [-1, full_trend]:
+        #     return
+        if full_trend not in localconfig.SELL_TREND_GROW_RECENT_LIST:
             return
         last_half_trend = PolicyUtil.get_flow_trend_cachable(stock_id, current_date_str, action_item_policy.sell.days_watch,
-                                                           repeated_stock_daily_info[len(repeated_stock_daily_info)/2:])
-        if action_item_policy.sell.trend.growth_percent_last_half not in [-1, last_half_trend]:
+                                                           repeated_stock_daily_info[-len(repeated_stock_daily_info)/localconfig.LAST_GROWTH_PART:])
+        # if action_item_policy.sell.trend.growth_percent_last_half not in [-1, last_half_trend]:
+        #     return
+        if last_half_trend not in localconfig.LAST_HALF_SELL_TREND_GROW_PERCENT_LIST:
             return
         last_buy_price = action_item.buy_stock_action[-1].at_price
         loss_stop_price = last_buy_price * (1000-action_item_policy.sell.sell_at_loss_thousandth)/1000.0
@@ -399,20 +414,29 @@ class PolicyUtil:
         :param current_date_str:
         :return: stock_info on success, otherwise return None
         '''
+        current_daily_info, last_daily_info = PolicyUtil.get_the_stock_daily_info_with_last(stock_info, current_date_str)
+        return current_daily_info
+
+    @staticmethod
+    def get_the_stock_daily_info_with_last(stock_info, current_date_str):
         stock_id = stock_info.stock_id
         if stock_id in PolicyUtil.stock_date_dict:
             if current_date_str in PolicyUtil.stock_date_dict[stock_id]:
                 return PolicyUtil.stock_date_dict[stock_id][current_date_str]
             else:
-                return None
+                return (None, None)
         else:
             PolicyUtil.stock_date_dict.setdefault(stock_id, {})
-            for stock_daily_info in stock_info.daily_info:
-                PolicyUtil.stock_date_dict[stock_id][stock_daily_info.date] = stock_daily_info
+            for i in range(0, len(stock_info.daily_info)):
+                stock_daily_info = stock_info.daily_info[i]
+                if 0 < i:
+                    PolicyUtil.stock_date_dict[stock_id][stock_daily_info.date] = [stock_daily_info, stock_info.daily_info[i-1]]
+                else:
+                    PolicyUtil.stock_date_dict[stock_id][stock_daily_info.date] = [stock_daily_info, None]
             if current_date_str in PolicyUtil.stock_date_dict[stock_id]:
                 return PolicyUtil.stock_date_dict[stock_id][current_date_str]
             else:
-                return None
+                return (None, None)
 
 
     @staticmethod
@@ -592,6 +616,7 @@ class PolicyUtil:
         # [stock_id] = {(trend, trend_buy, trend_sell, last_close, [price1, price2, ...], [price1, price2, ...])}
         buy_policy_list = PolicyUtil.get_best_buy_policy_list()
         stock_price_dict = {}
+        trend_list = localconfig.BUY_TREND_GROW_PERCENT_LIST
         for stock in stock_info:
             if not stock.daily_info:
                 logging.error("failed to get daily info for %s", stock.stock_id)
@@ -605,7 +630,6 @@ class PolicyUtil:
                 stock_price_dict.setdefault(stock.stock_id, [full_trend, 1, 1, 0, [], []])
                 stock_price_dict[stock.stock_id][3] = stock.daily_info[-1].close
                 stock_price_dict[stock.stock_id][4].append(price)
-                trend_list = [40, 50, 60]
                 if full_trend in trend_list:
                     stock_price_dict[stock.stock_id][1] = 1
                 else:
@@ -613,6 +637,7 @@ class PolicyUtil:
                 if half_trend in trend_list:
                     stock_price_dict[stock.stock_id][1] += 2
         sell_policy_list = PolicyUtil.get_best_sell_policy_list()
+        trend_list = localconfig.SELL_TREND_GROW_RECENT_LIST
         for stock in stock_info:
             if not stock.daily_info:
                 logging.error("failed to get daily info for %s", stock.stock_id)
@@ -626,7 +651,6 @@ class PolicyUtil:
                 stock_price_dict.setdefault(stock.stock_id, [full_trend, 1,1, 0, [], []])
                 stock_price_dict[stock.stock_id][3] = stock.daily_info[-1].close
                 stock_price_dict[stock.stock_id][5].append(price)
-                trend_list = [0, 10, 20, 30] + [90, 100]
                 if full_trend in trend_list:
                     stock_price_dict[stock.stock_id][2] = 1
                 else:

@@ -8,7 +8,7 @@ from proto.policy_pb2 import Policy
 cash_taken_in = 30000
 max_train_watch_days = 0
 max_predict_watch_days = 0
-max_watch_jump_times = 10
+max_watch_jump_times = 20
 DEFAULT_TIMEOUT_SECONDS = 2.0
 EXPIRE_AFTER_MS = 10000
 EXPIRE_AFTER_DAYS = 100
@@ -28,7 +28,7 @@ end_date_str = DatetimeUtil.to_datetime_str(datetime.datetime.now())
 # buy_days_watch:30	2|1.0564845995|1.0	5|1.0|0.0	8|1.0|0.0	9|0.994694594694|0.0
 # buy_days_watch:20	2|1.12920368388|1.0	5|1.0|0.0	8|1.0|0.0	9|0.988245656509|0.0
 
-BUY_WATCH_DAYS_LIST = [15]
+BUY_WATCH_DAYS_LIST = [20]
 # sell_days_watch:15	2-5-8-9:	1.23013866919 # 14.912, 1.04704621872 # 8.44, 0.891200242997 # 3.0, 0.733736507942 # 1.741
 # sell_days_watch:20	2-5-8-9:	1.22479592739 # 13.204, 1.04063553463 # 7.5, 0.897240429646 # 2.468, 0.730709881747 # 1.219
 # sell_days_watch:10	2-5-8-9:	1.17930207727 # 17.044, 1.02475195877 # 9.8, 0.877468725376 # 3.92, 0.684441354771 # 1.93
@@ -39,7 +39,7 @@ BUY_WATCH_DAYS_LIST = [15]
 # sell_days_watch:15	2|1.1555880782|2.0	5|1.0|0.0	8|1.0|0.0	9|0.983874971044|0.0
 # sell_days_watch:20	2|1.17920895004|1.0	5|1.0|0.0	8|1.0|0.0	9|0.991481424755|0.0
 
-SELL_WATCH_DAYS_LIST = [15]
+SELL_WATCH_DAYS_LIST = BUY_WATCH_DAYS_LIST
 
 
 
@@ -54,7 +54,7 @@ DAYS_HOLD_FOR_SALE_LIST = [15]
 # buy_percent_n:50	2|1.1643599906|3.0	5|1.0|0.0	8|0.978710149621|0.0	9|0.776383016797|0.0:%s
 
 # 50 > 40, 50 > 60
-BUY_PRICE_PERCENT_LIST = range(10, 10 + 1, 10)
+BUY_PRICE_PERCENT_LIST = range(20, 20 + 1, 10)
 
 # sell_percent_n:110	2-5-8-9:	1.26625731137 # 11.2, 1.13306259364 # 7.2, 1.04533893279 # 3.0, 1.02193602462 # 2.0
 # sell_percent_n:100	2-5-8-9:	1.26625731137 # 11.2, 1.13306259364 # 7.2, 1.04533893279 # 3.0, 1.02193602462 # 2.0
@@ -156,7 +156,7 @@ LOSS_STOP_THOUSANDTH_LIST = [990]
 
 # SELL_PROFIT_THOUSANDTH_LIST = range(10, 100+1, 10) + [200, 1000]
 # SELL_PROFIT_THOUSANDTH_LIST = range(10, 150, 10) + [200, 1000]
-SELL_PROFIT_THOUSANDTH_LIST = []
+SELL_PROFIT_THOUSANDTH_LIST = [10]
 
 
 # buy_growth:-1	2|1.39824154992|7.0	5|1.07432906313|1.0	8|0.916727451392|0.0	9|0.734182097445|0.0
@@ -184,7 +184,7 @@ SELL_PROFIT_THOUSANDTH_LIST = []
 # buy_growth:50	2|1.01188010102|1.0	5|0.977810342191|0.0	8|0.876620082362|0.0	9|0.846202269364|0.0
 # buy_growth:40	2|1.03671499191|1.0	5|0.97135708436|0.0	8|0.859918035342|0.0	9|0.839724607089|0.0
 
-BUY_TREND_GROW_PERCENT_LIST = range(40, 60+1, 10)
+BUY_TREND_GROW_PERCENT_LIST = range(50, 60+1, 10)
 
 
 # half_buy_growth:-1	2|1.65504313086|6.0	5|1.31151136137|1.0	8|1.10121854388|0.0	9|1.01243312546|0.0
@@ -239,7 +239,7 @@ LAST_HALF_BUY_TREND_GROW_PERCENT_LIST = BUY_TREND_GROW_PERCENT_LIST
 # sell_growth:100	2|1.04966712522|0.0	5|0.978834871005|0.0	8|0.86995866508|0.0	9|0.84954129066|0.0
 # sell_growth:50	2|1.00081449273|3.0	5|0.97705829169|1.0	8|0.874886337431|0.0	9|0.852500640412|0.0
 # sell_growth:70	2|1.00265790532|2.0	5|0.96976301765|1.0	8|0.872515982305|0.0	9|0.857058510722|0.0
-SELL_TREND_GROW_RECENT_LIST = range(0, 30+1, 10) + range(80, 100+1, 10)
+SELL_TREND_GROW_RECENT_LIST = range(0, 40+1, 10) + range(80, 100+1, 10)
 
 
 
@@ -259,13 +259,15 @@ SELL_TREND_GROW_RECENT_LIST = range(0, 30+1, 10) + range(80, 100+1, 10)
 LAST_HALF_SELL_TREND_GROW_PERCENT_LIST = SELL_TREND_GROW_RECENT_LIST
 
 
+LAST_GROWTH_PART = 2
+
 # BUY_TREND_GROW_PERCENT_LIST = [-1]
 # SELL_TREND_GROW_RECENT_LIST = [-1]
 
 
 # fin_stock = open('stock_list.easy')
 
-fin_stock = open('stock_list.easy2')
+fin_stock = open('stock_list.easy3')
 select_stock_name_list = fin_stock.read().split('\n')
 fin_stock.close()
 
@@ -275,12 +277,9 @@ fin_stock.close()
 # select_stock_name_list = ["BABA", "JD", "WB", "AMZN", "BIDU", "MSFT", "FB", "GOOGL", "NTES", "TSLA", "MOMO",  "NVDA", "AAPL",
 #                           "SPY", "QQQ", "IWM", "IWV"]
 # start_date_str = "20150101"
-start_date_str = "20160101"
-end_date_str = "20170630"
+start_date_str = "20170101"
+end_date_str = "20171230"
 
-# SELL_PROFIT_THOUSANDTH_LIST = range(10, 100+1, 10) + [200, 1000]
-# SELL_PROFIT_THOUSANDTH_LIST = range(10, 150, 10)
-# LOSS_STOP_THOUSANDTH_LIST = range(10, 200+1, 10) + [990]
 #
 # select_stock_name_list = ["BABA"]
 # DAYS_HOLD_FOR_SALE_LIST = [30]
