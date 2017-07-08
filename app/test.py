@@ -36,7 +36,7 @@ def main():
                                             stock_end_date,
                                             person.stock_info)
     for stock in person.stock_info:
-        if stock.daily_info and stock.daily_info[-1].close > 20:
+        if len(stock.daily_info) > 0 and stock.daily_info[-1].close > 20:
             print stock.stock_id
 
 if __name__ == "__main__":

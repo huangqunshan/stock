@@ -6,6 +6,7 @@ from proto.person_pb2 import Person
 import pandas_datareader.data as web
 import datetime
 import logging
+import math
 import requests
 import requests_cache
 import pandas_datareader as pdr
@@ -49,6 +50,9 @@ class StockInfoProxy:
         stock.stock_id = stock_name
         for row in dataFrame.iterrows():
             timestamp, info = row[0], row[1]
+            # ignore nan num
+            if math.isnan(info.Close) or math.isnan(info.Open):
+                continue
             daily_info = stock.daily_info.add()
             daily_info.open = info.Open
             daily_info.close = info.Close

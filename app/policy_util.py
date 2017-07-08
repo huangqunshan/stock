@@ -134,7 +134,9 @@ class PolicyUtil:
         #     return
 
         last_sequential_trend = PolicyPredictUtil.get_sequential_trend(repeated_stock_daily_info)
-        if action_item_policy.buy.trend.last_sequential_growth_percent not in [-1, last_sequential_trend]:
+        # if_continue = action_item_policy.buy.trend.last_sequential_growth_percent in [-1, last_sequential_trend]
+        if_continue = last_sequential_trend in localconfig.LAST_BUY_SEQUENTIAL_TREND_LIST
+        if not if_continue:
             logging.debug("ignore trend:%s vs %s", last_sequential_trend, action_item_policy.buy.trend.last_sequential_growth_percent)
             return
 
@@ -191,7 +193,9 @@ class PolicyUtil:
         #     return
 
         last_sequential_trend = PolicyPredictUtil.get_sequential_trend(repeated_stock_daily_info)
-        if action_item_policy.sell.trend.last_sequential_growth_percent not in [-1, last_sequential_trend]:
+        # if_continue = action_item_policy.sell.trend.last_sequential_growth_percent in [-1, last_sequential_trend]
+        if_continue = last_sequential_trend in localconfig.LAST_SELL_SEQUENTIAL_TREND_LIST
+        if not if_continue:
             logging.debug("ignore trend:%s vs %s", last_sequential_trend,
                          action_item_policy.sell.trend.last_sequential_growth_percent)
             return
@@ -218,6 +222,7 @@ class PolicyUtil:
         if the_high_price <= sell_price:
             logging.debug("quit sell for too high price:%s > high_price:%s", sell_price, the_high_price)
             return
+        logging.debug("debug sell_price:%s, the_low_price:%s", sell_price, the_low_price)
         sell_price = max(the_low_price, sell_price)
         stock_action = action_item.sell_stock_action.add()
         stock_action.date = current_date_str
@@ -330,8 +335,9 @@ class PolicyUtil:
         for stock_action in action_item.sell_stock_action:
             cash_sell += (stock_action.at_price * stock_action.volumn - stock_action.stock_trade_cost)
         cash_left = action_item.cash_taken_in + cash_sell - cash_buy
-        logging.debug("buy_size:%s, sell_size:%s, cash_buy:%s, cash_sell:%s, cash_left:%s",
-                      len(action_item.buy_stock_action), len(action_item.sell_stock_action), cash_buy, cash_sell, cash_left)
+        logging.debug("buy_size:%s, sell_size:%s, cash_buy:%s, cash_sell:%s, cash_left:%s, sell_stock_action:%s",
+                      len(action_item.buy_stock_action), len(action_item.sell_stock_action), cash_buy, cash_sell,
+                     cash_left, action_item.sell_stock_action)
         return cash_left
 
 
@@ -591,6 +597,7 @@ class PolicyUtil:
 
     @staticmethod
     def get_volumn_and_trade_cost(max_buy_asset_value, percent_price):
+        assert percent_price > 0
         predict_cost = max(max_buy_asset_value / percent_price * 0.005, 1)
         volumn = (max_buy_asset_value - predict_cost) / percent_price
         final_cost = max(volumn * 0.005, 1)
