@@ -311,8 +311,6 @@ class PolicyUtil:
         return result
 
 
-
-
     @staticmethod
     def get_asset_value_out(stock_info, action_item, action_item_policy, stock_end_date):
         cash_value = PolicyUtil.get_cash_value_available(action_item)
