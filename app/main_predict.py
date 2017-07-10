@@ -10,6 +10,7 @@ from operator import attrgetter, itemgetter
 from policy_factory import PolicyFactory
 from policy_predict_util import PolicyPredictUtil
 from proto.person_pb2 import Person
+from proto.policy_pb2 import Policy
 from stock_info_proxy import StockInfoProxy
 
 logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s', level=logging.INFO)
@@ -28,14 +29,15 @@ def main():
     current_date = datetime.datetime.now()
     person = Person()
     person.cash_taken_in = localconfig.cash_taken_in
-    stock_start_date = current_date - datetime.timedelta(days=15)
+    stock_start_date = current_date - datetime.timedelta(days=localconfig.RECENT_PREDICT_STOCK_DAYS)
     stock_end_date = current_date
-    predict_date_str = DatetimeUtil.to_datetime_str(current_date)
+    predict_date_str = DatetimeUtil.to_datetime_str(datetime.datetime.now())
     StockInfoProxy.generate_stock_info_list(select_stock_name_list,
                                             stock_start_date,
                                             stock_end_date,
                                             person.stock_info)
-    stock_price_dict = PolicyPredictUtil.predict(person.stock_info, predict_date_str)
+    # TODO: use mode: low for trend
+    stock_price_dict = PolicyPredictUtil.predict(person.stock_info, predict_date_str, Policy.TradePolicy.Percent.MEDIUM)
     result = []
     for stock_id, item in stock_price_dict.iteritems():
         trend, trend_buy, trend_sell, last_close_price, buy_price_list, sell_price_list = item

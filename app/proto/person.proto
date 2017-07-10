@@ -27,6 +27,8 @@ message Person {
         optional string policy_id = 3;
         // 交易观察起始日期
         optional string trade_watch_start_date = 4;
+        // 交易观察结束日期
+        optional string trade_watch_end_date = 8;
         // 满足日内交易规则： 5天最多3次同股票交易
         message StockAction {
             optional string date = 1;

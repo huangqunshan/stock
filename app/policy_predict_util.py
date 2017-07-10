@@ -14,7 +14,7 @@ import localconfig
 class PolicyPredictUtil:
 
     @staticmethod
-    def predict(stock_info, check_date):
+    def predict(stock_info, check_date_str, trend_mode):
         # TODO: filter stock_info for old date
         # [stock_id] = {(trend, trend_buy, trend_sell, last_close, [price1, price2, ...], [price1, price2, ...])}
         buy_policy_list = PolicyPredictUtil.get_best_buy_policy_list()
@@ -27,9 +27,9 @@ class PolicyPredictUtil:
             # ignore low price stock for cost for trade
             if stock.daily_info[-1].close < 20:
                 continue
-            full_trend = PolicyPredictUtil.get_flow_trend(PolicyPredictUtil.get_flow_detail_list(stock.daily_info))
-            half_trend = PolicyPredictUtil.get_flow_trend(PolicyPredictUtil.get_flow_detail_list(stock.daily_info[len(stock.daily_info)/2:]))
-            last_sequential_trend = PolicyPredictUtil.get_sequential_trend(stock.daily_info)
+            full_trend = PolicyPredictUtil.get_flow_trend(PolicyPredictUtil.get_flow_detail_list(stock.daily_info, trend_mode))
+            half_trend = PolicyPredictUtil.get_flow_trend(PolicyPredictUtil.get_flow_detail_list(stock.daily_info[len(stock.daily_info)/2:], trend_mode))
+            last_sequential_trend = PolicyPredictUtil.get_sequential_trend(stock.daily_info, trend_mode)
             for policy in buy_policy_list:
                 price = PercentPriceUtil.generate_percent(stock.daily_info[-policy.buy.days_watch:],
                                                           policy.buy.at_percent.mode,
@@ -54,9 +54,9 @@ class PolicyPredictUtil:
             # ignore low price stock for cost for trade
             if stock.daily_info[-1].close < 20:
                 continue
-            full_trend = PolicyPredictUtil.get_flow_trend(PolicyPredictUtil.get_flow_detail_list(stock.daily_info))
-            half_trend = PolicyPredictUtil.get_flow_trend(PolicyPredictUtil.get_flow_detail_list(stock.daily_info[len(stock.daily_info)/2:]))
-            last_sequential_trend = PolicyPredictUtil.get_sequential_trend(stock.daily_info)
+            full_trend = PolicyPredictUtil.get_flow_trend(PolicyPredictUtil.get_flow_detail_list(stock.daily_info, trend_mode))
+            half_trend = PolicyPredictUtil.get_flow_trend(PolicyPredictUtil.get_flow_detail_list(stock.daily_info[len(stock.daily_info)/2:], trend_mode))
+            last_sequential_trend = PolicyPredictUtil.get_sequential_trend(stock.daily_info, trend_mode)
             for policy in sell_policy_list:
                 price = PercentPriceUtil.generate_percent(stock.daily_info[-policy.sell.days_watch:],
                                                           policy.sell.at_percent.mode,
@@ -79,7 +79,7 @@ class PolicyPredictUtil:
     def get_best_buy_policy_list(limit_count=100):
         best_policy_list = []
         for day in [20]:
-            for percent in [10, 50]:
+            for percent in [20, 50]:
                 for mode in [Policy.TradePolicy.Percent.LOW]:
                     policy_best1 = Policy()
                     policy_best1.buy.days_watch = day
@@ -117,57 +117,69 @@ class PolicyPredictUtil:
 
 
     @staticmethod
-    def get_flow_detail_list(repeated_stock_daily_info):
+    def get_flow_detail_list(repeated_stock_daily_info, mode):
         # return PolicyPredictUtil.get_flow_detail_list_weighted(repeated_stock_daily_info)
 
         result = []
         for i in range(1, len(repeated_stock_daily_info)):
             current_info = repeated_stock_daily_info[i]
             last_info = repeated_stock_daily_info[i-1]
-            current_medium = 0.5 * (current_info.high+current_info.low)
-            last_medium = 0.5 * (last_info.high + last_info.low)
+            current_medium = PolicyPredictUtil.get_price(current_info, mode)
+            last_medium = PolicyPredictUtil.get_price(last_info, mode)
             if current_medium > last_medium:
                 result.append(1)
             else:
                 result.append(-1)
         return result
 
+    @staticmethod
+    def get_price(stock_daily_info, mode):
+        assert mode in [Policy.TradePolicy.Percent.HIGH,
+                        Policy.TradePolicy.Percent.LOW,
+                        Policy.TradePolicy.Percent.MEDIUM]
+        if Policy.TradePolicy.Percent.LOW == mode:
+            return stock_daily_info.low
+        if Policy.TradePolicy.Percent.HIGH == mode:
+            return stock_daily_info.high
+        assert mode == Policy.TradePolicy.Percent.MEDIUM
+        return 0.5 * (stock_daily_info.high + stock_daily_info.low)
+
+
+    # @staticmethod
+    # # 复杂策略，如突破高点与低点权重变大
+    # def get_flow_detail_list_weighted(repeated_stock_daily_info):
+    #     result = []
+    #     the_max = -1
+    #     the_min = repeated_stock_daily_info[0].high * 100
+    #     for i in range(1, len(repeated_stock_daily_info)):
+    #         current_info = repeated_stock_daily_info[i]
+    #         last_info = repeated_stock_daily_info[i-1]
+    #         current_medium = 0.5 * (current_info.high+current_info.low)
+    #         last_medium = 0.5 * (last_info.high + last_info.low)
+    #         if current_medium > last_medium:
+    #             if the_max == -1 or current_medium < the_max:
+    #                 result.append(1)
+    #             else:
+    #                 result.append(2)
+    #         else:
+    #             if the_min == -1 or the_min < current_medium:
+    #                 result.append(-1)
+    #             else:
+    #                 result.append(-2)
+    #         the_max = max(the_max, current_medium)
+    #         the_min = min(the_min, current_medium)
+    #     return result
+
 
     @staticmethod
-    # 复杂策略，如突破高点与低点权重变大
-    def get_flow_detail_list_weighted(repeated_stock_daily_info):
-        result = []
-        the_max = -1
-        the_min = repeated_stock_daily_info[0].high * 100
-        for i in range(1, len(repeated_stock_daily_info)):
-            current_info = repeated_stock_daily_info[i]
-            last_info = repeated_stock_daily_info[i-1]
-            current_medium = 0.5 * (current_info.high+current_info.low)
-            last_medium = 0.5 * (last_info.high + last_info.low)
-            if current_medium > last_medium:
-                if the_max == -1 or current_medium < the_max:
-                    result.append(1)
-                else:
-                    result.append(2)
-            else:
-                if the_min == -1 or the_min < current_medium:
-                    result.append(-1)
-                else:
-                    result.append(-2)
-            the_max = max(the_max, current_medium)
-            the_min = min(the_min, current_medium)
-        return result
-
-
-    @staticmethod
-    def get_sequential_trend(repeated_stock_daily_info):
-        trend_list = PolicyPredictUtil.get_flow_detail_list(repeated_stock_daily_info)
+    def get_sequential_trend(repeated_stock_daily_info, mode):
+        trend_list = PolicyPredictUtil.get_flow_detail_list(repeated_stock_daily_info, mode)
         if not trend_list:
             return 0
         sign = trend_list[-1]
         assert sign in [1, -1], sign
         count = 1
-        for i in range(len(trend_list)-2, 0, -1):
+        for i in range(len(trend_list)-2, -1, -1):
             if trend_list[i] != sign:
                 break
             count += 1

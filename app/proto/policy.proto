@@ -63,6 +63,7 @@ message Policy {
                 SUDDEN_GREATE_FAIL_DOWN = 6;
             }
             optional TrendEnum trend_enum = 4;
+            optional Percent.PercentMode trend_mode = 5;
         }
         optional Trend trend = 10;
     }

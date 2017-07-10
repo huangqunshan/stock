@@ -47,6 +47,7 @@ class PolicyFactory:
                 sell_grow_percent_n = -1
                 last_sequential_buy_trend = -1
                 last_sequential_sell_trend = -1
+                trend_mode = Policy.TradePolicy.Percent.MEDIUM
 
                 for sell_percent_n in localconfig.SELL_PRICE_PERCENT_LIST:
                     policy = repeated_policy.add()
@@ -87,6 +88,7 @@ class PolicyFactory:
                     policy.buy.trend.growth_percent = buy_grow_percent_n
                     policy.buy.trend.growth_percent_last_half = last_half_buy_grow_percent_n
                     policy.buy.trend.last_sequential_growth_percent = last_sequential_buy_trend
+                    policy.buy.trend.trend_mode = trend_mode
                     policy.sell.days_watch = sell_days_watch
                     policy.sell.at_percent.mode = sell_mode
                     policy.sell.at_percent.percent_n = sell_percent_n
@@ -95,6 +97,7 @@ class PolicyFactory:
                     policy.sell.trend.growth_percent = sell_grow_percent_n
                     policy.sell.trend.growth_percent_last_half = last_half_sell_grow_percent_n
                     policy.sell.trend.last_sequential_growth_percent = last_sequential_sell_trend
+                    policy.sell.trend.trend_mode = trend_mode
 
                 for sell_profit_thousandth_n in localconfig.SELL_PROFIT_THOUSANDTH_LIST:
                     policy = repeated_policy.add()
@@ -118,6 +121,7 @@ class PolicyFactory:
                     policy.buy.trend.growth_percent = buy_grow_percent_n
                     policy.buy.trend.growth_percent_last_half = last_half_buy_grow_percent_n
                     policy.buy.trend.last_sequential_growth_percent = last_sequential_buy_trend
+                    policy.buy.trend.trend_mode = trend_mode
                     policy.sell.days_watch = sell_days_watch
                     policy.sell.at_percent.mode = sell_mode
                     policy.sell.sell_at_profit_thousandth = sell_profit_thousandth_n
@@ -126,6 +130,7 @@ class PolicyFactory:
                     policy.sell.trend.growth_percent = sell_grow_percent_n
                     policy.sell.trend.growth_percent_last_half = last_half_sell_grow_percent_n
                     policy.sell.trend.last_sequential_growth_percent = last_sequential_sell_trend
+                    policy.sell.trend.trend_mode = trend_mode
         logging.debug("end generate_policy_list_for_percent")
 
 

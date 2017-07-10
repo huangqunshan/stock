@@ -9,11 +9,13 @@ cash_taken_in = 30000
 max_train_watch_days = 0
 max_predict_watch_days = 0
 max_watch_jump_times = 20
+RECENT_PREDICT_STOCK_DAYS = 20
 DEFAULT_TIMEOUT_SECONDS = 2.0
 EXPIRE_AFTER_MS = 10000
 EXPIRE_AFTER_DAYS = 100
 POSITION_PERCENT_LIST = range(0, 100+1, 10)
 end_date_str = DatetimeUtil.to_datetime_str(datetime.datetime.now())
+JUMPS_PER_WATCH = 1
 
 
 BUY_WATCH_DAYS_LIST = [20]
@@ -61,7 +63,7 @@ LAST_GROWTH_PART = 2
 # SELL_TREND_GROW_RECENT_LIST = [-1]
 
 
-fin_stock = open('stock_list.sina_more20_100')
+fin_stock = open('stock_list.sina_more20_50')
 
 # fin_stock = open('stock_list.easy3')
 select_stock_name_list = fin_stock.read().split('\n')
@@ -75,7 +77,7 @@ fin_stock.close()
 # select_stock_name_list = ["BABA", "JD", "WB", "AMZN", "BIDU", "MSFT", "FB", "GOOGL", "NTES", "TSLA", "MOMO",  "NVDA", "AAPL",
 #                           "SPY", "QQQ", "IWM", "IWV"]
 # start_date_str = "20150101"
-start_date_str = "20170101"
+start_date_str = "20160101"
 end_date_str = "20171230"
 
 # start_date_str = "20160101"
