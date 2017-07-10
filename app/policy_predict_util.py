@@ -25,7 +25,7 @@ class PolicyPredictUtil:
                 logging.error("failed to get daily info for %s", stock.stock_id)
                 continue
             # ignore low price stock for cost for trade
-            if stock.daily_info[-1].close < 20:
+            if stock.daily_info[-1].close < localconfig.MINIMUM_STOCK_PRICE:
                 continue
             full_trend = PolicyPredictUtil.get_flow_trend(PolicyPredictUtil.get_flow_detail_list(stock.daily_info, trend_mode))
             half_trend = PolicyPredictUtil.get_flow_trend(PolicyPredictUtil.get_flow_detail_list(stock.daily_info[len(stock.daily_info)/2:], trend_mode))

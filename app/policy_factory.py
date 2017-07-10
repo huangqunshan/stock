@@ -38,7 +38,7 @@ class PolicyFactory:
             for sell_loss_thousandth in localconfig.LOSS_STOP_THOUSANDTH_LIST:
                 buy_days_watch = 20
                 sell_days_watch = 10
-                days_hold_for_sell = 2
+                days_hold_for_sell = 5
                 buy_mode = Policy.TradePolicy.Percent.LOW
                 sell_mode = Policy.TradePolicy.Percent.HIGH
                 last_half_buy_grow_percent_n = -1
@@ -47,7 +47,7 @@ class PolicyFactory:
                 sell_grow_percent_n = -1
                 last_sequential_buy_trend = -1
                 last_sequential_sell_trend = -1
-                trend_mode = Policy.TradePolicy.Percent.MEDIUM
+                trend_mode = Policy.TradePolicy.Percent.HIGH
 
                 for sell_percent_n in localconfig.SELL_PRICE_PERCENT_LIST:
                     policy = repeated_policy.add()

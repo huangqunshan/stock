@@ -26,7 +26,7 @@ def main():
     # select_stock_name_list = localconfig.select_stock_name_list
     # if not select_stock_name_list:
     #     select_stock_name_list = StockInfoProxy.get_stock_name_list()
-    current_date = datetime.datetime.now()
+    current_date = datetime.datetime.now() + datetime.timedelta(days=1)
     person = Person()
     person.cash_taken_in = localconfig.cash_taken_in
     stock_start_date = current_date - datetime.timedelta(days=localconfig.RECENT_PREDICT_STOCK_DAYS)
@@ -37,7 +37,7 @@ def main():
                                             stock_end_date,
                                             person.stock_info)
     # TODO: use mode: low for trend
-    stock_price_dict = PolicyPredictUtil.predict(person.stock_info, predict_date_str, Policy.TradePolicy.Percent.MEDIUM)
+    stock_price_dict = PolicyPredictUtil.predict(person.stock_info, predict_date_str, Policy.TradePolicy.Percent.HIGH)
     result = []
     for stock_id, item in stock_price_dict.iteritems():
         trend, trend_buy, trend_sell, last_close_price, buy_price_list, sell_price_list = item
