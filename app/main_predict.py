@@ -29,7 +29,7 @@ def main():
     current_date = datetime.datetime.now() + datetime.timedelta(days=1)
     person = Person()
     person.cash_taken_in = localconfig.cash_taken_in
-    stock_start_date = current_date - datetime.timedelta(days=localconfig.RECENT_PREDICT_STOCK_DAYS)
+    stock_start_date = current_date - datetime.timedelta(days=localconfig.BUY_WATCH_DAYS.best)
     stock_end_date = current_date
     predict_date_str = DatetimeUtil.to_datetime_str(datetime.datetime.now())
     StockInfoProxy.generate_stock_info_list(select_stock_name_list,
@@ -41,6 +41,10 @@ def main():
     result = []
     for stock_id, item in stock_price_dict.iteritems():
         trend, trend_buy, trend_sell, last_close_price, buy_price_list, sell_price_list = item
+
+        if not buy_price_list or not sell_price_list:
+            continue
+
         buy_price_list = sorted(buy_price_list)
         buy_np_array = np.array(buy_price_list)
         buy_min = np.percentile(buy_np_array, 0)

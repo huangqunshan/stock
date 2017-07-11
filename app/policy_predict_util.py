@@ -19,13 +19,12 @@ class PolicyPredictUtil:
         # [stock_id] = {(trend, trend_buy, trend_sell, last_close, [price1, price2, ...], [price1, price2, ...])}
         buy_policy_list = PolicyPredictUtil.get_best_buy_policy_list()
         stock_price_dict = {}
-        trend_list = localconfig.BUY_TREND_GROW_PERCENT_LIST
         for stock in stock_info:
             if not stock.daily_info:
                 logging.error("failed to get daily info for %s", stock.stock_id)
                 continue
             # ignore low price stock for cost for trade
-            if stock.daily_info[-1].close < localconfig.MINIMUM_STOCK_PRICE:
+            if stock.daily_info[-1].close < localconfig.MIN_STOCK_PRICE.best:
                 continue
             full_trend = PolicyPredictUtil.get_flow_trend(PolicyPredictUtil.get_flow_detail_list(stock.daily_info, trend_mode))
             half_trend = PolicyPredictUtil.get_flow_trend(PolicyPredictUtil.get_flow_detail_list(stock.daily_info[len(stock.daily_info)/2:], trend_mode))
@@ -37,22 +36,21 @@ class PolicyPredictUtil:
                 stock_price_dict.setdefault(stock.stock_id, [full_trend, 1, 1, 0, [], []])
                 stock_price_dict[stock.stock_id][3] = stock.daily_info[-1].close
                 stock_price_dict[stock.stock_id][4].append(price)
-                if full_trend in trend_list:
+                if full_trend in localconfig.BUY_TREND_PERCENT.filter:
                     stock_price_dict[stock.stock_id][1] = 1
                 else:
                     stock_price_dict[stock.stock_id][1] = 0
-                if half_trend in trend_list:
+                if half_trend in localconfig.HALF_BUY_TREND_PERCENT.filter:
                     stock_price_dict[stock.stock_id][1] += 2
-                if last_sequential_trend in localconfig.LAST_BUY_SEQUENTIAL_TREND_LIST:
+                if last_sequential_trend in localconfig.LAST_BUY_SEQUENTIAL_TREND_COUNT.filter:
                     stock_price_dict[stock.stock_id][1] += 4
         sell_policy_list = PolicyPredictUtil.get_best_sell_policy_list()
-        trend_list = localconfig.SELL_TREND_GROW_RECENT_LIST
         for stock in stock_info:
             if not stock.daily_info:
                 logging.error("failed to get daily info for %s", stock.stock_id)
                 continue
             # ignore low price stock for cost for trade
-            if stock.daily_info[-1].close < 20:
+            if stock.daily_info[-1].close < localconfig.MIN_STOCK_PRICE.best:
                 continue
             full_trend = PolicyPredictUtil.get_flow_trend(PolicyPredictUtil.get_flow_detail_list(stock.daily_info, trend_mode))
             half_trend = PolicyPredictUtil.get_flow_trend(PolicyPredictUtil.get_flow_detail_list(stock.daily_info[len(stock.daily_info)/2:], trend_mode))
@@ -64,42 +62,32 @@ class PolicyPredictUtil:
                 stock_price_dict.setdefault(stock.stock_id, [full_trend, 1,1, 0, [], []])
                 stock_price_dict[stock.stock_id][3] = stock.daily_info[-1].close
                 stock_price_dict[stock.stock_id][5].append(price)
-                if full_trend in trend_list:
+                if full_trend in localconfig.SELL_TREND_RERCENT.filter:
                     stock_price_dict[stock.stock_id][2] = 1
                 else:
                     stock_price_dict[stock.stock_id][2] = 0
-                if half_trend in trend_list:
+                if half_trend in localconfig.HALF_SELL_TREND_PERCENT.filter:
                     stock_price_dict[stock.stock_id][2] += 2
-                if last_sequential_trend in localconfig.LAST_BUY_SEQUENTIAL_TREND_LIST:
+                if last_sequential_trend in localconfig.LAST_SELL_SEQUENTIAL_TREND_COUNT.filter:
                     stock_price_dict[stock.stock_id][2] += 4
         return stock_price_dict
 
 
     @staticmethod
     def get_best_buy_policy_list(limit_count=100):
-        best_policy_list = []
-        for day in [20]:
-            for percent in [20, 50]:
-                for mode in [Policy.TradePolicy.Percent.LOW]:
-                    policy_best1 = Policy()
-                    policy_best1.buy.days_watch = day
-                    policy_best1.buy.at_percent.mode = mode
-                    policy_best1.buy.at_percent.percent_n = percent
-                    best_policy_list.append(policy_best1)
-        return best_policy_list[:limit_count]
+        policy_best = Policy()
+        policy_best.buy.days_watch = localconfig.BUY_WATCH_DAYS.best
+        policy_best.buy.at_percent.mode = localconfig.BUY_MODE.best
+        policy_best.buy.at_percent.percent_n = localconfig.BUY_PRICE_PERCENT.best
+        return [policy_best]
 
     @staticmethod
     def get_best_sell_policy_list(limit_count=100):
-        best_policy_list = []
-        for day in [10]:
-            for percent in [20, 50]:
-                for mode in [Policy.TradePolicy.Percent.HIGH]:
-                    policy_best1 = Policy()
-                    policy_best1.sell.days_watch = day
-                    policy_best1.sell.at_percent.mode = mode
-                    policy_best1.sell.at_percent.percent_n = percent
-                    best_policy_list.append(policy_best1)
-        return best_policy_list[:limit_count]
+        policy_best = Policy()
+        policy_best.sell.days_watch = localconfig.SELL_WATCH_DAYS.best
+        policy_best.sell.at_percent.mode = localconfig.SELL_MODE.best
+        policy_best.sell.at_percent.percent_n = localconfig.SELL_PRICE_PERCENT.best
+        return [policy_best]
 
     @staticmethod
     def get_flow_trend(flow_detail_list):

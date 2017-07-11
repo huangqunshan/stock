@@ -10,6 +10,7 @@ message Policy {
     optional int32 prefer_max_splited_trade_unit = 1[default=1];
     // 倾向于持有的股票数
     optional int32 prefer_max_stock_count = 2[default=1];
+    optional double min_stock_price = 6;
     message TradePolicy {
         // 观察天数
         optional int32 days_watch = 1;

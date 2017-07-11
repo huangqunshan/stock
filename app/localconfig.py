@@ -4,61 +4,79 @@ import datetime
 from datetime_util import DatetimeUtil
 from proto.policy_pb2 import Policy
 
+class PolicyValueRange:
+    def __init__(self, value_list, best_value, filter=None):
+        self.range = value_list
+        self.best = best_value
+        if filter is not None:
+            self.filter = filter
+        else:
+            self.filter = self.range
 
-cash_taken_in = 30000
-max_train_watch_days = 0
-max_predict_watch_days = 0
-max_watch_jump_times = 20
-RECENT_PREDICT_STOCK_DAYS = 20
-DEFAULT_TIMEOUT_SECONDS = 2.0
-EXPIRE_AFTER_MS = 10000
-EXPIRE_AFTER_DAYS = 100
+
+DEFAULT_CONFIG = -9999
 POSITION_PERCENT_LIST = range(0, 100+1, 10)
+DEFAULT_TIMEOUT_SECONDS = 2.0
+EXPIRE_AFTER_DAYS = 100
+EXPIRE_AFTER_MS = 10000
 end_date_str = DatetimeUtil.to_datetime_str(datetime.datetime.now())
+cash_taken_in = 30000
+# max_train_watch_days = 0
+# max_predict_watch_days = 0
+
+max_watch_jump_times = 20
 JUMPS_PER_WATCH = 2
-MINIMUM_STOCK_PRICE = 10
-
-
-BUY_WATCH_DAYS_LIST = [20]
-SELL_WATCH_DAYS_LIST = BUY_WATCH_DAYS_LIST
-DAYS_HOLD_FOR_SALE_LIST = [5]
-BUY_MODE_LIST = [Policy.TradePolicy.Percent.LOW]
-SELL_MODE_LIST = [Policy.TradePolicy.Percent.HIGH, Policy.TradePolicy.Percent.MEDIUM]
-TREND_MODE_LIST = [Policy.TradePolicy.Percent.HIGH]
-
-
-BUY_PRICE_PERCENT_LIST = range(20, 40 + 1, 10)
-
-
-SELL_PRICE_PERCENT_LIST = []
-SELL_PRICE_PERCENT_LIST = range(20, 50 + 1, 10)
-
-
-LOSS_STOP_THOUSANDTH_LIST = [50]
-
-
-# SELL_PROFIT_THOUSANDTH_LIST = range(10, 100+1, 10) + [200, 1000]
-# SELL_PROFIT_THOUSANDTH_LIST = range(10, 150, 10) + [200, 1000]
-SELL_PROFIT_THOUSANDTH_LIST = []
-
-
-BUY_TREND_GROW_PERCENT_LIST = range(30, 60+1, 10)
-
-
-LAST_HALF_BUY_TREND_GROW_PERCENT_LIST = BUY_TREND_GROW_PERCENT_LIST
-
-
-SELL_TREND_GROW_RECENT_LIST = range(0, 40+1, 10) + range(80, 100+1, 10)
-
-
-LAST_HALF_SELL_TREND_GROW_PERCENT_LIST = SELL_TREND_GROW_RECENT_LIST
-
-
-LAST_BUY_SEQUENTIAL_TREND_LIST = [2, 3]
-LAST_SELL_SEQUENTIAL_TREND_LIST = range(-10, -5 + 1, 1) + range(5, 10+1, 1)
-
-
 LAST_GROWTH_PART = 2
+
+PREFER_MAX_SPLITED_TRADE_UNIT = PolicyValueRange([1], 1)
+PREFER_MAX_STOCK_COUNT = PolicyValueRange([1], 1)
+
+MIN_STOCK_PRICE = PolicyValueRange([10, 15, 20, 30], 10)
+BUY_WATCH_DAYS = PolicyValueRange([10, 20, 30], 20)
+SELL_WATCH_DAYS = PolicyValueRange([10, 20, 30], 20)
+DAYS_HOLD_FOR_SALE = PolicyValueRange([2, 5, 10, 15], 5)
+BUY_MODE = PolicyValueRange([Policy.TradePolicy.Percent.LOW, Policy.TradePolicy.Percent.MEDIUM], Policy.TradePolicy.Percent.LOW)
+SELL_MODE = PolicyValueRange([Policy.TradePolicy.Percent.HIGH, Policy.TradePolicy.Percent.MEDIUM],
+                             Policy.TradePolicy.Percent.HIGH)
+TREND_MODE = PolicyValueRange([Policy.TradePolicy.Percent.LOW, Policy.TradePolicy.Percent.HIGH, Policy.TradePolicy.Percent.MEDIUM],
+                              Policy.TradePolicy.Percent.LOW)
+
+BUY_PRICE_PERCENT = PolicyValueRange(range(10, 100 + 1, 10), 30)
+SELL_PRICE_PERCENT = PolicyValueRange(range(10, 100 + 1, 10), 40)
+LOSS_STOP_THOUSANDTH = PolicyValueRange([10, 20, 50, 100, 200, 500], 50)
+
+SELL_PROFIT_THOUSANDTH = PolicyValueRange([0, 10, 20, 50, 100, 150, 1000], 0)
+
+BUY_TREND_PERCENT = PolicyValueRange(range(0, 100 + 1, 10),
+                                     DEFAULT_CONFIG,
+                                     None
+                                     # range(40, 60 + 1, 10)
+                                     )
+SELL_TREND_RERCENT = PolicyValueRange(range(0, 100 + 1, 10),
+                                      DEFAULT_CONFIG,
+                                      None
+                                      # range(10, 40+1, 10) + range(80, 100+1, 10)
+                                      )
+HALF_BUY_TREND_PERCENT = PolicyValueRange(range(0, 100 + 1, 10),
+                                          DEFAULT_CONFIG,
+                                          None
+                                          #range(40, 60 + 1, 10),
+                                          )
+HALF_SELL_TREND_PERCENT = PolicyValueRange(range(0, 100 + 1, 10),
+                                           DEFAULT_CONFIG,
+                                           None
+                                           #range(10, 40 + 1, 10) + range(80, 100 + 1, 10),
+                                           )
+
+LAST_BUY_SEQUENTIAL_TREND_COUNT = PolicyValueRange(range(-20, 20 + 1, 1),
+                                                   DEFAULT_CONFIG,
+                                                   None)
+LAST_SELL_SEQUENTIAL_TREND_COUNT = PolicyValueRange(range(-20, 20 + 1, 1),
+                                                    DEFAULT_CONFIG,
+                                                    None)
+
+
+
 
 # BUY_TREND_GROW_PERCENT_LIST = [-1]
 # SELL_TREND_GROW_RECENT_LIST = [-1]

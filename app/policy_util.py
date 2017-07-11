@@ -24,7 +24,7 @@ class PolicyUtil:
         for policy in person.policy_info:
             logging.info("begin train for policy_id:%s", policy.id)
             for stock_info in person.stock_info:
-                if not stock_info.daily_info or stock_info.daily_info[-1].low < localconfig.MINIMUM_STOCK_PRICE:
+                if not stock_info.daily_info or stock_info.daily_info[-1].low < policy.min_stock_price:
                     continue
                 logging.info("begin train for stock_id:%s,policy_id:%s,stock_daily_info_size:%s",
                              stock_info.stock_id, policy.id, len(stock_info.daily_info))
@@ -123,22 +123,28 @@ class PolicyUtil:
 
         full_trend = PolicyUtil.get_flow_trend_cachable(stock_id, current_date_str, action_item_policy.buy.days_watch,
                                                         stock_daily_info_list, action_item_policy.buy.trend.trend_mode)
-        # if_continue = action_item_policy.buy.trend.growth_percent in [-1, full_trend]
-        if_continue = full_trend in localconfig.BUY_TREND_GROW_PERCENT_LIST
+        if action_item_policy.buy.trend.growth_percent == localconfig.DEFAULT_CONFIG:
+            if_continue = full_trend in localconfig.BUY_TREND_PERCENT.filter
+        else:
+            if_continue = action_item_policy.buy.trend.growth_percent == full_trend
         if not if_continue:
             return
 
         last_half_trend = PolicyUtil.get_flow_trend_cachable(stock_id, current_date_str, action_item_policy.buy.days_watch,
                                                              stock_daily_info_list[-len(stock_daily_info_list)/localconfig.LAST_GROWTH_PART:],
                                                              action_item_policy.buy.trend.trend_mode)
-        # if_continue = action_item_policy.buy.trend.growth_percent_last_half in [-1, last_half_trend]
-        if_continue = last_half_trend in localconfig.LAST_HALF_BUY_TREND_GROW_PERCENT_LIST
+        if action_item_policy.buy.trend.growth_percent_last_half == localconfig.DEFAULT_CONFIG:
+            if_continue = last_half_trend in localconfig.HALF_BUY_TREND_PERCENT.filter
+        else:
+            if_continue = action_item_policy.buy.trend.growth_percent_last_half == last_half_trend
         if not if_continue:
             return
 
         last_sequential_trend = PolicyPredictUtil.get_sequential_trend(stock_daily_info_list, action_item_policy.buy.trend.trend_mode)
-        # if_continue = action_item_policy.buy.trend.last_sequential_growth_percent in [-1, last_sequential_trend]
-        if_continue = last_sequential_trend in localconfig.LAST_BUY_SEQUENTIAL_TREND_LIST
+        if action_item_policy.buy.trend.last_sequential_growth_percent == localconfig.DEFAULT_CONFIG:
+            if_continue = last_sequential_trend in localconfig.LAST_BUY_SEQUENTIAL_TREND_COUNT.filter
+        else:
+            if_continue = action_item_policy.buy.trend.last_sequential_growth_percent == last_sequential_trend
         if not if_continue:
             logging.debug("ignore trend:%s vs %s", last_sequential_trend, action_item_policy.buy.trend.last_sequential_growth_percent)
             return
@@ -184,22 +190,29 @@ class PolicyUtil:
 
         full_trend = PolicyUtil.get_flow_trend_cachable(stock_id, current_date_str, action_item_policy.sell.days_watch,
                                                         stock_daily_info_list, action_item_policy.sell.trend.trend_mode)
-        # if_continue = action_item_policy.sell.trend.growth_percent in [-1, full_trend]
-        if_continue = full_trend in localconfig.SELL_TREND_GROW_RECENT_LIST
+        if action_item_policy.sell.trend.growth_percent == localconfig.DEFAULT_CONFIG:
+            if_continue = full_trend in localconfig.SELL_TREND_RERCENT.filter
+        else:
+            if_continue = action_item_policy.sell.trend.growth_percent == full_trend
         if not if_continue:
             return
 
         last_half_trend = PolicyUtil.get_flow_trend_cachable(stock_id, current_date_str, action_item_policy.sell.days_watch,
                                                              stock_daily_info_list[-len(stock_daily_info_list)/localconfig.LAST_GROWTH_PART:],
                                                              action_item_policy.sell.trend.trend_mode)
-        # if_continue =  action_item_policy.sell.trend.growth_percent_last_half in [-1, last_half_trend]
-        if_continue = last_half_trend in localconfig.LAST_HALF_SELL_TREND_GROW_PERCENT_LIST
+        if action_item_policy.sell.trend.growth_percent_last_half == localconfig.DEFAULT_CONFIG:
+            if_continue = last_half_trend in localconfig.HALF_SELL_TREND_PERCENT.filter
+        else:
+            if_continue = action_item_policy.sell.trend.growth_percent_last_half == last_half_trend
         if not if_continue:
             return
 
         last_sequential_trend = PolicyPredictUtil.get_sequential_trend(stock_daily_info_list, action_item_policy.sell.trend.trend_mode)
-        # if_continue = action_item_policy.sell.trend.last_sequential_growth_percent in [-1, last_sequential_trend]
-        if_continue = last_sequential_trend in localconfig.LAST_SELL_SEQUENTIAL_TREND_LIST
+        if action_item_policy.sell.trend.last_sequential_growth_percent == localconfig.DEFAULT_CONFIG:
+            if_continue = last_sequential_trend in localconfig.LAST_SELL_SEQUENTIAL_TREND_COUNT.filter
+        else:
+            if_continue = action_item_policy.sell.trend.last_sequential_growth_percent == last_sequential_trend
+
         if not if_continue:
             logging.debug("ignore trend:%s vs %s", last_sequential_trend,
                          action_item_policy.sell.trend.last_sequential_growth_percent)

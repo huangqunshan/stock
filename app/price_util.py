@@ -55,7 +55,8 @@ class PercentPriceUtil:
             return percent_map.get(at_percent.percent_n)
         #return PercentPriceUtil.generate_percent(stock_daily_info_list, at_percent.mode, at_percent.percent_n)
         # cost time: at least 30:26
-        price_percent_list = localconfig.BUY_PRICE_PERCENT_LIST + localconfig.SELL_PRICE_PERCENT_LIST
+        # TODO:
+        price_percent_list = localconfig.BUY_PRICE_PERCENT.range + localconfig.SELL_PRICE_PERCENT.range
         percent_map = PercentPriceUtil.generate_percent_map(stock_daily_info_list, at_percent.mode, price_percent_list)
         PercentPriceUtil.put(stock_id, days_watch, current_date_str, at_percent.mode, percent_map)
         logging.debug("end get_percent_price")

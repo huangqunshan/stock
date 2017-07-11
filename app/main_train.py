@@ -20,8 +20,8 @@ def main():
     person.cash_taken_in = localconfig.cash_taken_in
     person.stock_start_date = localconfig.start_date_str
     person.stock_end_date = localconfig.end_date_str
-    person.max_train_watch_days = localconfig.max_train_watch_days
-    person.max_predict_watch_days = localconfig.max_predict_watch_days
+    # person.max_train_watch_days = localconfig.max_train_watch_days
+    # person.max_predict_watch_days = localconfig.max_predict_watch_days
     PolicyFactory.generate_policy_list(person.policy_info)
     StockInfoProxy.generate_stock_info_list(select_stock_name_list,
                                             DatetimeUtil.from_date_str(person.stock_start_date),
