@@ -62,7 +62,7 @@ class PolicyPredictUtil:
                 stock_price_dict.setdefault(stock.stock_id, [full_trend, 1,1, 0, [], []])
                 stock_price_dict[stock.stock_id][3] = stock.daily_info[-1].close
                 stock_price_dict[stock.stock_id][5].append(price)
-                if full_trend in localconfig.SELL_TREND_RERCENT.filter:
+                if full_trend in localconfig.SELL_TREND_PERCENT.filter:
                     stock_price_dict[stock.stock_id][2] = 1
                 else:
                     stock_price_dict[stock.stock_id][2] = 0

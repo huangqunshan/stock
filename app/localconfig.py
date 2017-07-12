@@ -31,7 +31,7 @@ LAST_GROWTH_PART = 2
 PREFER_MAX_SPLITED_TRADE_UNIT = PolicyValueRange([1], 1)
 PREFER_MAX_STOCK_COUNT = PolicyValueRange([1], 1)
 
-MIN_STOCK_PRICE = PolicyValueRange([10, 15, 20, 30], 10)
+MIN_STOCK_PRICE = PolicyValueRange([5, 10, 15, 20, 30], 10)
 BUY_WATCH_DAYS = PolicyValueRange([10, 20, 30], 20)
 SELL_WATCH_DAYS = PolicyValueRange([10, 20, 30], 20)
 DAYS_HOLD_FOR_SALE = PolicyValueRange([2, 5, 10, 15], 5)
@@ -47,12 +47,19 @@ LOSS_STOP_THOUSANDTH = PolicyValueRange([10, 20, 50, 100, 200, 500], 50)
 
 SELL_PROFIT_THOUSANDTH = PolicyValueRange([0, 10, 20, 50, 100, 150, 1000], 0)
 
+
+
+BUY_TREND_DAYS_WATCH = PolicyValueRange(range(10, 50+1, 10) + range(60, 120+1, 20),
+                                        40)
+SELL_TREND_DAYS_WATCH = PolicyValueRange(range(10, 50+1, 10) + range(60, 120+1, 20),
+                                        40)
+
 BUY_TREND_PERCENT = PolicyValueRange(range(0, 100 + 1, 10),
                                      DEFAULT_CONFIG,
                                      None
                                      # range(40, 60 + 1, 10)
                                      )
-SELL_TREND_RERCENT = PolicyValueRange(range(0, 100 + 1, 10),
+SELL_TREND_PERCENT = PolicyValueRange(range(0, 100 + 1, 10),
                                       DEFAULT_CONFIG,
                                       None
                                       # range(10, 40+1, 10) + range(80, 100+1, 10)
@@ -82,7 +89,7 @@ LAST_SELL_SEQUENTIAL_TREND_COUNT = PolicyValueRange(range(-20, 20 + 1, 1),
 # SELL_TREND_GROW_RECENT_LIST = [-1]
 
 
-# fin_stock = open('stock_list.sina_more20_50')
+# fin_stock = open('stock_list.sina_more20_500')
 
 fin_stock = open('stock_list.easy')
 select_stock_name_list = fin_stock.read().split('\n')

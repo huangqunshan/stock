@@ -98,31 +98,37 @@ class PolicyUtil:
             stock_daily_info_list = PolicyUtil.filter_stock_daily_info_list(stock_info,
                                                                         action_item_policy.buy.days_watch,
                                                                         current_date_str)
+            trend_daily_info_list = PolicyUtil.filter_stock_daily_info_list(stock_info,
+                                                                        action_item_policy.buy.trend.days_watch,
+                                                                        current_date_str)
             if stock_daily_info_list:
-                PolicyUtil.check_if_buy(stock_info.stock_id, stock_daily_info_list, action_item, action_item_policy,
-                                        current_date_str, current_stock_daily_info)
+                PolicyUtil.check_if_buy(stock_info.stock_id, stock_daily_info_list, trend_daily_info_list,
+                                        action_item, action_item_policy, current_date_str, current_stock_daily_info)
         else:
             assert len(action_item.buy_stock_action) == len(action_item.sell_stock_action) + 1
             stock_daily_info_list = PolicyUtil.filter_stock_daily_info_list(stock_info,
                                                                         action_item_policy.sell.days_watch,
                                                                         current_date_str)
+            trend_daily_info_list = PolicyUtil.filter_stock_daily_info_list(stock_info,
+                                                                        action_item_policy.sell.trend.days_watch,
+                                                                        current_date_str)
             if stock_daily_info_list:
-                PolicyUtil.check_if_sell(stock_info.stock_id, stock_daily_info_list, action_item, action_item_policy,
-                                     current_date_str, current_stock_daily_info)
+                PolicyUtil.check_if_sell(stock_info.stock_id, stock_daily_info_list, trend_daily_info_list,
+                                         action_item, action_item_policy, current_date_str, current_stock_daily_info)
         logging.debug("end try_trade_by_policy")
 
 
     @staticmethod
-    def check_if_buy(stock_id, stock_daily_info_list, action_item, action_item_policy, current_date_str,
-                     current_stock_daily_info):
+    def check_if_buy(stock_id, stock_daily_info_list, trend_daily_info_list, action_item, action_item_policy,
+                     current_date_str, current_stock_daily_info):
         the_low_price, the_high_price = current_stock_daily_info.low, current_stock_daily_info.high
         if len(action_item.sell_stock_action) < len(action_item.buy_stock_action):
             logging.debug("quit buy for wait sell")
             return
         assert len(action_item.buy_stock_action) == len(action_item.sell_stock_action)
 
-        full_trend = PolicyUtil.get_flow_trend_cachable(stock_id, current_date_str, action_item_policy.buy.days_watch,
-                                                        stock_daily_info_list, action_item_policy.buy.trend.trend_mode)
+        full_trend = PolicyUtil.get_flow_trend_cachable(stock_id, current_date_str, action_item_policy.buy.trend.days_watch,
+                                                        trend_daily_info_list, action_item_policy.buy.trend.trend_mode)
         if action_item_policy.buy.trend.growth_percent == localconfig.DEFAULT_CONFIG:
             if_continue = full_trend in localconfig.BUY_TREND_PERCENT.filter
         else:
@@ -130,23 +136,13 @@ class PolicyUtil:
         if not if_continue:
             return
 
-        last_half_trend = PolicyUtil.get_flow_trend_cachable(stock_id, current_date_str, action_item_policy.buy.days_watch,
-                                                             stock_daily_info_list[-len(stock_daily_info_list)/localconfig.LAST_GROWTH_PART:],
-                                                             action_item_policy.buy.trend.trend_mode)
-        if action_item_policy.buy.trend.growth_percent_last_half == localconfig.DEFAULT_CONFIG:
-            if_continue = last_half_trend in localconfig.HALF_BUY_TREND_PERCENT.filter
-        else:
-            if_continue = action_item_policy.buy.trend.growth_percent_last_half == last_half_trend
-        if not if_continue:
-            return
-
-        last_sequential_trend = PolicyPredictUtil.get_sequential_trend(stock_daily_info_list, action_item_policy.buy.trend.trend_mode)
-        if action_item_policy.buy.trend.last_sequential_growth_percent == localconfig.DEFAULT_CONFIG:
+        last_sequential_trend = PolicyPredictUtil.get_sequential_trend(trend_daily_info_list, action_item_policy.buy.trend.trend_mode)
+        if action_item_policy.buy.trend.last_sequential_trend_count == localconfig.DEFAULT_CONFIG:
             if_continue = last_sequential_trend in localconfig.LAST_BUY_SEQUENTIAL_TREND_COUNT.filter
         else:
-            if_continue = action_item_policy.buy.trend.last_sequential_growth_percent == last_sequential_trend
+            if_continue = action_item_policy.buy.trend.last_sequential_trend_count == last_sequential_trend
         if not if_continue:
-            logging.debug("ignore trend:%s vs %s", last_sequential_trend, action_item_policy.buy.trend.last_sequential_growth_percent)
+            logging.debug("ignore trend:%s vs %s", last_sequential_trend, action_item_policy.buy.trend.last_sequential_trend_count)
             return
 
         current_price = PercentPriceUtil.get_percent_price(stock_id,
@@ -180,42 +176,32 @@ class PolicyUtil:
 
 
     @staticmethod
-    def check_if_sell(stock_id, stock_daily_info_list, action_item, action_item_policy, current_date_str,
-                      current_stock_daily_info):
+    def check_if_sell(stock_id, stock_daily_info_list, trend_daily_info_list, action_item, action_item_policy,
+                      current_date_str, current_stock_daily_info):
         the_low_price, the_high_price = current_stock_daily_info.low, current_stock_daily_info.high
         if len(action_item.buy_stock_action) <= len(action_item.sell_stock_action):
             logging.debug("quit sell for empty stock hold list")
             return
         assert len(action_item.buy_stock_action) == len(action_item.sell_stock_action) + 1
 
-        full_trend = PolicyUtil.get_flow_trend_cachable(stock_id, current_date_str, action_item_policy.sell.days_watch,
-                                                        stock_daily_info_list, action_item_policy.sell.trend.trend_mode)
+        full_trend = PolicyUtil.get_flow_trend_cachable(stock_id, current_date_str, action_item_policy.sell.trend.days_watch,
+                                                        trend_daily_info_list, action_item_policy.sell.trend.trend_mode)
         if action_item_policy.sell.trend.growth_percent == localconfig.DEFAULT_CONFIG:
-            if_continue = full_trend in localconfig.SELL_TREND_RERCENT.filter
+            if_continue = full_trend in localconfig.SELL_TREND_PERCENT.filter
         else:
             if_continue = action_item_policy.sell.trend.growth_percent == full_trend
         if not if_continue:
             return
 
-        last_half_trend = PolicyUtil.get_flow_trend_cachable(stock_id, current_date_str, action_item_policy.sell.days_watch,
-                                                             stock_daily_info_list[-len(stock_daily_info_list)/localconfig.LAST_GROWTH_PART:],
-                                                             action_item_policy.sell.trend.trend_mode)
-        if action_item_policy.sell.trend.growth_percent_last_half == localconfig.DEFAULT_CONFIG:
-            if_continue = last_half_trend in localconfig.HALF_SELL_TREND_PERCENT.filter
-        else:
-            if_continue = action_item_policy.sell.trend.growth_percent_last_half == last_half_trend
-        if not if_continue:
-            return
-
-        last_sequential_trend = PolicyPredictUtil.get_sequential_trend(stock_daily_info_list, action_item_policy.sell.trend.trend_mode)
-        if action_item_policy.sell.trend.last_sequential_growth_percent == localconfig.DEFAULT_CONFIG:
+        last_sequential_trend = PolicyPredictUtil.get_sequential_trend(trend_daily_info_list, action_item_policy.sell.trend.trend_mode)
+        if action_item_policy.sell.trend.last_sequential_trend_count == localconfig.DEFAULT_CONFIG:
             if_continue = last_sequential_trend in localconfig.LAST_SELL_SEQUENTIAL_TREND_COUNT.filter
         else:
-            if_continue = action_item_policy.sell.trend.last_sequential_growth_percent == last_sequential_trend
+            if_continue = action_item_policy.sell.trend.last_sequential_trend_count == last_sequential_trend
 
         if not if_continue:
             logging.debug("ignore trend:%s vs %s", last_sequential_trend,
-                         action_item_policy.sell.trend.last_sequential_growth_percent)
+                         action_item_policy.sell.trend.last_sequential_trend_count)
             return
 
 
