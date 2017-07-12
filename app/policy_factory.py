@@ -5,6 +5,7 @@ import logging
 import localconfig
 from proto.person_pb2 import Person
 from proto.policy_pb2 import Policy
+import random
 
 
 BUY_DAYS_WATCH = "buy_days_watch"
@@ -32,6 +33,7 @@ SELL_TREND_DAYS_WATCH = "sell_trend_days_watch"
 
 class PolicyItem:
     def __init__(self, current_policy_dict):
+        self.current_policy_dict = current_policy_dict
         for item_type, item_value in current_policy_dict.iteritems():
             setattr(self, item_type, item_value)
 
@@ -62,29 +64,66 @@ class PolicyItem:
 
     def build_policy_id(self):
         result = []
-        for attr in PolicyFactory.policy_value_dict.keys():
+        for attr in self.current_policy_dict.keys():
             result.append("%s:%s" % (attr, getattr(self, attr)))
         return ",".join(result)
 
 
     @staticmethod
-    def build(repeated_policy, current_policy_dict):
-        if len(current_policy_dict) < len(PolicyFactory.policy_value_dict):
-            for k,v in PolicyFactory.policy_value_dict.iteritems():
-                if k in current_policy_dict:
-                    continue
-                best_item = v.best
-                if isinstance(best_item, list):
-                    current_policy_dict[k] = best_item[0]
-                    # # TODO: iterate all best
-                    # for item in best_item:
-                    #     current_policy_dict[k] = item
-                    #     PolicyItem.build(repeated_policy, dict(current_policy_dict))
+    def build(repeated_policy, current_policy_dict, partial_policy_set, full_policy_set):
+        if str(current_policy_dict) in partial_policy_set:
+            return
+        partial_policy_set.add(str(current_policy_dict))
+        if len(current_policy_dict) == len(PolicyFactory.policy_value_dict):
+            PolicyItem.build_core(repeated_policy, current_policy_dict, partial_policy_set, full_policy_set)
+            return
+        assert len(current_policy_dict) < len(PolicyFactory.policy_value_dict)
+        for k,v in PolicyFactory.policy_value_dict.iteritems():
+            if len(PolicyFactory.policy_value_dict) <= len(current_policy_dict):
+                break
+            if k in current_policy_dict:
+                continue
+            best_item = v.best
+            if isinstance(best_item, list):
+                if 1 < len(best_item) and False:
+                    for item in best_item:
+                        current_policy_dict[k] = item
+                        if len(current_policy_dict) < len(PolicyFactory.policy_value_dict):
+                            # 必须拷贝而非直接修改
+                            PolicyItem.build(repeated_policy, dict(current_policy_dict), partial_policy_set, full_policy_set)
+                        else:
+                            PolicyItem.build_core(repeated_policy, current_policy_dict, partial_policy_set, full_policy_set)
                 else:
-                    current_policy_dict[k] = best_item
-        policy_item = PolicyItem(current_policy_dict)
-        policy_item.build_policy(repeated_policy.add())
+                    assert best_item
+                    # 取random
+                    current_policy_dict[k] = best_item[int(random.random()*100) % len(best_item)]
+                    if len(current_policy_dict) == len(PolicyFactory.policy_value_dict):
+                        PolicyItem.build_core(repeated_policy, current_policy_dict, partial_policy_set, full_policy_set)
+                        return
+            else:
+                current_policy_dict[k] = best_item
+                if len(current_policy_dict) == len(PolicyFactory.policy_value_dict):
+                    PolicyItem.build_core(repeated_policy, current_policy_dict, partial_policy_set, full_policy_set)
+                    return
 
+
+
+    @staticmethod
+    def build_core(repeated_policy, current_policy_dict, partial_policy_set, full_policy_set):
+        if str(current_policy_dict) in partial_policy_set:
+            return
+        partial_policy_set.add(str(current_policy_dict))
+        assert len(current_policy_dict) == len(PolicyFactory.policy_value_dict)
+        if str(current_policy_dict) not in full_policy_set:
+            policy_item = PolicyItem(current_policy_dict)
+            # 判断policy_id是考虑到str(current_policy_dict)可能是无序的
+            policy_id = policy_item.build_policy_id()
+            if policy_id in full_policy_set:
+                return
+            policy = repeated_policy.add()
+            policy_item.build_policy(policy)
+            full_policy_set.add(str(current_policy_dict))
+            full_policy_set.add(policy_id)
 
 
 class PolicyFactory:
@@ -128,8 +167,10 @@ class PolicyFactory:
 
     @staticmethod
     def generate_policy_list_impl_for_policy_type(repeated_policy, policy_type, policy_value_list):
+        policy_str_set = set()
+        policy_id_set = set()
         for policy_value in policy_value_list:
-            PolicyItem.build(repeated_policy, {policy_type: policy_value})
+            PolicyItem.build(repeated_policy, {policy_type: policy_value}, policy_str_set, policy_id_set)
 
 
 if __name__ == "__main__":
