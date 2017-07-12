@@ -110,7 +110,7 @@ end_date_str = "20171230"
 # end_date_str = "20161230"
 
 #
-# select_stock_name_list = ["JD"]
+select_stock_name_list = ["JD"]
 # DAYS_HOLD_FOR_SALE_LIST = [30]
 # start_date_str = "20170101"
 

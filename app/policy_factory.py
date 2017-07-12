@@ -17,6 +17,11 @@ SELL_PRICE_PERCENT = "sell_price_percent"
 BUY_TREND_PERCENT = "buy_trend_percent"
 SELL_TREND_PERCENT = "sell_trend_percent"
 LOSS_STOP_THOUSANDTH = "loss_stop_thousandth"
+<<<<<<< HEAD
+=======
+HALF_BUY_TREND_PERCENT = "half_buy_trend_percent"
+HALF_SELL_TREND_PERCENT = "half_sell_trend_percent"
+>>>>>>> 62d774d1bdba757b6c2ee020b5230353e5196427
 PREFER_MAX_SPLITED_TRADE_UNIT = "prefer_max_splited_trade_unit"
 PREFER_MAX_STOCK_COUNT = "prefer_max_stock_count"
 LAST_BUY_SEQUENTIAL_TREND_COUNT = "last_buy_sequential_trend_count"
@@ -43,6 +48,10 @@ class PolicyItem:
         policy.buy.at_percent.mode = getattr(self, BUY_MODE)
         policy.buy.at_percent.percent_n = getattr(self, BUY_PRICE_PERCENT)
         policy.buy.trend.growth_percent = getattr(self, BUY_TREND_PERCENT)
+<<<<<<< HEAD
+=======
+        policy.buy.trend.half_trend_percent = getattr(self, HALF_BUY_TREND_PERCENT)
+>>>>>>> 62d774d1bdba757b6c2ee020b5230353e5196427
         policy.buy.trend.last_sequential_trend_count = getattr(self, LAST_BUY_SEQUENTIAL_TREND_COUNT)
         policy.buy.trend.trend_mode = getattr(self, TREND_MODE)
         policy.buy.trend.days_watch = getattr(self, BUY_TREND_DAYS_WATCH)
@@ -52,6 +61,10 @@ class PolicyItem:
         policy.sell.sell_at_loss_thousandth = getattr(self, LOSS_STOP_THOUSANDTH)
         policy.sell.days_hold_for_sell = getattr(self, DAYS_HOLD_FOR_SELL)
         policy.sell.trend.growth_percent = getattr(self, SELL_TREND_PERCENT)
+<<<<<<< HEAD
+=======
+        policy.sell.trend.half_trend_percent = getattr(self, HALF_SELL_TREND_PERCENT)
+>>>>>>> 62d774d1bdba757b6c2ee020b5230353e5196427
         policy.sell.trend.last_sequential_trend_count = getattr(self, LAST_SELL_SEQUENTIAL_TREND_COUNT)
         policy.sell.trend.trend_mode = getattr(self, TREND_MODE)
         policy.sell.trend.days_watch = getattr(self, SELL_TREND_DAYS_WATCH)
@@ -100,6 +113,11 @@ class PolicyFactory:
         BUY_TREND_PERCENT: localconfig.BUY_TREND_PERCENT,
         SELL_TREND_PERCENT: localconfig.SELL_TREND_PERCENT,
         LOSS_STOP_THOUSANDTH: localconfig.LOSS_STOP_THOUSANDTH,
+<<<<<<< HEAD
+=======
+        HALF_BUY_TREND_PERCENT: localconfig.HALF_BUY_TREND_PERCENT,
+        HALF_SELL_TREND_PERCENT: localconfig.HALF_SELL_TREND_PERCENT,
+>>>>>>> 62d774d1bdba757b6c2ee020b5230353e5196427
         LAST_BUY_SEQUENTIAL_TREND_COUNT: localconfig.LAST_BUY_SEQUENTIAL_TREND_COUNT,
         LAST_SELL_SEQUENTIAL_TREND_COUNT: localconfig.LAST_SELL_SEQUENTIAL_TREND_COUNT,
         TREND_MODE: localconfig.TREND_MODE,
@@ -118,6 +136,13 @@ class PolicyFactory:
         PolicyFactory.generate_policy_list_impl_auto(repeated_policy)
         logging.info("end generate policy list")
 
+<<<<<<< HEAD
+=======
+    # @staticmethod
+    # def generate_policy_list_impl(prefer_max_splited_trade_unit, prefer_max_stock_count, repeated_policy):
+    #     PolicyFactory.generate_policy_list_for_percent(prefer_max_splited_trade_unit, prefer_max_stock_count, repeated_policy)
+
+>>>>>>> 62d774d1bdba757b6c2ee020b5230353e5196427
 
     @staticmethod
     def generate_policy_list_impl_auto(repeated_policy):
@@ -131,6 +156,98 @@ class PolicyFactory:
         for policy_value in policy_value_list:
             PolicyItem.build(repeated_policy, {policy_type: policy_value})
 
+<<<<<<< HEAD
+=======
+    # @staticmethod
+    # def generate_policy_list_for_percent(prefer_max_splited_trade_unit, prefer_max_stock_count, repeated_policy):
+    #     logging.debug("begin generate_policy_list_for_percent")
+    #     for buy_percent_n in localconfig.BUY_PRICE_PERCENT:
+    #         for sell_loss_thousandth in localconfig.LOSS_STOP_THOUSANDTH_LIST:
+    #             buy_days_watch = 20
+    #             sell_days_watch = 10
+    #             days_hold_for_sell = 5
+    #             buy_mode = Policy.TradePolicy.Percent.LOW
+    #             sell_mode = Policy.TradePolicy.Percent.HIGH
+    #             HALF_BUY_TREND_PERCENT = localconfig.DEFAULT_CONFIG
+    #             HALF_SELL_TREND_PERCENT = localconfig.DEFAULT_CONFIG
+    #             BUY_TREND_PERCENT = localconfig.DEFAULT_CONFIG
+    #             SELL_TREND_RERCENT = localconfig.DEFAULT_CONFIG
+    #             LAST_BUY_SEQUENTIAL_TREND_COUNT = localconfig.DEFAULT_CONFIG
+    #             LAST_SELL_SEQUENTIAL_TREND_COUNT = localconfig.DEFAULT_CONFIG
+    #             trend_mode = Policy.TradePolicy.Percent.HIGH
+    #
+    #             for sell_percent_n in localconfig.SELL_PRICE_PERCENT_LIST:
+    #                 policy = repeated_policy.add()
+    #                 policy.id = "buy_days_watch:%s,sell_days_watch:%s,days_hold_for_sell:%s,"  \
+    #                             "buy_percent_n:%s,sell_percent_n:%s,buy_mode:%s,sell_mode:%s,"  \
+    #                             "loss_stop_thousandth:%s,buy_growth:%s,sell_growth:%s,"  \
+    #                             "half_buy_growth:%s,half_sell_growth:%s," \
+    #                             "LAST_BUY_SEQUENTIAL_TREND_COUNT:%s,LAST_SELL_SEQUENTIAL_TREND_COUNT:%s" % (
+    #                     buy_days_watch, sell_days_watch, days_hold_for_sell,
+    #                     buy_percent_n, sell_percent_n, buy_mode, sell_mode,
+    #                     sell_loss_thousandth, BUY_TREND_PERCENT, SELL_TREND_RERCENT,
+    #                     HALF_BUY_TREND_PERCENT, HALF_SELL_TREND_PERCENT,
+    #                     LAST_BUY_SEQUENTIAL_TREND_COUNT,LAST_SELL_SEQUENTIAL_TREND_COUNT
+    #                 )
+    #
+    #
+    #                 # set_attr(object, attr_name, policy_key_name)
+    #
+    #                 policy.prefer_max_splited_trade_unit = prefer_max_splited_trade_unit
+    #                 policy.prefer_max_stock_count = prefer_max_stock_count
+    #                 policy.buy.days_watch = buy_days_watch
+    #                 policy.buy.at_percent.mode = buy_mode
+    #                 policy.buy.at_percent.percent_n = buy_percent_n
+    #                 policy.buy.trend.growth_percent = BUY_TREND_PERCENT
+    #                 policy.buy.trend.half_trend_percent = HALF_BUY_TREND_PERCENT
+    #                 policy.buy.trend.last_sequential_trend_count = LAST_BUY_SEQUENTIAL_TREND_COUNT
+    #                 policy.buy.trend.trend_mode = trend_mode
+    #                 policy.sell.days_watch = sell_days_watch
+    #                 policy.sell.at_percent.mode = sell_mode
+    #                 policy.sell.at_percent.percent_n = sell_percent_n
+    #                 policy.sell.sell_at_loss_thousandth = sell_loss_thousandth
+    #                 policy.sell.days_hold_for_sell = days_hold_for_sell
+    #                 policy.sell.trend.growth_percent = SELL_TREND_RERCENT
+    #                 policy.sell.trend.half_trend_percent = HALF_SELL_TREND_PERCENT
+    #                 policy.sell.trend.last_sequential_trend_count = LAST_SELL_SEQUENTIAL_TREND_COUNT
+    #                 policy.sell.trend.trend_mode = trend_mode
+    #
+    #             for sell_profit_thousandth_n in localconfig.SELL_PROFIT_THOUSANDTH:
+    #                 policy = repeated_policy.add()
+    #                 policy.id = "buy_days_watch:%s,sell_days_watch:%s,days_hold_for_sell:%s,"  \
+    #                             "buy_percent_n:%s,sell_profit_thousandth_n:%s,buy_mode:%s,"  \
+    #                             "sell_mode:%s,loss_stop_thousandth:%s,buy_growth:%s,sell_growth:%s," \
+    #                             "half_buy_growth:%s,half_sell_growth:%s," \
+    #                             "LAST_BUY_SEQUENTIAL_TREND_COUNT:%s,LAST_SELL_SEQUENTIAL_TREND_COUNT:%s" % (
+    #                                 buy_days_watch, sell_days_watch, days_hold_for_sell,
+    #                                 buy_percent_n, sell_profit_thousandth_n, buy_mode,
+    #                                 sell_mode, sell_loss_thousandth, BUY_TREND_PERCENT,
+    #                                 SELL_TREND_RERCENT,
+    #                                 HALF_BUY_TREND_PERCENT, HALF_SELL_TREND_PERCENT,
+    #                                 LAST_BUY_SEQUENTIAL_TREND_COUNT, LAST_SELL_SEQUENTIAL_TREND_COUNT
+    #                 )
+    #                 policy.prefer_max_splited_trade_unit = prefer_max_splited_trade_unit
+    #                 policy.prefer_max_stock_count = prefer_max_stock_count
+    #                 policy.buy.days_watch = buy_days_watch
+    #                 policy.buy.at_percent.mode = buy_mode
+    #                 policy.buy.at_percent.percent_n = buy_percent_n
+    #                 policy.buy.trend.growth_percent = BUY_TREND_PERCENT
+    #                 policy.buy.trend.half_trend_percent = HALF_BUY_TREND_PERCENT
+    #                 policy.buy.trend.last_sequential_trend_count = LAST_BUY_SEQUENTIAL_TREND_COUNT
+    #                 policy.buy.trend.trend_mode = trend_mode
+    #                 policy.sell.days_watch = sell_days_watch
+    #                 policy.sell.at_percent.mode = sell_mode
+    #                 policy.sell.sell_at_profit_thousandth = sell_profit_thousandth_n
+    #                 policy.sell.sell_at_loss_thousandth = sell_loss_thousandth
+    #                 policy.sell.days_hold_for_sell = days_hold_for_sell
+    #                 policy.sell.trend.growth_percent = SELL_TREND_RERCENT
+    #                 policy.sell.trend.half_trend_percent = HALF_SELL_TREND_PERCENT
+    #                 policy.sell.trend.last_sequential_trend_count = LAST_SELL_SEQUENTIAL_TREND_COUNT
+    #                 policy.sell.trend.trend_mode = trend_mode
+    #     logging.debug("end generate_policy_list_for_percent")
+    #
+
+>>>>>>> 62d774d1bdba757b6c2ee020b5230353e5196427
 if __name__ == "__main__":
     person = Person()
     PolicyFactory.generate_policy_list(person.policy_info)
