@@ -1,5 +1,6 @@
 import unittest
 from policy_util import PolicyUtil
+from policy_report_util import PolicyReportUtil
 from policy_predict_util import PolicyPredictUtil
 from proto.policy_pb2 import Policy, PolicyReport
 from proto.person_pb2 import Person
@@ -61,10 +62,10 @@ class MyTestCase(unittest.TestCase):
         daily_info.date = "20170102"
         daily_info = stock_info.daily_info.add()
         daily_info.date = "20170105"
-        self.assertTrue(PolicyUtil.get_the_stock_daily_info(stock_info, "20170101"))
-        self.assertTrue(PolicyUtil.get_the_stock_daily_info(stock_info, "20170102"))
-        self.assertTrue(not PolicyUtil.get_the_stock_daily_info(stock_info, "20170103"))
-        self.assertTrue(PolicyUtil.get_the_stock_daily_info(stock_info, "20170105"))
+        self.assertTrue(PolicyReportUtil.get_the_stock_daily_info(stock_info, "20170101"))
+        self.assertTrue(PolicyReportUtil.get_the_stock_daily_info(stock_info, "20170102"))
+        self.assertTrue(not PolicyReportUtil.get_the_stock_daily_info(stock_info, "20170103"))
+        self.assertTrue(PolicyReportUtil.get_the_stock_daily_info(stock_info, "20170105"))
 
 
     def test_build_watch_days(self):
@@ -80,7 +81,7 @@ class MyTestCase(unittest.TestCase):
         action_item = Person.StockPolicyActionsItem()
         action_item.trade_watch_start_date = "20170103"
         action_item.trade_watch_end_date = "20170107"
-        self.assertEqual(2, PolicyUtil.build_watch_days(stock_info.daily_info, action_item))
+        self.assertEqual(2, PolicyReportUtil.build_watch_days(stock_info.daily_info, action_item))
 
 
     def test_get_cash_value_available(self):
@@ -93,7 +94,7 @@ class MyTestCase(unittest.TestCase):
         buy_action.at_price = 10
         buy_action.volumn = 200
         buy_action.stock_trade_cost = 1
-        self.assertEqual(1000, PolicyUtil.get_cash_value_available(action_item))
+        self.assertEqual(1000, PolicyReportUtil.get_cash_value_available(action_item))
 
 
     def test_get_asset_value_out(self):
@@ -116,17 +117,17 @@ class MyTestCase(unittest.TestCase):
         buy_action.at_price = 10
         buy_action.volumn = 200
         buy_action.stock_trade_cost = 1
-        self.assertEqual(5100 - 1 - 10*200 + 10.5*200 -1, PolicyUtil.get_asset_value_out(stock_info, action_item))
+        self.assertEqual(5100 - 1 - 10*200 + 10.5*200 -1, PolicyReportUtil.get_asset_value_out(stock_info, action_item))
 
         action_item.trade_watch_end_date = "20170105"
-        self.assertEqual(5100 - 1 - 10*200 + 10.1*200 -1, PolicyUtil.get_asset_value_out(stock_info, action_item))
+        self.assertEqual(5100 - 1 - 10*200 + 10.1*200 -1, PolicyReportUtil.get_asset_value_out(stock_info, action_item))
 
         sell_action = action_item.sell_stock_action.add()
         sell_action.date = "20170102"
         sell_action.at_price = 10.3
         sell_action.volumn = 200
         sell_action.stock_trade_cost = 1
-        self.assertEqual(5100 - 1 - 10*200 + 10.3*200 -1, PolicyUtil.get_asset_value_out(stock_info, action_item))
+        self.assertEqual(5100 - 1 - 10*200 + 10.3*200 -1, PolicyReportUtil.get_asset_value_out(stock_info, action_item))
 
 
     def test_build_action_item_report(self):
@@ -162,7 +163,7 @@ class MyTestCase(unittest.TestCase):
         buy_action.volumn = 200
         buy_action.stock_trade_cost = 1
         report = PolicyReport()
-        PolicyUtil.build_action_item_report(stock_info, action_item, report)
+        PolicyReportUtil.build_action_item_report(stock_info, action_item, report)
         self.assertEqual(1, report.stock_watch_days)
         self.assertEqual(5100, report.cash_taken_in)
         self.assertEqual(5100 - 10*200 -1 + 10.5*200 -1, report.cash_taken_out)
@@ -178,7 +179,7 @@ class MyTestCase(unittest.TestCase):
 
 
         action_item.trade_watch_end_date = "20170105"
-        PolicyUtil.build_action_item_report(stock_info, action_item, report)
+        PolicyReportUtil.build_action_item_report(stock_info, action_item, report)
         self.assertEqual(5100 - 10 * 200 - 1 + 10.1 * 200 - 1, report.cash_taken_out)
         self.assertEqual(report.stock_buy_times - report.stock_sell_times, report.stock_hold_no_sell_times)
 
@@ -188,7 +189,7 @@ class MyTestCase(unittest.TestCase):
         sell_action.at_price = 10.2
         sell_action.volumn = 200
         sell_action.stock_trade_cost = 1
-        PolicyUtil.build_action_item_report(stock_info, action_item, report)
+        PolicyReportUtil.build_action_item_report(stock_info, action_item, report)
         self.assertEqual(2, report.stock_watch_days)
         self.assertEqual(5100, report.cash_taken_in)
         self.assertEqual(5100 - 10*200 -1 + 10.2*200 -1, report.cash_taken_out)
@@ -206,7 +207,7 @@ class MyTestCase(unittest.TestCase):
         sell_action.at_price = 9
         sell_action.volumn = 200
         sell_action.stock_trade_cost = 1
-        PolicyUtil.build_action_item_report(stock_info, action_item, report)
+        PolicyReportUtil.build_action_item_report(stock_info, action_item, report)
         self.assertEqual(2, report.stock_watch_days)
         self.assertEqual(5100, report.cash_taken_in)
         self.assertEqual(5100 - 10*200 -1 + 9*200 -1, report.cash_taken_out)
@@ -227,7 +228,7 @@ class MyTestCase(unittest.TestCase):
         buy_action.volumn = 200
         buy_action.stock_trade_cost = 1
         action_item.trade_watch_end_date = "20170110"
-        PolicyUtil.build_action_item_report(stock_info, action_item, report)
+        PolicyReportUtil.build_action_item_report(stock_info, action_item, report)
         self.assertEqual(6, report.stock_watch_days)
         self.assertEqual(5100, report.cash_taken_in)
         self.assertEqual(5100 - 10*200 -1 + 9*200 -1 - 10.5*200 -1 + 9.5*200 -1, report.cash_taken_out)
@@ -241,6 +242,38 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(4, report.stock_hold_loss_days)
         self.assertEqual(report.stock_buy_times - report.stock_sell_times, report.stock_hold_no_sell_times)
 
+
+    def test_greater_policy_report_roi_top(self):
+        left = PolicyReport()
+        left.roi = 1.0
+        left.stock_sell_times = 2
+        left.stock_buy_times = 2
+        left.trade_profit_times = 2
+        right = PolicyReport()
+        right.roi = 1.0
+        right.stock_sell_times = 2
+        right.stock_buy_times = 2
+        right.trade_profit_times = 2
+        self.assertTrue(PolicyReportUtil.greater_policy_report_roi(left, right) == 0)
+        left.roi = 1.1
+        self.assertTrue(PolicyReportUtil.greater_policy_report_roi(left, right) < 0)
+        left.roi = 1.0
+        left.stock_sell_times = 3
+        self.assertTrue(PolicyReportUtil.greater_policy_report_roi(left, right) < 0)
+        left.stock_sell_times = 1
+        self.assertTrue(not PolicyReportUtil.greater_policy_report_roi(left, right) < 0)
+        left.stock_sell_times = 2
+        left.stock_buy_times = 3
+        self.assertTrue(PolicyReportUtil.greater_policy_report_roi(left, right) < 0)
+        left.stock_buy_times = 1
+        self.assertTrue(not PolicyReportUtil.greater_policy_report_roi(left, right) < 0)
+        left.stock_buy_times = 2
+        left.trade_profit_times = 3
+        self.assertTrue(PolicyReportUtil.greater_policy_report_roi(left, right) < 0)
+
+
+
+        
 
 
 if __name__ == '__main__':

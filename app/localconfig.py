@@ -19,15 +19,20 @@ class PolicyValueRange:
 
 DEFAULT_CONFIG = -9999
 POSITION_PERCENT_LIST = range(0, 100+1, 10)
+SUMMARY_POSITION_PERCENT_LIST = range(0, 100+1, 10)
 DEFAULT_TIMEOUT_SECONDS = 2.0
 EXPIRE_AFTER_DAYS = 100
 EXPIRE_AFTER_MS = 10000
 end_date_str = DatetimeUtil.to_datetime_str(datetime.datetime.now())
 cash_taken_in = 30000
+TOP_PERCENT = 0
+MIN_TRADE_DAYS_PERCENT = 8
+MIN_TRADE_DAYS = 4
+MAX_MEAN_DAYS_HOLD_FOR_SALE = 5
 # max_train_watch_days = 0
 # max_predict_watch_days = 0
 
-max_watch_jump_times = 20
+max_watch_jump_times = 5
 JUMPS_PER_WATCH = 1
 LAST_GROWTH_PART = 2
 
@@ -46,10 +51,10 @@ SELL_MODE = PolicyValueRange([Policy.TradePolicy.Percent.HIGH, Policy.TradePolic
                              [Policy.TradePolicy.Percent.HIGH])
 
 BUY_WATCH_DAYS = PolicyValueRange([10, 20, 30], [30, 20])
-SELL_WATCH_DAYS = PolicyValueRange([10, 20, 30], [10, 20])
+SELL_WATCH_DAYS = PolicyValueRange([10, 20, 30], [10, 30, 20])
 
-BUY_PRICE_PERCENT = PolicyValueRange(range(10, 100 + 1, 10), [70, 40, 30])
-SELL_PRICE_PERCENT = PolicyValueRange(range(10, 100 + 1, 10), [90, 40, 100])
+BUY_PRICE_PERCENT = PolicyValueRange(range(10, 100 + 1, 10), [90, 70, 80])
+SELL_PRICE_PERCENT = PolicyValueRange(range(10, 100 + 1, 10), [90, 100, 80])
 
 LOSS_STOP_THOUSANDTH = PolicyValueRange([10, 20, 50, 100, 200, 500], [50, 20])
 SELL_PROFIT_THOUSANDTH = PolicyValueRange([0, 10, 20, 50, 100, 150, 1000], [0, 100, 50])

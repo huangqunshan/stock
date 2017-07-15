@@ -10,11 +10,10 @@ from price_util import PercentPriceUtil
 from policy_predict_util import PolicyPredictUtil
 from proto.policy_pb2 import Policy
 import localconfig
+from policy_report_util import PolicyReportUtil
 
 
 class PolicyUtil:
-    # [stock_id][date_str] = (stock_daily_info, last_stock_daily_info)
-    stock_date_dict = {}
     # [stock_id][current_date_str][days_watch] = trend
     stock_trend_dict = {}
 
@@ -43,24 +42,22 @@ class PolicyUtil:
                     action_item.trade_watch_start_date = trade_watch_start_date_str
                     action_item.trade_watch_end_date = trade_watch_end_date_str
                     PolicyUtil.build_policy_actions(stock_info, action_item, policy)
-                    PolicyUtil.build_action_item_report(stock_info, action_item, action_item.report)
+                    PolicyReportUtil.build_action_item_report(stock_info, action_item, action_item.report)
                     # clear memory now
                     del action_item.buy_stock_action[:]
                     del action_item.sell_stock_action[:]
                 logging.info("end train for policy_id, stock_id")
-                PolicyUtil.build_percent_policy_report_for_stock_policy(person)
+                PolicyReportUtil.build_summary_policy_report_for_stock_policy(person)
                 del person.action_items[:]
             logging.info("end train for policy_id:%s", policy.id)
-        PolicyUtil.build_percent_policy_report_for_policy(person)
-        PolicyUtil.build_percent_policy_report_for_policy_group(person)
-        PolicyUtil.build_percent_policy_report_for_stock_policy_group(person)
-        PolicyUtil.build_sort_report(person)
+        PolicyReportUtil.build_summary_policy_report_for_policy(person)
+        PolicyReportUtil.build_summary_policy_report_for_policy_group(person)
+        PolicyReportUtil.build_summary_policy_report_for_stock_policy_group(person)
+        PolicyReportUtil.build_sort_report(person)
         # clear other empty
         del person.stock_info[:]
         del person.policy_info[:]
-        logging.info("begin print_summary")
-        PolicyUtil.print_summary(person)
-        logging.info("end print_summary")
+        PolicyReportUtil.print_summary(person)
         logging.info("end train")
         return
 
@@ -81,7 +78,7 @@ class PolicyUtil:
     def do_trade_by_policy(stock_info, action_item, action_item_policy, current_date):
         logging.debug("begin try_trade_by_policy, current_date:%s", current_date)
         current_date_str = DatetimeUtil.to_datetime_str(current_date)
-        current_stock_daily_info = PolicyUtil.get_the_stock_daily_info(stock_info, current_date_str)
+        current_stock_daily_info = PolicyReportUtil.get_the_stock_daily_info(stock_info, current_date_str)
         if current_stock_daily_info is None:
             logging.debug("no stock info for %s", current_date_str)
             return
@@ -91,8 +88,6 @@ class PolicyUtil:
             logging.debug("not allow trade for %s", current_date)
             logging.debug("end try_trade_by_policy")
             return
-        # TODO: 添加趋势的过滤条件
-        # TODO: 优化， 提前计算percent list， 以及有效的序列
         if len(action_item.buy_stock_action) == len(action_item.sell_stock_action):
             stock_daily_info_list = PolicyUtil.filter_stock_daily_info_list(stock_info,
                                                                         action_item_policy.buy.days_watch,
@@ -160,7 +155,7 @@ class PolicyUtil:
             logging.debug("quit buy for too low percent_price:%s < low_price:%s", current_price, the_low_price)
             return
         current_price = min(current_price, the_high_price)
-        cash_value_left_to_buy = PolicyUtil.get_cash_value_available(action_item)
+        cash_value_left_to_buy = PolicyReportUtil.get_cash_value_available(action_item)
 
         logging.debug("cash value left:%s", cash_value_left_to_buy)
         if cash_value_left_to_buy <= 0:
@@ -242,62 +237,6 @@ class PolicyUtil:
 
 
     @staticmethod
-    def print_summary(person):
-        logging.info("-----------------------")
-        for item_report in person.sorted_policy_group_report:
-            logging.info("policy_group_report:\t%s:%s\t2|%s|%s\t5|%s|%s\t8|%s|%s\t0|%s|%s",
-                         item_report.policy_group_type, item_report.policy_group_value,
-                         item_report.reports[2].report.roi,
-                         item_report.reports[2].report.stock_sell_times,
-                         item_report.reports[5].report.roi,
-                         item_report.reports[5].report.stock_sell_times,
-                         item_report.reports[8].report.roi,
-                         item_report.reports[8].report.stock_sell_times,
-                         item_report.reports[0].report.roi,
-                         item_report.reports[0].report.stock_sell_times)
-        logging.info("-----------------------")
-        for item_report in person.sorted_policy_summary_report:
-            logging.info("policy_summary_report:\t%s\t2|%s|%s\t5|%s|%s\t8|%s|%s\t0|%s|%s",
-                         item_report.policy_id,
-                         item_report.reports[2].report.roi,
-                         item_report.reports[2].report.stock_sell_times,
-                         item_report.reports[5].report.roi,
-                         item_report.reports[5].report.stock_sell_times,
-                         item_report.reports[8].report.roi,
-                         item_report.reports[8].report.stock_sell_times,
-                         item_report.reports[0].report.roi,
-                         item_report.reports[0].report.stock_sell_times)
-        logging.info("-----------------------")
-        for item_report in person.sorted_stock_policy_group_report:
-            logging.info("stock_policy_group_report:\t%s\t%s:%s\t2|%s|%s\t5|%s|%s\t8|%s|%s\t0|%s|%s",
-                         item_report.stock_id,
-                         item_report.policy_group_type,
-                         item_report.policy_group_value,
-                         item_report.reports[2].report.roi,
-                         item_report.reports[2].report.stock_sell_times,
-                         item_report.reports[5].report.roi,
-                         item_report.reports[5].report.stock_sell_times,
-                         item_report.reports[8].report.roi,
-                         item_report.reports[8].report.stock_sell_times,
-                         item_report.reports[0].report.roi,
-                         item_report.reports[0].report.stock_sell_times)
-        logging.info("-----------------------")
-        for item_report in person.sorted_stock_policy_report:
-            logging.info("stock_policy_report:\t%s\t%s\t2|%s|%s\t5|%s|%s\t8|%s|%s\t0|%s|%s",
-                         item_report.stock_id,
-                         item_report.policy_id,
-                         item_report.reports[2].report.roi,
-                         item_report.reports[2].report.stock_sell_times,
-                         item_report.reports[5].report.roi,
-                         item_report.reports[5].report.stock_sell_times,
-                         item_report.reports[8].report.roi,
-                         item_report.reports[8].report.stock_sell_times,
-                         item_report.reports[0].report.roi,
-                         item_report.reports[0].report.stock_sell_times)
-        logging.info("-----------------------")
-
-
-    @staticmethod
     def get_trade_watch_date_list(repeated_daily_info, days_before, max_watch_jump_times, jumps_per_range):
         logging.debug("begin get_trade_watch_date_str_list:%s, pre_train_watch_days:%s, max_watch_jump_times:%s, jumps_per_range:%s",
                       repeated_daily_info, days_before, max_watch_jump_times, jumps_per_range)
@@ -318,307 +257,17 @@ class PolicyUtil:
 
 
     @staticmethod
-    def get_asset_value_out(stock_info, action_item):
-        cash_value = PolicyUtil.get_cash_value_available(action_item)
-        asset_value_taken_out = cash_value
-        if len(action_item.sell_stock_action) < len(action_item.buy_stock_action):
-            the_stock_daily_info = PolicyUtil.get_the_last_stock_daily_info(stock_info, action_item)
-            the_stock_mean_price = (the_stock_daily_info.high + the_stock_daily_info.low) / 2.0
-            # 最后一笔持有的仍然计算手续费
-            asset_value_taken_out += (the_stock_mean_price * action_item.buy_stock_action[-1].volumn - action_item.buy_stock_action[-1].stock_trade_cost)
-        logging.debug("cash_value:%s, asset_value_out:%s", cash_value, asset_value_taken_out)
-        return asset_value_taken_out
-
-
-    @staticmethod
-    def get_cash_value_available(action_item):
-        cash_buy = 0
-        cash_sell = 0
-        for stock_action in action_item.buy_stock_action:
-            cash_buy += (stock_action.at_price * stock_action.volumn + stock_action.stock_trade_cost)
-        for stock_action in action_item.sell_stock_action:
-            cash_sell += (stock_action.at_price * stock_action.volumn - stock_action.stock_trade_cost)
-        cash_left = action_item.cash_taken_in + cash_sell - cash_buy
-        logging.debug("buy_size:%s, sell_size:%s, cash_buy:%s, cash_sell:%s, cash_left:%s, sell_stock_action:%s",
-                      len(action_item.buy_stock_action), len(action_item.sell_stock_action), cash_buy, cash_sell,
-                     cash_left, action_item.sell_stock_action)
-        return cash_left
-
-
-    @staticmethod
-    def get_the_last_stock_daily_info(stock_info, action_item):
-        # 以观察周期最后一天的下一天的close作为卖出价格
-        return PolicyUtil.get_the_stock_daily_info(stock_info, action_item.trade_watch_end_date)
-
-
-    @staticmethod
     def filter_stock_daily_info_list(stock_info, days_watch, current_date_str):
         end_date = DatetimeUtil.from_date_str(current_date_str)
         result = []
         for i in range(days_watch, 0, -1):
             the_date = end_date - datetime.timedelta(days=i)
-            the_daily_info = PolicyUtil.get_the_stock_daily_info(stock_info,
+            the_daily_info = PolicyReportUtil.get_the_stock_daily_info(stock_info,
                                                                  DatetimeUtil.to_datetime_str(the_date))
             if the_daily_info:
                 result.append(the_daily_info)
         return result
 
-
-    @staticmethod
-    def get_the_stock_daily_info(stock_info, current_date_str):
-        stock_id = stock_info.stock_id
-        if stock_id in PolicyUtil.stock_date_dict:
-            if current_date_str in PolicyUtil.stock_date_dict[stock_id]:
-                return PolicyUtil.stock_date_dict[stock_id][current_date_str]
-            else:
-                return None
-        else:
-            PolicyUtil.stock_date_dict.setdefault(stock_id, {})
-            for stock_daily_info in stock_info.daily_info:
-                PolicyUtil.stock_date_dict[stock_id][stock_daily_info.date] = stock_daily_info
-            if stock_id in PolicyUtil.stock_date_dict and current_date_str in PolicyUtil.stock_date_dict[stock_id]:
-                return PolicyUtil.stock_date_dict[stock_id][current_date_str]
-            else:
-                return None
-
-
-    @staticmethod
-    def build_percent_policy_report_for_stock_policy(person):
-        logging.info("begin build_percent_policy_report_for_stock_policy")
-        # [stock_id][policy_id] = [PolicyReport]
-        stock_policy_to_policy_report_dict = {}
-        for action_item in person.action_items:
-            stock_policy_to_policy_report_dict.setdefault(action_item.stock_id, {})
-            stock_policy_to_policy_report_dict[action_item.stock_id].setdefault(action_item.policy_id, [])
-            stock_policy_to_policy_report_dict[action_item.stock_id][action_item.policy_id].append(action_item.report)
-        for stock_id, value_item in stock_policy_to_policy_report_dict.iteritems():
-            for policy_id, policy_report_list in value_item.iteritems():
-                stock_policy_report = person.stock_policy_report.add()
-                stock_policy_report.stock_id = stock_id
-                stock_policy_report.policy_id = policy_id
-                PolicyUtil.build_percent_policy_report(policy_report_list, stock_policy_report.reports)
-        logging.info("end build_percent_policy_report_for_stock_policy")
-
-
-    @staticmethod
-    def build_percent_policy_report_for_policy(person):
-        logging.info("begin build_percent_policy_report_for_policy")
-        # [policy_id] = [PolicyReport]
-        policy_position_to_report_dict = {}
-        for stock_policy_report in person.stock_policy_report:
-            policy_position_to_report_dict.setdefault(stock_policy_report.policy_id, [])
-            for percent_policy_report in stock_policy_report.reports:
-                # add all position
-                policy_position_to_report_dict[stock_policy_report.policy_id].append(percent_policy_report.report)
-        for policy_id, policy_report_list in policy_position_to_report_dict.iteritems():
-            policy_summary_report = person.policy_summary_report.add()
-            policy_summary_report.policy_id = policy_id
-            PolicyUtil.build_percent_policy_report(policy_report_list, policy_summary_report.reports)
-        logging.info("end build_percent_policy_report_for_policy")
-
-
-    @staticmethod
-    def build_percent_policy_report_for_policy_group(person):
-        logging.info("begin build_percent_policy_report_for_policy_group")
-        # [policy_group_type][policy_group_value] = [PolicyReport]
-        policy_group_position_to_report_dict = {}
-        for policy_summary_report in person.policy_summary_report:
-            for policy_group in policy_summary_report.policy_id.split(","):
-                policy_group_type, policy_group_value = policy_group.split(":")
-                policy_group_position_to_report_dict.setdefault(policy_group_type, {})
-                policy_group_position_to_report_dict[policy_group_type].setdefault(policy_group_value, [])
-                for report in policy_summary_report.reports:
-                    # add all position
-                    policy_group_position_to_report_dict[policy_group_type][policy_group_value].append(report.report)
-        for policy_group_type, item_value in policy_group_position_to_report_dict.iteritems():
-            for policy_group_value, policy_report_list in item_value.iteritems():
-                policy_group_report = person.policy_group_report.add()
-                policy_group_report.policy_group_type = policy_group_type
-                policy_group_report.policy_group_value = policy_group_value
-                PolicyUtil.build_percent_policy_report(policy_report_list, policy_group_report.reports)
-        logging.info("end build_percent_policy_report_for_policy_group")
-
-    @staticmethod
-    def build_percent_policy_report_for_stock_policy_group(person):
-        logging.info("begin build_percent_policy_report_for_stock_policy_group")
-        # [stock_id][policy_group_type][policy_group_value] = [PolicyReport]
-        stock_policy_group_to_report_dict = {}
-        for stock_policy_report in person.stock_policy_report:
-            stock_policy_group_to_report_dict.setdefault(stock_policy_report.stock_id, {})
-            for policy_group in stock_policy_report.policy_id.split(","):
-                policy_group_type, policy_group_value = policy_group.split(":")
-                stock_policy_group_to_report_dict[stock_policy_report.stock_id].setdefault(policy_group_type, {})
-                stock_policy_group_to_report_dict[stock_policy_report.stock_id][policy_group_type].setdefault(policy_group_value, [])
-                for report in stock_policy_report.reports:
-                    stock_policy_group_to_report_dict[stock_policy_report.stock_id][policy_group_type][policy_group_value].append(report.report)
-        for stock_id, policy_group_item in stock_policy_group_to_report_dict.iteritems():
-            for policy_group_type, policy_group_value_item in policy_group_item.iteritems():
-                for policy_group_value, policy_report_list in policy_group_value_item.iteritems():
-                    report = person.stock_policy_group_report.add()
-                    report.stock_id = stock_id
-                    report.policy_group_type = policy_group_type
-                    report.policy_group_value = policy_group_value
-                    PolicyUtil.build_percent_policy_report(policy_report_list, report.reports)
-        logging.info("end build_percent_policy_report_for_stock_policy_group")
-
-    @staticmethod
-    def build_sort_report(person):
-        logging.info("begin build_sort_report")
-
-        sorted_stock_policy_report_list = sorted(person.stock_policy_report, key=PolicyUtil.get_percent_policy_report_sell_times_top, reverse=True)
-        sorted_stock_policy_report_list = sorted(sorted_stock_policy_report_list, key=PolicyUtil.get_percent_policy_report_roi_top, reverse=True)
-        sorted_stock_policy_report_list = sorted(sorted_stock_policy_report_list, key=attrgetter('stock_id'), reverse=False)
-        del person.stock_policy_report[:]
-        person.sorted_stock_policy_report.extend(sorted_stock_policy_report_list)
-        del sorted_stock_policy_report_list[:]
-
-        sorted_policy_summary_report_list = sorted(person.policy_summary_report, key=PolicyUtil.get_percent_policy_report_sell_times_top, reverse=True)
-        sorted_policy_summary_report_list = sorted(sorted_policy_summary_report_list, key=PolicyUtil.get_percent_policy_report_roi_top, reverse=True)
-        del person.policy_summary_report[:]
-        person.sorted_policy_summary_report.extend(sorted_policy_summary_report_list)
-        del sorted_policy_summary_report_list[:]
-
-        sorted_policy_group_report_list = sorted(person.policy_group_report, key=PolicyUtil.get_percent_policy_report_sell_times_top, reverse=True)
-        sorted_policy_group_report_list = sorted(sorted_policy_group_report_list, key=PolicyUtil.get_percent_policy_report_roi_top, reverse=True)
-        del person.policy_group_report[:]
-        sorted_policy_group_report_list = sorted(sorted_policy_group_report_list, key=attrgetter('policy_group_type'), reverse=False)
-        person.sorted_policy_group_report.extend(sorted_policy_group_report_list)
-
-
-        del sorted_policy_group_report_list[:]
-
-        sorted_stock_policy_group_report_list = sorted(person.stock_policy_group_report, key=PolicyUtil.get_percent_policy_report_sell_times_top, reverse=True)
-        sorted_stock_policy_group_report_list = sorted(sorted_stock_policy_group_report_list, key=PolicyUtil.get_percent_policy_report_roi_top, reverse=True)
-        del person.stock_policy_group_report[:]
-        sorted_stock_policy_group_report_list = sorted(sorted_stock_policy_group_report_list, key=attrgetter('policy_group_type'), reverse=False)
-        sorted_stock_policy_group_report_list = sorted(sorted_stock_policy_group_report_list, key=attrgetter('stock_id'), reverse=False)
-        person.sorted_stock_policy_group_report.extend(sorted_stock_policy_group_report_list)
-        del sorted_stock_policy_group_report_list[:]
-        logging.info("end build_sort_report")
-
-
-    @staticmethod
-    def get_percent_policy_report_roi_top(item):
-        TOP_POSISTION_FOR_ROI = 0
-        MIDDLE_POSISTION_INDEX = 0
-        assert item.reports[MIDDLE_POSISTION_INDEX].position == TOP_POSISTION_FOR_ROI, item.reports[MIDDLE_POSISTION_INDEX].position
-        return item.reports[MIDDLE_POSISTION_INDEX].report.roi
-
-    @staticmethod
-    def get_percent_policy_report_sell_times_top(item):
-        TOP_POSISTION_FOR_ROI = 0
-        MIDDLE_POSISTION_INDEX = 0
-        assert item.reports[MIDDLE_POSISTION_INDEX].position == TOP_POSISTION_FOR_ROI, item.reports[MIDDLE_POSISTION_INDEX].position
-        return item.reports[MIDDLE_POSISTION_INDEX].report.stock_sell_times
-
-    # @staticmethod
-    # def get_percent_policy_report_roi_50(item):
-    #     MIDDLE_POSISTION_FOR_ROI = 50
-    #     MIDDLE_POSISTION_INDEX = 5
-    #     assert item.reports[MIDDLE_POSISTION_INDEX].position == MIDDLE_POSISTION_FOR_ROI
-    #     return item.reports[MIDDLE_POSISTION_INDEX].report.roi
-
-    @staticmethod
-    def build_percent_policy_report(policy_report_list, repeated_stock_policy_report):
-        position_to_report_dict = {}
-        for position in localconfig.POSITION_PERCENT_LIST:
-            position_report = repeated_stock_policy_report.add()
-            position_report.position = position
-            position_to_report_dict[position] = position_report.report
-        for field_name in ["roi", "cash_taken_in", "cash_taken_out", "stock_buy_times", "stock_sell_times", "stock_hold_days",
-                           "stock_hold_loss_days", "stock_hold_profit_days", "trade_profit_times", "trade_loss_times"]:
-            PolicyUtil.build_percent_policy_report_for_field(policy_report_list, position_to_report_dict,
-                                                             field_name)
-
-    @staticmethod
-    def build_percent_policy_report_for_field(policy_report_list, position_to_report_dict, field_name):
-        field_value_list = []
-        for report in policy_report_list:
-            field_value_list.append(getattr(report, field_name))
-        np_array = np.array(field_value_list)
-        for position, policy_report in position_to_report_dict.iteritems():
-            assert position <= 100
-            percent_value = np.percentile(np_array, 100 - position)
-            setattr(policy_report, field_name, percent_value)
-
-
-    @staticmethod
-    def build_action_item_report(stock_info, action_item, report):
-        report.Clear()
-        report.stock_watch_days = PolicyUtil.build_watch_days(stock_info.daily_info, action_item)
-        report.cash_taken_in = action_item.cash_taken_in
-        report.cash_taken_out = PolicyUtil.get_asset_value_out(stock_info, action_item)
-        # 增加float是因为python弱类型，会导致protobuf中float声明类型无效
-        report.roi = float(report.cash_taken_out) / report.cash_taken_in if report.cash_taken_in > 0 else 1
-        report.stock_buy_times = len(action_item.buy_stock_action)
-        report.stock_sell_times = len(action_item.sell_stock_action)
-        report.stock_hold_days = 0
-        report.stock_hold_loss_days = 0
-        report.stock_hold_profit_days = 0
-        report.trade_profit_times = 0
-        report.trade_loss_times = 0
-        report.stock_hold_no_sell_times = 0
-        for i in range(0, len(action_item.sell_stock_action)):
-            buy_action_item = action_item.buy_stock_action[i]
-            sell_action_item = action_item.sell_stock_action[i]
-            if buy_action_item.at_price < sell_action_item.at_price:
-                report.trade_profit_times += 1
-            else:
-                report.trade_loss_times += 1
-            buy_date = DatetimeUtil.from_date_str(buy_action_item.date)
-            sell_date = DatetimeUtil.from_date_str(sell_action_item.date)
-            current_date = buy_date + datetime.timedelta(days=1)
-            while current_date <= sell_date:
-                current_date_str = DatetimeUtil.to_datetime_str(current_date)
-                # advance to next date
-                current_date = current_date + datetime.timedelta(days=1)
-                the_stock_daily_info = PolicyUtil.get_the_stock_daily_info(stock_info, current_date_str)
-                if not the_stock_daily_info:
-                    continue
-                if current_date <= sell_date:
-                    the_check_price = the_stock_daily_info.low
-                else:
-                    the_check_price = sell_action_item.at_price
-                if buy_action_item.at_price < the_check_price:
-                    report.stock_hold_profit_days += 1
-                else:
-                    report.stock_hold_loss_days += 1
-            report.stock_hold_days = report.stock_hold_profit_days + report.stock_hold_loss_days
-        # 考虑没有卖出持有在手的情况, 以观察周期最后一天的下一天的close作为卖出价格
-        if len(action_item.sell_stock_action) < len(action_item.buy_stock_action):
-            report.stock_hold_no_sell_times = 1
-            buy_action_item = action_item.buy_stock_action[-1]
-            the_last_stock_daily_info = PolicyUtil.get_the_last_stock_daily_info(stock_info, action_item)
-            the_stock_mean_price = (the_last_stock_daily_info.high + the_last_stock_daily_info.low) / 2.0
-            if buy_action_item.at_price < the_stock_mean_price:
-                report.trade_profit_times += 1
-            else:
-                report.trade_loss_times += 1
-            buy_date = DatetimeUtil.from_date_str(buy_action_item.date)
-            last_date = DatetimeUtil.from_date_str(the_last_stock_daily_info.date)
-            current_date = buy_date + datetime.timedelta(days=1)
-            while current_date <= last_date:
-                current_date_str = DatetimeUtil.to_datetime_str(current_date)
-                # advance to next date
-                current_date = current_date + datetime.timedelta(days=1)
-                the_stock_daily_info = PolicyUtil.get_the_stock_daily_info(stock_info, current_date_str)
-                if not the_stock_daily_info:
-                    continue
-                if buy_action_item.at_price < the_stock_daily_info.low:
-                    report.stock_hold_profit_days += 1
-                else:
-                    report.stock_hold_loss_days += 1
-            report.stock_hold_days = report.stock_hold_profit_days + report.stock_hold_loss_days
-        return report
-
-
-    @staticmethod
-    def build_watch_days(repeated_daily_info, action_item):
-        stock_watch_days = 0
-        for stock in repeated_daily_info:
-            if action_item.trade_watch_start_date <= stock.date and stock.date < action_item.trade_watch_end_date:
-                stock_watch_days += 1
-        return stock_watch_days
 
     @staticmethod
     def check_if_allow_trade(action_item, current_date):
@@ -627,7 +276,7 @@ class PolicyUtil:
             return True
         TO_DAYS_WATCH = 5
         TO_MAX_ALLOW_TRADE_COUNT = 3
-        # TODO: 日内多次交易算多次
+        # NOTE: 日内多次交易算多次
         return True
 
     @staticmethod
