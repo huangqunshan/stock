@@ -74,6 +74,8 @@ message Policy {
 }
 
 message PolicyReport {
+    // 观察日期跨度
+    optional double stock_watch_days = 4;
     // 投资回报比
     optional double roi = 1 [default=1];
     optional double cash_taken_in = 2;
@@ -83,14 +85,16 @@ message PolicyReport {
     optional double stock_buy_times = 6;
     // 卖的次数
     optional double stock_sell_times = 7;
-    // 有效持仓天数
-    optional double stock_hold_days = 11;
-    // 有效持仓亏损天数
-    optional double stock_hold_loss_days = 12;
-    // 有效持仓盈利天数
-    optional double stock_hold_profit_days = 13;
+    // 留手里的次数
+    optional double stock_hold_no_sell_times = 8;
     // 交易盈利次数（最终一天仍持有股票则按当天股价估算价值）
     optional double trade_profit_times = 16;
     // 交易亏损次数（最终一天仍持有股票则按当天股价估算价值）
     optional double trade_loss_times = 17;
+    // 有效持仓天数
+    optional double stock_hold_days = 11;
+    // 有效持仓盈利天数
+    optional double stock_hold_profit_days = 13;
+    // 有效持仓亏损天数
+    optional double stock_hold_loss_days = 12;
 }

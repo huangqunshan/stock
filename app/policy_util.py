@@ -43,8 +43,7 @@ class PolicyUtil:
                     action_item.trade_watch_start_date = trade_watch_start_date_str
                     action_item.trade_watch_end_date = trade_watch_end_date_str
                     PolicyUtil.build_policy_actions(stock_info, action_item, policy)
-                    PolicyUtil.build_action_item_report(stock_info, action_item, action_item.report, policy,
-                                                        DatetimeUtil.from_date_str(person.stock_end_date))
+                    PolicyUtil.build_action_item_report(stock_info, action_item, action_item.report)
                     # clear memory now
                     del action_item.buy_stock_action[:]
                     del action_item.sell_stock_action[:]
@@ -319,7 +318,7 @@ class PolicyUtil:
 
 
     @staticmethod
-    def get_asset_value_out(stock_info, action_item, action_item_policy, stock_end_date):
+    def get_asset_value_out(stock_info, action_item):
         cash_value = PolicyUtil.get_cash_value_available(action_item)
         asset_value_taken_out = cash_value
         if len(action_item.sell_stock_action) < len(action_item.buy_stock_action):
@@ -348,6 +347,7 @@ class PolicyUtil:
 
     @staticmethod
     def get_the_last_stock_daily_info(stock_info, action_item):
+        # 以观察周期最后一天的下一天的close作为卖出价格
         return PolicyUtil.get_the_stock_daily_info(stock_info, action_item.trade_watch_end_date)
 
 
@@ -543,10 +543,13 @@ class PolicyUtil:
 
 
     @staticmethod
-    def build_action_item_report(stock_info, action_item, report, action_item_policy, stock_end_date):
+    def build_action_item_report(stock_info, action_item, report):
+        report.Clear()
+        report.stock_watch_days = PolicyUtil.build_watch_days(stock_info.daily_info, action_item)
         report.cash_taken_in = action_item.cash_taken_in
-        report.cash_taken_out = PolicyUtil.get_asset_value_out(stock_info, action_item, action_item_policy, stock_end_date)
-        report.roi = report.cash_taken_out / float(report.cash_taken_in) if report.cash_taken_in > 0 else 1
+        report.cash_taken_out = PolicyUtil.get_asset_value_out(stock_info, action_item)
+        # 增加float是因为python弱类型，会导致protobuf中float声明类型无效
+        report.roi = float(report.cash_taken_out) / report.cash_taken_in if report.cash_taken_in > 0 else 1
         report.stock_buy_times = len(action_item.buy_stock_action)
         report.stock_sell_times = len(action_item.sell_stock_action)
         report.stock_hold_days = 0
@@ -554,25 +557,68 @@ class PolicyUtil:
         report.stock_hold_profit_days = 0
         report.trade_profit_times = 0
         report.trade_loss_times = 0
+        report.stock_hold_no_sell_times = 0
         for i in range(0, len(action_item.sell_stock_action)):
-            if action_item.buy_stock_action[i].at_price < action_item.sell_stock_action[i].at_price:
+            buy_action_item = action_item.buy_stock_action[i]
+            sell_action_item = action_item.sell_stock_action[i]
+            if buy_action_item.at_price < sell_action_item.at_price:
                 report.trade_profit_times += 1
             else:
                 report.trade_loss_times += 1
-            report.stock_hold_days += (DatetimeUtil.from_date_str(action_item.sell_stock_action[i].date)
-                                      - DatetimeUtil.from_date_str(action_item.buy_stock_action[i].date)).days
+            buy_date = DatetimeUtil.from_date_str(buy_action_item.date)
+            sell_date = DatetimeUtil.from_date_str(sell_action_item.date)
+            current_date = buy_date + datetime.timedelta(days=1)
+            while current_date <= sell_date:
+                current_date_str = DatetimeUtil.to_datetime_str(current_date)
+                # advance to next date
+                current_date = current_date + datetime.timedelta(days=1)
+                the_stock_daily_info = PolicyUtil.get_the_stock_daily_info(stock_info, current_date_str)
+                if not the_stock_daily_info:
+                    continue
+                if current_date <= sell_date:
+                    the_check_price = the_stock_daily_info.low
+                else:
+                    the_check_price = sell_action_item.at_price
+                if buy_action_item.at_price < the_check_price:
+                    report.stock_hold_profit_days += 1
+                else:
+                    report.stock_hold_loss_days += 1
+            report.stock_hold_days = report.stock_hold_profit_days + report.stock_hold_loss_days
+        # 考虑没有卖出持有在手的情况, 以观察周期最后一天的下一天的close作为卖出价格
         if len(action_item.sell_stock_action) < len(action_item.buy_stock_action):
-            the_stock_daily_info = PolicyUtil.get_the_last_stock_daily_info(stock_info, action_item)
-            the_stock_mean_price = (the_stock_daily_info.high + the_stock_daily_info.low) / 2.0
-            if action_item.buy_stock_action[-1].at_price < the_stock_mean_price:
+            report.stock_hold_no_sell_times = 1
+            buy_action_item = action_item.buy_stock_action[-1]
+            the_last_stock_daily_info = PolicyUtil.get_the_last_stock_daily_info(stock_info, action_item)
+            the_stock_mean_price = (the_last_stock_daily_info.high + the_last_stock_daily_info.low) / 2.0
+            if buy_action_item.at_price < the_stock_mean_price:
                 report.trade_profit_times += 1
             else:
                 report.trade_loss_times += 1
-            report.stock_hold_days += (DatetimeUtil.from_date_str(the_stock_daily_info.date)
-                                       - DatetimeUtil.from_date_str(action_item.buy_stock_action[-1].date)).days
-        # TODO: 有效持仓亏损天数, 盈利天数
+            buy_date = DatetimeUtil.from_date_str(buy_action_item.date)
+            last_date = DatetimeUtil.from_date_str(the_last_stock_daily_info.date)
+            current_date = buy_date + datetime.timedelta(days=1)
+            while current_date <= last_date:
+                current_date_str = DatetimeUtil.to_datetime_str(current_date)
+                # advance to next date
+                current_date = current_date + datetime.timedelta(days=1)
+                the_stock_daily_info = PolicyUtil.get_the_stock_daily_info(stock_info, current_date_str)
+                if not the_stock_daily_info:
+                    continue
+                if buy_action_item.at_price < the_stock_daily_info.low:
+                    report.stock_hold_profit_days += 1
+                else:
+                    report.stock_hold_loss_days += 1
+            report.stock_hold_days = report.stock_hold_profit_days + report.stock_hold_loss_days
         return report
 
+
+    @staticmethod
+    def build_watch_days(repeated_daily_info, action_item):
+        stock_watch_days = 0
+        for stock in repeated_daily_info:
+            if action_item.trade_watch_start_date <= stock.date and stock.date < action_item.trade_watch_end_date:
+                stock_watch_days += 1
+        return stock_watch_days
 
     @staticmethod
     def check_if_allow_trade(action_item, current_date):

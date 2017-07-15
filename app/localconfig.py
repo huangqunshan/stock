@@ -27,7 +27,7 @@ cash_taken_in = 30000
 # max_train_watch_days = 0
 # max_predict_watch_days = 0
 
-max_watch_jump_times = 2
+max_watch_jump_times = 20
 JUMPS_PER_WATCH = 1
 LAST_GROWTH_PART = 2
 
@@ -94,11 +94,13 @@ LAST_SELL_SEQUENTIAL_TREND_COUNT = PolicyValueRange(range(-10, 10 + 1, 1),
 #                                            )
 
 
-# fin_stock = open('stock_list.sina_more20_500')
-
-fin_stock = open('stock_list.easy')
-select_stock_name_list = fin_stock.read().split('\n')
-fin_stock.close()
+try:
+    # fin_stock = open('stock_list.sina_more20_500')
+    fin_stock = open('stock_list.easy')
+    select_stock_name_list = fin_stock.read().split('\n')
+    fin_stock.close()
+except Exception:
+    select_stock_name_list = []
 
 
 # BUY_PRICE_PERCENT_LIST = [10]
