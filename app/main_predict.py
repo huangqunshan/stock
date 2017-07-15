@@ -40,7 +40,7 @@ def main():
     stock_price_dict = PolicyPredictUtil.predict(person.stock_info, predict_date_str, localconfig.TREND_MODE.best[0])
     result = []
     for stock_id, item in stock_price_dict.iteritems():
-        trend, trend_buy, trend_sell, last_close_price, buy_price_list, sell_price_list = item
+        trend, trend_buy, trend_sell, last_close_price, buy_price_list, sell_price_list, trend_sequential = item
 
         if not buy_price_list or not sell_price_list:
             continue
@@ -60,8 +60,8 @@ def main():
         sell_max = np.percentile(sell_np_array, 100)
         sell_profit = sell_final / float(last_close_price)
         
-        buy_msg = "%s\ttrend:%s-buy:%s-sell:%s\tbuy_prob:%s\tprofit_rate:%s\t%s\tbuy:f-0-100\t%s@%s:%s" % (
-            stock_id, trend, trend_buy, trend_sell, buy_prob, sell_profit, predict_date_str, buy_min, buy_final, buy_max)
+        buy_msg = "%s\ttrend:%s-sequential:%s\tbuy:%s-sell:%s\tbuy_prob:%s\tprofit_rate:%s\t%s\tbuy:f-0-100\t%s@%s:%s" % (
+            stock_id, trend, trend_sequential, trend_buy, trend_sell, buy_prob, sell_profit, predict_date_str, buy_min, buy_final, buy_max)
         sell_msg = "\tsell:f-0-100\t%s@%s:%s" % (
             sell_min, sell_final, sell_max)
         result.append((sell_profit, trend_buy, trend_sell, buy_msg, sell_msg))

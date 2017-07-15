@@ -33,7 +33,7 @@ class PolicyPredictUtil:
                 price = PercentPriceUtil.generate_percent(stock.daily_info[-policy.buy.days_watch:],
                                                           policy.buy.at_percent.mode,
                                                           policy.buy.at_percent.percent_n)
-                stock_price_dict.setdefault(stock.stock_id, [full_trend, 1, 1, 0, [], []])
+                stock_price_dict.setdefault(stock.stock_id, [full_trend, 1, 1, 0, [], [], 0])
                 stock_price_dict[stock.stock_id][3] = stock.daily_info[-1].close
                 stock_price_dict[stock.stock_id][4].append(price)
                 if full_trend in localconfig.BUY_TREND_PERCENT.filter:
@@ -44,6 +44,7 @@ class PolicyPredictUtil:
                 #     stock_price_dict[stock.stock_id][1] += 2
                 if last_sequential_trend in localconfig.LAST_BUY_SEQUENTIAL_TREND_COUNT.filter:
                     stock_price_dict[stock.stock_id][1] += 4
+                stock_price_dict[stock.stock_id][6] = last_sequential_trend
         sell_policy_list = PolicyPredictUtil.get_best_sell_policy_list()
         for stock in stock_info:
             if not stock.daily_info:

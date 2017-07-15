@@ -166,6 +166,8 @@ class PolicyUtil:
         logging.debug("cash value left:%s", cash_value_left_to_buy)
         if cash_value_left_to_buy <= 0:
             return
+        if current_price < action_item_policy.min_stock_price:
+            return
         stock_action = action_item.buy_stock_action.add()
         stock_action.date = current_date_str
         stock_action.at_price = current_price
@@ -462,18 +464,22 @@ class PolicyUtil:
     @staticmethod
     def build_sort_report(person):
         logging.info("begin build_sort_report")
-        sorted_stock_policy_report_list = sorted(person.stock_policy_report, key=PolicyUtil.get_percent_policy_report_roi_top, reverse=True)
+
+        sorted_stock_policy_report_list = sorted(person.stock_policy_report, key=PolicyUtil.get_percent_policy_report_sell_times_top, reverse=True)
+        sorted_stock_policy_report_list = sorted(sorted_stock_policy_report_list, key=PolicyUtil.get_percent_policy_report_roi_top, reverse=True)
         sorted_stock_policy_report_list = sorted(sorted_stock_policy_report_list, key=attrgetter('stock_id'), reverse=False)
         del person.stock_policy_report[:]
         person.sorted_stock_policy_report.extend(sorted_stock_policy_report_list)
         del sorted_stock_policy_report_list[:]
 
-        sorted_policy_summary_report_list = sorted(person.policy_summary_report, key=PolicyUtil.get_percent_policy_report_roi_top, reverse=True)
+        sorted_policy_summary_report_list = sorted(person.policy_summary_report, key=PolicyUtil.get_percent_policy_report_sell_times_top, reverse=True)
+        sorted_policy_summary_report_list = sorted(sorted_policy_summary_report_list, key=PolicyUtil.get_percent_policy_report_roi_top, reverse=True)
         del person.policy_summary_report[:]
         person.sorted_policy_summary_report.extend(sorted_policy_summary_report_list)
         del sorted_policy_summary_report_list[:]
 
-        sorted_policy_group_report_list = sorted(person.policy_group_report, key=PolicyUtil.get_percent_policy_report_roi_top, reverse=True)
+        sorted_policy_group_report_list = sorted(person.policy_group_report, key=PolicyUtil.get_percent_policy_report_sell_times_top, reverse=True)
+        sorted_policy_group_report_list = sorted(sorted_policy_group_report_list, key=PolicyUtil.get_percent_policy_report_roi_top, reverse=True)
         del person.policy_group_report[:]
         sorted_policy_group_report_list = sorted(sorted_policy_group_report_list, key=attrgetter('policy_group_type'), reverse=False)
         person.sorted_policy_group_report.extend(sorted_policy_group_report_list)
@@ -481,7 +487,8 @@ class PolicyUtil:
 
         del sorted_policy_group_report_list[:]
 
-        sorted_stock_policy_group_report_list = sorted(person.stock_policy_group_report, key=PolicyUtil.get_percent_policy_report_roi_top, reverse=True)
+        sorted_stock_policy_group_report_list = sorted(person.stock_policy_group_report, key=PolicyUtil.get_percent_policy_report_sell_times_top, reverse=True)
+        sorted_stock_policy_group_report_list = sorted(sorted_stock_policy_group_report_list, key=PolicyUtil.get_percent_policy_report_roi_top, reverse=True)
         del person.stock_policy_group_report[:]
         sorted_stock_policy_group_report_list = sorted(sorted_stock_policy_group_report_list, key=attrgetter('policy_group_type'), reverse=False)
         sorted_stock_policy_group_report_list = sorted(sorted_stock_policy_group_report_list, key=attrgetter('stock_id'), reverse=False)
@@ -498,11 +505,18 @@ class PolicyUtil:
         return item.reports[MIDDLE_POSISTION_INDEX].report.roi
 
     @staticmethod
-    def get_percent_policy_report_roi_50(item):
-        MIDDLE_POSISTION_FOR_ROI = 50
-        MIDDLE_POSISTION_INDEX = 5
-        assert item.reports[MIDDLE_POSISTION_INDEX].position == MIDDLE_POSISTION_FOR_ROI
-        return item.reports[MIDDLE_POSISTION_INDEX].report.roi
+    def get_percent_policy_report_sell_times_top(item):
+        TOP_POSISTION_FOR_ROI = 0
+        MIDDLE_POSISTION_INDEX = 0
+        assert item.reports[MIDDLE_POSISTION_INDEX].position == TOP_POSISTION_FOR_ROI, item.reports[MIDDLE_POSISTION_INDEX].position
+        return item.reports[MIDDLE_POSISTION_INDEX].report.stock_sell_times
+
+    # @staticmethod
+    # def get_percent_policy_report_roi_50(item):
+    #     MIDDLE_POSISTION_FOR_ROI = 50
+    #     MIDDLE_POSISTION_INDEX = 5
+    #     assert item.reports[MIDDLE_POSISTION_INDEX].position == MIDDLE_POSISTION_FOR_ROI
+    #     return item.reports[MIDDLE_POSISTION_INDEX].report.roi
 
     @staticmethod
     def build_percent_policy_report(policy_report_list, repeated_stock_policy_report):

@@ -96,7 +96,8 @@ class PolicyItem:
                 else:
                     assert best_item
                     # 取random
-                    current_policy_dict[k] = best_item[int(random.random()*100) % len(best_item)]
+                    # current_policy_dict[k] = best_item[int(random.random()*100) % len(best_item)]
+                    current_policy_dict[k] = best_item[0]
                     if len(current_policy_dict) == len(PolicyFactory.policy_value_dict):
                         PolicyItem.build_core(repeated_policy, current_policy_dict, partial_policy_set, full_policy_set)
                         return

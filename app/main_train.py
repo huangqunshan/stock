@@ -9,8 +9,8 @@ from policy_util import PolicyUtil
 from proto.person_pb2 import Person
 from stock_info_proxy import StockInfoProxy
 
-logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s', level=logging.INFO)
-
+# logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s', level=logging.INFO)
+logging.basicConfig(format='%(message)s', level=logging.INFO)
 
 def main():
     select_stock_name_list = localconfig.select_stock_name_list
