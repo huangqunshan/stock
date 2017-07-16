@@ -9,6 +9,7 @@ from datetime_util import DatetimeUtil
 from price_util import PercentPriceUtil
 from policy_predict_util import PolicyPredictUtil
 from proto.policy_pb2 import Policy
+from policy_factory import PolicyItem
 import localconfig
 
 
@@ -31,6 +32,7 @@ class PolicyReportUtil:
                 stock_policy_report = person.stock_policy_report.add()
                 stock_policy_report.stock_id = stock_id
                 stock_policy_report.policy_id = policy_id
+                stock_policy_report.policy_id_md5 = PolicyItem.md5(policy_id)
                 PolicyReportUtil.build_summary_policy_report(policy_report_list, stock_policy_report.reports)
                 if not stock_policy_report.reports:
                     del person.stock_policy_report[-1]
@@ -50,6 +52,7 @@ class PolicyReportUtil:
         for policy_id, policy_report_list in policy_position_to_report_dict.iteritems():
             policy_summary_report = person.policy_summary_report.add()
             policy_summary_report.policy_id = policy_id
+            policy_summary_report.policy_id_md5 = PolicyItem.md5(policy_id)
             PolicyReportUtil.build_summary_policy_report(policy_report_list, policy_summary_report.reports)
             if not policy_summary_report.reports:
                 del person.policy_summary_report[-1]
@@ -115,7 +118,13 @@ class PolicyReportUtil:
         sorted_stock_policy_report_list = sorted(sorted_stock_policy_report_list, key=attrgetter('stock_id'), reverse=False)
         del person.stock_policy_report[:]
         person.sorted_stock_policy_report.extend(sorted_stock_policy_report_list)
+        sorted_policy_stock_report_list = sorted(sorted_stock_policy_report_list,
+                                                 cmp=PolicyReportUtil.greater_summary_policy_report_roi_top)
         del sorted_stock_policy_report_list[:]
+        sorted_policy_stock_report_list = sorted(sorted_policy_stock_report_list, key=attrgetter('policy_id'), reverse=False)
+        person.sorted_policy_stock_report.extend(sorted_policy_stock_report_list)
+        del sorted_policy_stock_report_list[:]
+
 
         sorted_policy_summary_report_list = sorted(person.policy_summary_report,
                                                    cmp=PolicyReportUtil.greater_summary_policy_report_roi_top)

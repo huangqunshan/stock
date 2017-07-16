@@ -17,10 +17,10 @@ message Person {
     optional int32 max_policy_count = 4 [default=1];
     // 交易券商给定，手续费固定: 按照ib计算
     optional string stock_holder = 5 [default="ib"];
-    optional string stock_start_date = 16;
-    optional string stock_end_date = 17;
-    repeated StockInfo stock_info = 6;
-    repeated Policy policy_info = 7;
+    optional string stock_start_date = 6;
+    optional string stock_end_date = 7;
+    repeated StockInfo stock_info = 8;
+    repeated Policy policy_info = 9;
     message StockPolicyActionsItem {
         optional double cash_taken_in = 1;
         optional string stock_id = 2;
@@ -28,7 +28,7 @@ message Person {
         // 交易观察起始日期
         optional string trade_watch_start_date = 4;
         // 交易观察结束日期
-        optional string trade_watch_end_date = 8;
+        optional string trade_watch_end_date = 5;
         // 满足日内交易规则： 5天最多3次同股票交易
         message StockAction {
             optional string date = 1;
@@ -41,41 +41,44 @@ message Person {
             // put期权等各种费用
             optional double option_trade_cost = 5;
         }
-        repeated StockAction buy_stock_action = 5;
-        repeated StockAction sell_stock_action = 6;
-        optional PolicyReport report = 7;
+        repeated StockAction buy_stock_action = 6;
+        repeated StockAction sell_stock_action = 7;
+        optional PolicyReport report = 8;
     }
-    repeated StockPolicyActionsItem action_items = 8;
+    repeated StockPolicyActionsItem action_items = 10;
     message PercentPolicyReport {
         optional int32 position = 1;
         optional PolicyReport report = 2;
     }
     message StockPolicyReport {
         optional string stock_id = 1;
-        optional string policy_id = 3;
+        optional string policy_id = 2;
+        optional string policy_id_md5 = 3;
         repeated PercentPolicyReport reports = 4;
     }
-    repeated StockPolicyReport stock_policy_report = 10;
-    repeated StockPolicyReport sorted_stock_policy_report = 11;
+    repeated StockPolicyReport stock_policy_report = 11;
+    repeated StockPolicyReport sorted_stock_policy_report = 12;
+    repeated StockPolicyReport sorted_policy_stock_report = 13;
     message PolicySummaryReport {
-        optional string policy_id = 3;
-        repeated PercentPolicyReport reports = 4;
+        optional string policy_id = 1;
+        optional string policy_id_md5 = 2;
+        repeated PercentPolicyReport reports = 3;
     }
-    repeated PolicySummaryReport policy_summary_report = 12;
-    repeated PolicySummaryReport sorted_policy_summary_report = 13;
+    repeated PolicySummaryReport policy_summary_report = 14;
+    repeated PolicySummaryReport sorted_policy_summary_report = 15;
     message PolicyGroupReport {
         optional string policy_group_type = 1;
         optional string policy_group_value = 2;
         repeated PercentPolicyReport reports = 3;
     }
-    repeated PolicyGroupReport policy_group_report = 14;
-    repeated PolicyGroupReport sorted_policy_group_report = 15;
+    repeated PolicyGroupReport policy_group_report = 16;
+    repeated PolicyGroupReport sorted_policy_group_report = 17;
     message StockPolicyGroupReport {
         optional string stock_id = 1;
         optional string policy_group_type = 2;
         optional string policy_group_value = 3;
         repeated PercentPolicyReport reports = 4;
     }
-    repeated StockPolicyGroupReport stock_policy_group_report = 20;
-    repeated StockPolicyGroupReport sorted_stock_policy_group_report = 21;
+    repeated StockPolicyGroupReport stock_policy_group_report = 18;
+    repeated StockPolicyGroupReport sorted_stock_policy_group_report = 19;
 }

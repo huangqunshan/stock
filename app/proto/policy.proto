@@ -5,16 +5,17 @@ syntax = "proto2";
 
 // 买入卖出策略
 message Policy {
-    optional string id = 5;
+    optional string id = 1;
+    optional string id_md5 = 2;
     // 偏好的资金分几次入场
-    optional int32 prefer_max_splited_trade_unit = 1[default=1];
+    optional int32 prefer_max_splited_trade_unit = 3[default=1];
     // 倾向于持有的股票数
-    optional int32 prefer_max_stock_count = 2[default=1];
-    optional double min_stock_price = 6;
+    optional int32 prefer_max_stock_count = 4[default=1];
+    optional double min_stock_price = 5;
     message TradePolicy {
         // 观察天数
         optional int32 days_watch = 1;
-        optional int32 days_hold_for_sell = 8;
+        optional int32 days_hold_for_sell = 2;
         message Percent {
             enum PercentMode {
                 LOW = 1;
@@ -26,8 +27,8 @@ message Policy {
             optional PercentMode mode = 1;
             optional int32 percent_n = 2;
         }
-        optional Percent at_percent = 2;
-        optional Percent.PercentMode at_mode = 3;
+        optional Percent at_percent = 3;
+        optional Percent.PercentMode at_mode = 4;
         // hold until loss thousandth n
         optional int32 sell_at_loss_thousandth = 5;
         // sell at profit
@@ -47,54 +48,54 @@ message Policy {
         }
         optional StockChange at_stock_change = 7;
         message Trend {
-            optional int32 days_watch = 6;
-            optional int32 growth_percent = 1;
-            optional int32 half_trend_percent = 2;
-            optional int32 last_sequential_trend_count = 3;
+            optional int32 days_watch = 1;
+            optional int32 growth_percent = 2;
+            optional int32 half_trend_percent = 3;
+            optional int32 last_sequential_trend_count = 4;
             enum TrendEnum {
                 // 上升 >=4/6
                 GROWP_UP = 1;
                 // 下降 >=4/6
-                FAIL_DOWN = 3;
+                FAIL_DOWN = 2;
                 // 上升逆转: >=4/6且最后1/4时间降>=4/6
-                GROWP_UP_THEN_FAIL_DOWN = 2;
+                GROWP_UP_THEN_FAIL_DOWN = 3;
                 // 下降逆转 降>=4/6,且最后1/4时间升>=4/6
                 FAIL_DOWN_THEN_GROWP_UP = 4;
                 // 黑天鹅
                 SUDDEN_GREATE_GROWP_UP = 5;
                 SUDDEN_GREATE_FAIL_DOWN = 6;
             }
-            optional TrendEnum trend_enum = 4;
-            optional Percent.PercentMode trend_mode = 5;
+            optional TrendEnum trend_enum = 5;
+            optional Percent.PercentMode trend_mode = 6;
         }
-        optional Trend trend = 10;
+        optional Trend trend = 8;
     }
-    optional TradePolicy buy = 3;
-    optional TradePolicy sell = 4;
+    optional TradePolicy buy = 6;
+    optional TradePolicy sell = 7;
 }
 
 message PolicyReport {
     // 观察日期跨度
-    optional double stock_watch_days = 4;
+    optional double stock_watch_days = 1;
     // 投资回报比
-    optional double roi = 1 [default=1];
-    optional double cash_taken_in = 2;
+    optional double roi = 2 [default=1];
+    optional double cash_taken_in = 3;
     // 预期回归资金：包含已卖的和未卖的股票价值
-    optional double cash_taken_out = 3;
+    optional double cash_taken_out = 4;
     // 买的次数
-    optional double stock_buy_times = 6;
+    optional double stock_buy_times = 5;
     // 卖的次数
-    optional double stock_sell_times = 7;
+    optional double stock_sell_times = 6;
     // 留手里的次数
-    optional double stock_hold_no_sell_times = 8;
+    optional double stock_hold_no_sell_times = 7;
     // 交易盈利次数（最终一天仍持有股票则按当天股价估算价值）
-    optional double trade_profit_times = 16;
+    optional double trade_profit_times = 8;
     // 交易亏损次数（最终一天仍持有股票则按当天股价估算价值）
-    optional double trade_loss_times = 17;
+    optional double trade_loss_times = 9;
     // 有效持仓天数
-    optional double stock_hold_days = 11;
+    optional double stock_hold_days = 10;
     // 有效持仓盈利天数
-    optional double stock_hold_profit_days = 13;
+    optional double stock_hold_profit_days = 11;
     // 有效持仓亏损天数
     optional double stock_hold_loss_days = 12;
 }

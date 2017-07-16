@@ -32,7 +32,7 @@ MAX_MEAN_DAYS_HOLD_FOR_SALE = 5
 # max_train_watch_days = 0
 # max_predict_watch_days = 0
 
-max_watch_jump_times = 5
+max_watch_jump_times = 2
 JUMPS_PER_WATCH = 1
 LAST_GROWTH_PART = 2
 
@@ -56,7 +56,7 @@ SELL_WATCH_DAYS = PolicyValueRange([10, 20, 30], [10, 30, 20])
 BUY_PRICE_PERCENT = PolicyValueRange(range(10, 100 + 1, 10), [90, 70, 80])
 SELL_PRICE_PERCENT = PolicyValueRange(range(10, 100 + 1, 10), [90, 100, 80])
 
-LOSS_STOP_THOUSANDTH = PolicyValueRange([10, 20, 50, 100, 200, 500], [50, 20])
+LOSS_STOP_THOUSANDTH = PolicyValueRange([10, 20, 50, 100, 200, 500], [100, 50, 20])
 SELL_PROFIT_THOUSANDTH = PolicyValueRange([0, 10, 20, 50, 100, 150, 1000], [0, 100, 50])
 
 
@@ -122,7 +122,7 @@ end_date_str = "20171230"
 # end_date_str = "20161230"
 
 #
-# select_stock_name_list = ["JD"]
+# select_stock_name_list = ["JD", "BABA"]
 # DAYS_HOLD_FOR_SALE_LIST = [30]
 # start_date_str = "20170101"
 

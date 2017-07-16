@@ -6,6 +6,7 @@ import localconfig
 from proto.person_pb2 import Person
 from proto.policy_pb2 import Policy
 import random
+import hashlib
 
 
 BUY_DAYS_WATCH = "buy_days_watch"
@@ -59,8 +60,14 @@ class PolicyItem:
         policy.sell.trend.days_watch = getattr(self, SELL_TREND_DAYS_WATCH)
         policy.sell.sell_at_profit_thousandth = getattr(self, SELL_PROFIT_THOUSANDTH)
         policy.id = self.build_policy_id()
+        policy.id_md5 = PolicyItem.md5(policy.id)
         logging.info("build policy:%s", policy.id)
 
+    @staticmethod
+    def md5(content):
+        md5sum = hashlib.md5()
+        md5sum.update(content)
+        return md5sum.hexdigest()
 
     def build_policy_id(self):
         result = []
