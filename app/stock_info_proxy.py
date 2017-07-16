@@ -23,10 +23,6 @@ socket.setdefaulttimeout(localconfig.DEFAULT_TIMEOUT_SECONDS)
 
 
 class StockInfoProxy:
-    @staticmethod
-    def get_stock_name_list():
-        # TODO
-        return localconfig.select_stock_name_list
 
     @staticmethod
     def generate_stock_info_list(stock_name_list, start_date, end_date, repeated_stock_info):

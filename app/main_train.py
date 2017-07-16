@@ -18,11 +18,14 @@ def main():
     parser = argparse.ArgumentParser(description='')
     parser.add_argument('--validate', dest='validate', action='store_true',
                         help='if validate')
+    parser.add_argument('--quick', dest='quick', action='store_true',
+                        help='if quick')
     args = parser.parse_args()
 
-    select_stock_name_list = localconfig.select_stock_name_list
-    if not select_stock_name_list:
-        select_stock_name_list = StockInfoProxy.get_stock_name_list()
+    if args.quick:
+        select_stock_name_list = localconfig.short_stock_name_list
+    else:
+        select_stock_name_list = localconfig.select_stock_name_list
     person = Person()
     person.cash_taken_in = localconfig.cash_taken_in
     person.stock_start_date = localconfig.start_date_str

@@ -14,6 +14,29 @@ class PolicyValueRange:
             self.filter = self.range
 
 
+# sorted_summary_policy_report {
+#   policy_id: "sell_days_watch:10,trend_mode:2,buy_days_watch:30,buy_price_percent:90,buy_mode:1,loss_stop_thousandth:100,prefer_max_stock_count:1,sell_price_percent:90,last_sell_sequential_trend_count:-9999,sell_profit_thousandth:0,buy_trend_days_watch:40,buy_trend_percent:-9999,sell_trend_percent:-9999,last_buy_sequential_trend_count:-9999,days_hold_for_sell:5,min_stock_price:10,last_close_price_percent:100,sell_mode:2,sell_trend_days_watch:40,prefer_max_splited_trade_unit:1"
+#   policy_id_md5: "6f233e45c9db425ffd22a6bc3a847b35"
+#   roi_more_than_one_rate: 1.0
+#   reports {
+#     position: 0
+#     report {
+#       stock_watch_days: 175
+#       roi: 1.2443601
+#       cash_taken_in: 30000
+#       cash_taken_out: 37330.803
+#       stock_buy_times: 15
+#       stock_sell_times: 15
+#       stock_hold_no_sell_times: 0
+#       trade_profit_times: 14
+#       trade_loss_times: 1
+#       stock_hold_days: 38
+#       stock_hold_profit_days: 14
+#       stock_hold_loss_days: 24
+#     }
+#   }
+
+
 DEFAULT_CONFIG = -9999
 POSITION_PERCENT_LIST = range(0, 100+1, 10)
 SUMMARY_POSITION_PERCENT_LIST = range(0, 100+1, 10)
@@ -58,7 +81,7 @@ SELL_PROFIT_THOUSANDTH = PolicyValueRange([0, 10, 20, 50, 100, 150, 1000], [0, 1
 
 
 
-LAST_CLOSE_PRICE_PERCENT = PolicyValueRange([DEFAULT_CONFIG] + range(80, 120, 1), DEFAULT_CONFIG)
+LAST_CLOSE_PRICE_PERCENT = PolicyValueRange([DEFAULT_CONFIG] + range(80, 120, 1), [100])
 
 
 TREND_MODE = PolicyValueRange([Policy.TradePolicy.Percent.LOW, Policy.TradePolicy.Percent.HIGH, Policy.TradePolicy.Percent.MEDIUM],
@@ -125,13 +148,4 @@ except Exception:
 start_date_str = "20160101"
 end_date_str = "20171230"
 
-# start_date_str = "20160101"
-# end_date_str = "20161230"
-
-#
-# select_stock_name_list = ["JD", "BABA"]
-# DAYS_HOLD_FOR_SALE_LIST = [30]
-# start_date_str = "20170101"
-
-
-
+short_stock_name_list = ["JD", "BABA", "WBAI", "GOOGL", "TSLA"]

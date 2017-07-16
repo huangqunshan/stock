@@ -29,13 +29,14 @@ class PolicyReportUtil:
             stock_policy_to_policy_report_dict[action_item.stock_id][action_item.policy_id].append(action_item.report)
         for stock_id, value_item in stock_policy_to_policy_report_dict.iteritems():
             for policy_id, policy_report_list in value_item.iteritems():
-                stock_policy_report = person.stock_policy_report.add()
-                stock_policy_report.stock_id = stock_id
-                stock_policy_report.policy_id = policy_id
-                stock_policy_report.policy_id_md5 = PolicyItem.md5(policy_id)
-                PolicyReportUtil.build_summary_policy_report(policy_report_list, stock_policy_report.reports, is_validate)
-                if not stock_policy_report.reports:
+                report = person.stock_policy_report.add()
+                report.stock_id = stock_id
+                report.policy_id = policy_id
+                report.policy_id_md5 = PolicyItem.md5(policy_id)
+                PolicyReportUtil.build_summary_policy_report(policy_report_list, report.reports, is_validate)
+                if not report.reports:
                     del person.stock_policy_report[-1]
+                report.roi_more_than_one_rate = PolicyReportUtil.build_roi_more_than_one_rate(report.reports)
         logging.info("end build_summary_policy_report_for_stock_policy")
 
 
@@ -50,12 +51,13 @@ class PolicyReportUtil:
                 # add all position
                 policy_position_to_report_dict[stock_policy_report.policy_id].append(percent_policy_report.report)
         for policy_id, policy_report_list in policy_position_to_report_dict.iteritems():
-            summary_policy_report = person.summary_policy_report.add()
-            summary_policy_report.policy_id = policy_id
-            summary_policy_report.policy_id_md5 = PolicyItem.md5(policy_id)
-            PolicyReportUtil.build_summary_policy_report(policy_report_list, summary_policy_report.reports, is_validate)
-            if not summary_policy_report.reports:
+            report = person.summary_policy_report.add()
+            report.policy_id = policy_id
+            report.policy_id_md5 = PolicyItem.md5(policy_id)
+            PolicyReportUtil.build_summary_policy_report(policy_report_list, report.reports, is_validate)
+            if not report.reports:
                 del person.summary_policy_report[-1]
+            report.roi_more_than_one_rate = PolicyReportUtil.build_roi_more_than_one_rate(report.reports)
         logging.info("end build_summary_policy_report_for_policy")
 
 
@@ -74,12 +76,13 @@ class PolicyReportUtil:
                     policy_group_position_to_report_dict[policy_group_type][policy_group_value].append(report.report)
         for policy_group_type, item_value in policy_group_position_to_report_dict.iteritems():
             for policy_group_value, policy_report_list in item_value.iteritems():
-                policy_group_report = person.policy_group_report.add()
-                policy_group_report.policy_group_type = policy_group_type
-                policy_group_report.policy_group_value = policy_group_value
-                PolicyReportUtil.build_summary_policy_report(policy_report_list, policy_group_report.reports, is_validate)
-                if not policy_group_report.reports:
+                report = person.policy_group_report.add()
+                report.policy_group_type = policy_group_type
+                report.policy_group_value = policy_group_value
+                PolicyReportUtil.build_summary_policy_report(policy_report_list, report.reports, is_validate)
+                if not report.reports:
                     del person.policy_group_report[-1]
+                report.roi_more_than_one_rate = PolicyReportUtil.build_roi_more_than_one_rate(report.reports)
         logging.info("end build_summary_policy_report_for_policy_group")
 
 
@@ -106,6 +109,7 @@ class PolicyReportUtil:
                     PolicyReportUtil.build_summary_policy_report(policy_report_list, report.reports, is_validate)
                     if not report.reports:
                         del person.stock_policy_group_report[-1]
+                    report.roi_more_than_one_rate = PolicyReportUtil.build_roi_more_than_one_rate(report.reports)
         logging.info("end build_summary_policy_report_for_stock_policy_group")
 
 
@@ -113,35 +117,33 @@ class PolicyReportUtil:
     def build_sort_report(person):
         logging.info("begin build_sort_report")
 
-        sorted_stock_policy_report_list = sorted(person.stock_policy_report,
-                                                 cmp=PolicyReportUtil.greater_summary_policy_report_roi_top)
+        # compare_method = PolicyReportUtil.greater_summary_policy_report_roi_top
+        compare_method = PolicyReportUtil.greater_roi_more_than_one_rate
+
+        sorted_stock_policy_report_list = sorted(person.stock_policy_report, cmp=compare_method)
         sorted_stock_policy_report_list = sorted(sorted_stock_policy_report_list, key=attrgetter('stock_id'), reverse=False)
         del person.stock_policy_report[:]
         person.sorted_stock_policy_report.extend(sorted_stock_policy_report_list)
-        sorted_policy_stock_report_list = sorted(sorted_stock_policy_report_list,
-                                                 cmp=PolicyReportUtil.greater_summary_policy_report_roi_top)
+        sorted_policy_stock_report_list = sorted(sorted_stock_policy_report_list, cmp=compare_method)
         del sorted_stock_policy_report_list[:]
         sorted_policy_stock_report_list = sorted(sorted_policy_stock_report_list, key=attrgetter('policy_id'), reverse=False)
         person.sorted_policy_stock_report.extend(sorted_policy_stock_report_list)
         del sorted_policy_stock_report_list[:]
 
 
-        sorted_summary_policy_report_list = sorted(person.summary_policy_report,
-                                                   cmp=PolicyReportUtil.greater_summary_policy_report_roi_top)
+        sorted_summary_policy_report_list = sorted(person.summary_policy_report, cmp=compare_method)
         del person.summary_policy_report[:]
         person.sorted_summary_policy_report.extend(sorted_summary_policy_report_list)
         del sorted_summary_policy_report_list[:]
 
-        sorted_policy_group_report_list = sorted(person.policy_group_report,
-                                                 cmp=PolicyReportUtil.greater_summary_policy_report_roi_top)
+        sorted_policy_group_report_list = sorted(person.policy_group_report, cmp=compare_method)
         del person.policy_group_report[:]
         sorted_policy_group_report_list = sorted(sorted_policy_group_report_list, key=attrgetter('policy_group_type'), reverse=False)
         person.sorted_policy_group_report.extend(sorted_policy_group_report_list)
 
         del sorted_policy_group_report_list[:]
 
-        sorted_stock_policy_group_report_list = sorted(person.stock_policy_group_report,
-                                                       cmp=PolicyReportUtil.greater_summary_policy_report_roi_top)
+        sorted_stock_policy_group_report_list = sorted(person.stock_policy_group_report, cmp=compare_method)
         del person.stock_policy_group_report[:]
         sorted_stock_policy_group_report_list = sorted(sorted_stock_policy_group_report_list, key=attrgetter('policy_group_type'), reverse=False)
         sorted_stock_policy_group_report_list = sorted(sorted_stock_policy_group_report_list, key=attrgetter('stock_id'), reverse=False)
@@ -338,11 +340,21 @@ class PolicyReportUtil:
             return -1 if right.trade_profit_times < left.trade_profit_times else 1
         return 0
 
+
     @staticmethod
     def greater_summary_policy_report_roi_top(left, right):
         # compare with the best roi for report
         top_percent = int(localconfig.TOP_PERCENT / 10)
         return PolicyReportUtil.greater_policy_report_roi(left.reports[top_percent].report, right.reports[top_percent].report)
+
+
+    @staticmethod
+    def greater_roi_more_than_one_rate(left, right):
+        # compare with the best roi for report
+        top_percent = int(localconfig.TOP_PERCENT / 10)
+        if left.roi_more_than_one_rate != right.roi_more_than_one_rate:
+            return -1 if right.roi_more_than_one_rate < left.roi_more_than_one_rate else 1
+        return PolicyReportUtil.greater_summary_policy_report_roi_top(left, right)
 
 
     @staticmethod
@@ -388,6 +400,18 @@ class PolicyReportUtil:
             percent_policy_report.reports[0].report.stock_sell_times
         )
         return result
+
+
+    @staticmethod
+    def build_roi_more_than_one_rate(repeated_percent_policy_report):
+        if not repeated_percent_policy_report:
+            return 1
+        size = len(repeated_percent_policy_report)
+        more_than_one_count = 0
+        for item in repeated_percent_policy_report:
+            if item.report.roi > 1:
+                more_than_one_count += 1
+        return int(float(more_than_one_count) * 100/size) / 100.0
 
 
     @staticmethod
