@@ -50,12 +50,12 @@ class PolicyReportUtil:
                 # add all position
                 policy_position_to_report_dict[stock_policy_report.policy_id].append(percent_policy_report.report)
         for policy_id, policy_report_list in policy_position_to_report_dict.iteritems():
-            policy_summary_report = person.policy_summary_report.add()
-            policy_summary_report.policy_id = policy_id
-            policy_summary_report.policy_id_md5 = PolicyItem.md5(policy_id)
-            PolicyReportUtil.build_summary_policy_report(policy_report_list, policy_summary_report.reports, is_validate)
-            if not policy_summary_report.reports:
-                del person.policy_summary_report[-1]
+            summary_policy_report = person.summary_policy_report.add()
+            summary_policy_report.policy_id = policy_id
+            summary_policy_report.policy_id_md5 = PolicyItem.md5(policy_id)
+            PolicyReportUtil.build_summary_policy_report(policy_report_list, summary_policy_report.reports, is_validate)
+            if not summary_policy_report.reports:
+                del person.summary_policy_report[-1]
         logging.info("end build_summary_policy_report_for_policy")
 
 
@@ -64,12 +64,12 @@ class PolicyReportUtil:
         logging.info("begin build_summary_policy_report_for_policy_group")
         # [policy_group_type][policy_group_value] = [PolicyReport]
         policy_group_position_to_report_dict = {}
-        for policy_summary_report in person.policy_summary_report:
-            for policy_group in policy_summary_report.policy_id.split(","):
+        for summary_policy_report in person.summary_policy_report:
+            for policy_group in summary_policy_report.policy_id.split(","):
                 policy_group_type, policy_group_value = policy_group.split(":")
                 policy_group_position_to_report_dict.setdefault(policy_group_type, {})
                 policy_group_position_to_report_dict[policy_group_type].setdefault(policy_group_value, [])
-                for report in policy_summary_report.reports:
+                for report in summary_policy_report.reports:
                     # add all position
                     policy_group_position_to_report_dict[policy_group_type][policy_group_value].append(report.report)
         for policy_group_type, item_value in policy_group_position_to_report_dict.iteritems():
@@ -126,11 +126,11 @@ class PolicyReportUtil:
         del sorted_policy_stock_report_list[:]
 
 
-        sorted_policy_summary_report_list = sorted(person.policy_summary_report,
+        sorted_summary_policy_report_list = sorted(person.summary_policy_report,
                                                    cmp=PolicyReportUtil.greater_summary_policy_report_roi_top)
-        del person.policy_summary_report[:]
-        person.sorted_policy_summary_report.extend(sorted_policy_summary_report_list)
-        del sorted_policy_summary_report_list[:]
+        del person.summary_policy_report[:]
+        person.sorted_summary_policy_report.extend(sorted_summary_policy_report_list)
+        del sorted_summary_policy_report_list[:]
 
         sorted_policy_group_report_list = sorted(person.policy_group_report,
                                                  cmp=PolicyReportUtil.greater_summary_policy_report_roi_top)
@@ -353,8 +353,8 @@ class PolicyReportUtil:
                          item_report.policy_group_type, item_report.policy_group_value,
                          PolicyReportUtil.build_percent_policy_report_msg(item_report))
         logging.info("-----------------------")
-        for item_report in person.sorted_policy_summary_report:
-            logging.info("policy_summary_report:\t%s\t%s",
+        for item_report in person.sorted_summary_policy_report:
+            logging.info("summary_policy_report:\t%s\t%s",
                          item_report.policy_id,
                          PolicyReportUtil.build_percent_policy_report_msg(item_report))
         logging.info("-----------------------")

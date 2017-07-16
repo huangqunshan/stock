@@ -59,13 +59,13 @@ message Person {
     repeated StockPolicyReport stock_policy_report = 11;
     repeated StockPolicyReport sorted_stock_policy_report = 12;
     repeated StockPolicyReport sorted_policy_stock_report = 13;
-    message PolicySummaryReport {
+    message SummaryPolicyReport {
         optional string policy_id = 1;
         optional string policy_id_md5 = 2;
         repeated PercentPolicyReport reports = 3;
     }
-    repeated PolicySummaryReport policy_summary_report = 14;
-    repeated PolicySummaryReport sorted_policy_summary_report = 15;
+    repeated SummaryPolicyReport summary_policy_report = 14;
+    repeated SummaryPolicyReport sorted_summary_policy_report = 15;
     message PolicyGroupReport {
         optional string policy_group_type = 1;
         optional string policy_group_value = 2;
