@@ -1,5 +1,7 @@
 # coding=utf8
 
+
+import argparse
 import logging
 import sys
 import localconfig
@@ -13,6 +15,11 @@ from stock_info_proxy import StockInfoProxy
 logging.basicConfig(format='%(message)s', level=logging.INFO)
 
 def main():
+    parser = argparse.ArgumentParser(description='')
+    parser.add_argument('--validate', dest='validate', action='store_true',
+                        help='if validate')
+    args = parser.parse_args()
+
     select_stock_name_list = localconfig.select_stock_name_list
     if not select_stock_name_list:
         select_stock_name_list = StockInfoProxy.get_stock_name_list()
@@ -20,14 +27,19 @@ def main():
     person.cash_taken_in = localconfig.cash_taken_in
     person.stock_start_date = localconfig.start_date_str
     person.stock_end_date = localconfig.end_date_str
-    # person.max_train_watch_days = localconfig.max_train_watch_days
-    # person.max_predict_watch_days = localconfig.max_predict_watch_days
-    PolicyFactory.generate_policy_list(person.policy_info)
     StockInfoProxy.generate_stock_info_list(select_stock_name_list,
                                             DatetimeUtil.from_date_str(person.stock_start_date),
                                             DatetimeUtil.from_date_str(person.stock_end_date),
                                             person.stock_info)
-    PolicyUtil.train(person)
+
+    if args.validate:
+        # person.max_train_watch_days = localconfig.max_train_watch_days
+        # person.max_predict_watch_days = localconfig.max_predict_watch_days
+        PolicyFactory.generate_policy_list_for_validate(person.policy_info)
+        PolicyUtil.train(person, True)
+    else:
+        PolicyFactory.generate_policy_list_for_train(person.policy_info)
+        PolicyUtil.train(person)
     logging.info("begin write person to file")
     # fout = open('model_out', 'w')
     # fout.write(person.SerializeToString())

@@ -18,7 +18,7 @@ class PolicyUtil:
     stock_trend_dict = {}
 
     @staticmethod
-    def train(person):
+    def train(person, is_validate=False):
         logging.info("begin train, stock info size:%s, policy info size:%s", len(person.stock_info), len(person.policy_info))
         for policy in person.policy_info:
             logging.info("begin train for policy_id:%s", policy.id)
@@ -47,12 +47,12 @@ class PolicyUtil:
                     del action_item.buy_stock_action[:]
                     del action_item.sell_stock_action[:]
                 logging.info("end train for policy_id, stock_id")
-                PolicyReportUtil.build_summary_policy_report_for_stock_policy(person)
+                PolicyReportUtil.build_summary_policy_report_for_stock_policy(person, is_validate)
                 del person.action_items[:]
             logging.info("end train for policy_id:%s", policy.id)
-        PolicyReportUtil.build_summary_policy_report_for_policy(person)
-        PolicyReportUtil.build_summary_policy_report_for_policy_group(person)
-        PolicyReportUtil.build_summary_policy_report_for_stock_policy_group(person)
+        PolicyReportUtil.build_summary_policy_report_for_policy(person, is_validate)
+        PolicyReportUtil.build_summary_policy_report_for_policy_group(person, is_validate)
+        PolicyReportUtil.build_summary_policy_report_for_stock_policy_group(person, is_validate)
         PolicyReportUtil.build_sort_report(person)
         # clear other empty
         del person.stock_info[:]
@@ -96,8 +96,12 @@ class PolicyUtil:
                                                                         action_item_policy.buy.trend.days_watch,
                                                                         current_date_str)
             if stock_daily_info_list:
+                previous_stock_daily_info = PolicyReportUtil.get_previous_stock_daily_info(stock_info,
+                                                                                     action_item.trade_watch_start_date,
+                                                                                     current_date_str)
                 PolicyUtil.check_if_buy(stock_info.stock_id, stock_daily_info_list, trend_daily_info_list,
-                                        action_item, action_item_policy, current_date_str, current_stock_daily_info)
+                                        action_item, action_item_policy, current_date_str, current_stock_daily_info,
+                                        previous_stock_daily_info)
         else:
             assert len(action_item.buy_stock_action) == len(action_item.sell_stock_action) + 1
             stock_daily_info_list = PolicyUtil.filter_stock_daily_info_list(stock_info,
@@ -114,7 +118,7 @@ class PolicyUtil:
 
     @staticmethod
     def check_if_buy(stock_id, stock_daily_info_list, trend_daily_info_list, action_item, action_item_policy,
-                     current_date_str, current_stock_daily_info):
+                     current_date_str, current_stock_daily_info, previous_stock_daily_info):
         the_low_price, the_high_price = current_stock_daily_info.low, current_stock_daily_info.high
         if len(action_item.sell_stock_action) < len(action_item.buy_stock_action):
             logging.debug("quit buy for wait sell")
@@ -148,8 +152,18 @@ class PolicyUtil:
             logging.debug("quit buy for empty percent price")
             return
 
-        # current_price = (last_daily_info.low + last_daily_info.high)/2.0
-
+        if previous_stock_daily_info:
+            current_price_percent = int(100.0 * current_price / previous_stock_daily_info.close)
+            # NOTE: 这里进行了归一化， 需要与localconfig配合
+            current_price_percent = max(current_price_percent, 80)
+            current_price_percent = min(current_price_percent, 120)
+            if action_item_policy.buy.last_close_price_percent == localconfig.DEFAULT_CONFIG:
+                if_continue = current_price_percent in localconfig.LAST_CLOSE_PRICE_PERCENT.filter if localconfig.LAST_CLOSE_PRICE_PERCENT.filter else True
+            else:
+                if_continue = action_item_policy.buy.last_close_price_percent == current_price_percent
+            if not if_continue:
+                logging.debug("quit buy for last_close_price_percent:%s", current_price_percent)
+                return
 
         if current_price <= the_low_price:
             logging.debug("quit buy for too low percent_price:%s < low_price:%s", current_price, the_low_price)
@@ -194,7 +208,6 @@ class PolicyUtil:
             if_continue = last_sequential_trend in localconfig.LAST_SELL_SEQUENTIAL_TREND_COUNT.filter if localconfig.LAST_SELL_SEQUENTIAL_TREND_COUNT.filter else True
         else:
             if_continue = action_item_policy.sell.trend.last_sequential_trend_count == last_sequential_trend
-
         if not if_continue:
             logging.debug("ignore trend:%s vs %s", last_sequential_trend,
                          action_item_policy.sell.trend.last_sequential_trend_count)

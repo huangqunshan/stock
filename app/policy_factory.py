@@ -29,6 +29,7 @@ SELL_PROFIT_THOUSANDTH = "sell_profit_thousandth"
 BUY_TREND_PERCENT = "buy_trend_percent"
 BUY_TREND_DAYS_WATCH = "buy_trend_days_watch"
 SELL_TREND_DAYS_WATCH = "sell_trend_days_watch"
+LAST_CLOSE_PRICE_PERCENT = "last_close_price_percent"
 
 
 
@@ -49,6 +50,7 @@ class PolicyItem:
         policy.buy.trend.last_sequential_trend_count = getattr(self, LAST_BUY_SEQUENTIAL_TREND_COUNT)
         policy.buy.trend.trend_mode = getattr(self, TREND_MODE)
         policy.buy.trend.days_watch = getattr(self, BUY_TREND_DAYS_WATCH)
+        policy.buy.last_close_price_percent = getattr(self, LAST_CLOSE_PRICE_PERCENT)
         policy.sell.days_watch = getattr(self, SELL_DAYS_WATCH)
         policy.sell.at_percent.mode = getattr(self, SELL_MODE)
         policy.sell.at_percent.percent_n = getattr(self, SELL_PRICE_PERCENT)
@@ -59,6 +61,7 @@ class PolicyItem:
         policy.sell.trend.trend_mode = getattr(self, TREND_MODE)
         policy.sell.trend.days_watch = getattr(self, SELL_TREND_DAYS_WATCH)
         policy.sell.sell_at_profit_thousandth = getattr(self, SELL_PROFIT_THOUSANDTH)
+        policy.sell.last_close_price_percent = getattr(self, LAST_CLOSE_PRICE_PERCENT)
         policy.id = self.build_policy_id()
         policy.id_md5 = PolicyItem.md5(policy.id)
         logging.info("build policy:%s", policy.id)
@@ -115,7 +118,6 @@ class PolicyItem:
                     return
 
 
-
     @staticmethod
     def build_core(repeated_policy, current_policy_dict, partial_policy_set, full_policy_set):
         if str(current_policy_dict) in partial_policy_set:
@@ -155,26 +157,29 @@ class PolicyFactory:
         MIN_STOCK_PRICE: localconfig.MIN_STOCK_PRICE,
         SELL_PROFIT_THOUSANDTH: localconfig.SELL_PROFIT_THOUSANDTH,
         BUY_TREND_DAYS_WATCH: localconfig.BUY_TREND_DAYS_WATCH,
-        SELL_TREND_DAYS_WATCH: localconfig.SELL_TREND_DAYS_WATCH
+        SELL_TREND_DAYS_WATCH: localconfig.SELL_TREND_DAYS_WATCH,
+        LAST_CLOSE_PRICE_PERCENT: localconfig.LAST_CLOSE_PRICE_PERCENT
     }
 
 
     @staticmethod
-    def generate_policy_list(repeated_policy):
-        logging.info("begin generate policy list")
-        PolicyFactory.generate_policy_list_impl_auto(repeated_policy)
-        logging.info("end generate policy list")
-
-
-    @staticmethod
-    def generate_policy_list_impl_auto(repeated_policy):
+    def generate_policy_list_for_train(repeated_policy):
+        logging.info("begin generate policy list for train")
         for policy_type, item_value in PolicyFactory.policy_value_dict.iteritems():
             assert isinstance(item_value.range, list)
-            PolicyFactory.generate_policy_list_impl_for_policy_type(repeated_policy, policy_type, item_value.range)
+            PolicyFactory.generate_policy_list_with_policy_type(repeated_policy, policy_type, item_value.range)
+        logging.info("end generate policy list for train")
 
 
     @staticmethod
-    def generate_policy_list_impl_for_policy_type(repeated_policy, policy_type, policy_value_list):
+    def generate_policy_list_for_validate(repeated_policy):
+        logging.info("begin generate policy list for validate")
+        PolicyItem.build(repeated_policy, {}, set(), set())
+        logging.info("end generate policy list for validate")
+
+
+    @staticmethod
+    def generate_policy_list_with_policy_type(repeated_policy, policy_type, policy_value_list):
         policy_str_set = set()
         policy_id_set = set()
         for policy_value in policy_value_list:
@@ -183,5 +188,5 @@ class PolicyFactory:
 
 if __name__ == "__main__":
     person = Person()
-    PolicyFactory.generate_policy_list(person.policy_info)
+    PolicyFactory.generate_policy_list_for_train(person.policy_info)
     print person.policy_info

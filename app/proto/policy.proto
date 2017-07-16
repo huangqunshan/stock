@@ -69,6 +69,7 @@ message Policy {
             optional Percent.PercentMode trend_mode = 6;
         }
         optional Trend trend = 8;
+        optional int32 last_close_price_percent = 9;
     }
     optional TradePolicy buy = 6;
     optional TradePolicy sell = 7;

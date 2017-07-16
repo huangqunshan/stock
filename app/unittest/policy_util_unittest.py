@@ -271,9 +271,21 @@ class MyTestCase(unittest.TestCase):
         left.trade_profit_times = 3
         self.assertTrue(PolicyReportUtil.greater_policy_report_roi(left, right) < 0)
 
-
-
-        
+    def test_get_previous_stock_daily_info(self):
+        stock_info = StockInfo()
+        daily_info = stock_info.daily_info.add()
+        daily_info.date = "20170101"
+        daily_info = stock_info.daily_info.add()
+        daily_info.date = "20170102"
+        daily_info = stock_info.daily_info.add()
+        daily_info.date = "20170105"
+        daily_info = stock_info.daily_info.add()
+        daily_info.date = "20170106"
+        daily_info = stock_info.daily_info.add()
+        daily_info.date = "20170108"
+        self.assertEqual("20170102", PolicyReportUtil.get_previous_stock_daily_info(stock_info, "20170101", "20170105").date)
+        self.assertEqual(None, PolicyReportUtil.get_previous_stock_daily_info(stock_info, "20170103", "20170105"))
+        self.assertEqual("20170105", PolicyReportUtil.get_previous_stock_daily_info(stock_info, "20170101", "20170106").date)
 
 
 if __name__ == '__main__':

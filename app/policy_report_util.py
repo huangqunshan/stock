@@ -19,7 +19,7 @@ class PolicyReportUtil:
 
 
     @staticmethod
-    def build_summary_policy_report_for_stock_policy(person):
+    def build_summary_policy_report_for_stock_policy(person, is_validate):
         logging.info("begin build_summary_policy_report_for_stock_policy")
         # [stock_id][policy_id] = [PolicyReport]
         stock_policy_to_policy_report_dict = {}
@@ -33,14 +33,14 @@ class PolicyReportUtil:
                 stock_policy_report.stock_id = stock_id
                 stock_policy_report.policy_id = policy_id
                 stock_policy_report.policy_id_md5 = PolicyItem.md5(policy_id)
-                PolicyReportUtil.build_summary_policy_report(policy_report_list, stock_policy_report.reports)
+                PolicyReportUtil.build_summary_policy_report(policy_report_list, stock_policy_report.reports, is_validate)
                 if not stock_policy_report.reports:
                     del person.stock_policy_report[-1]
         logging.info("end build_summary_policy_report_for_stock_policy")
 
 
     @staticmethod
-    def build_summary_policy_report_for_policy(person):
+    def build_summary_policy_report_for_policy(person, is_validate):
         logging.info("begin build_summary_policy_report_for_policy")
         # [policy_id] = [PolicyReport]
         policy_position_to_report_dict = {}
@@ -53,14 +53,14 @@ class PolicyReportUtil:
             policy_summary_report = person.policy_summary_report.add()
             policy_summary_report.policy_id = policy_id
             policy_summary_report.policy_id_md5 = PolicyItem.md5(policy_id)
-            PolicyReportUtil.build_summary_policy_report(policy_report_list, policy_summary_report.reports)
+            PolicyReportUtil.build_summary_policy_report(policy_report_list, policy_summary_report.reports, is_validate)
             if not policy_summary_report.reports:
                 del person.policy_summary_report[-1]
         logging.info("end build_summary_policy_report_for_policy")
 
 
     @staticmethod
-    def build_summary_policy_report_for_policy_group(person):
+    def build_summary_policy_report_for_policy_group(person, is_validate):
         logging.info("begin build_summary_policy_report_for_policy_group")
         # [policy_group_type][policy_group_value] = [PolicyReport]
         policy_group_position_to_report_dict = {}
@@ -77,14 +77,14 @@ class PolicyReportUtil:
                 policy_group_report = person.policy_group_report.add()
                 policy_group_report.policy_group_type = policy_group_type
                 policy_group_report.policy_group_value = policy_group_value
-                PolicyReportUtil.build_summary_policy_report(policy_report_list, policy_group_report.reports)
+                PolicyReportUtil.build_summary_policy_report(policy_report_list, policy_group_report.reports, is_validate)
                 if not policy_group_report.reports:
                     del person.policy_group_report[-1]
         logging.info("end build_summary_policy_report_for_policy_group")
 
 
     @staticmethod
-    def build_summary_policy_report_for_stock_policy_group(person):
+    def build_summary_policy_report_for_stock_policy_group(person, is_validate):
         logging.info("begin build_summary_policy_report_for_stock_policy_group")
         # [stock_id][policy_group_type][policy_group_value] = [PolicyReport]
         stock_policy_group_to_report_dict = {}
@@ -103,7 +103,7 @@ class PolicyReportUtil:
                     report.stock_id = stock_id
                     report.policy_group_type = policy_group_type
                     report.policy_group_value = policy_group_value
-                    PolicyReportUtil.build_summary_policy_report(policy_report_list, report.reports)
+                    PolicyReportUtil.build_summary_policy_report(policy_report_list, report.reports, is_validate)
                     if not report.reports:
                         del person.stock_policy_group_report[-1]
         logging.info("end build_summary_policy_report_for_stock_policy_group")
@@ -151,8 +151,11 @@ class PolicyReportUtil:
 
 
     @staticmethod
-    def build_summary_policy_report(policy_report_list, repeated_stock_policy_report):
-        filter_policy_report_list = PolicyReportUtil.build_filter_report_list(policy_report_list)
+    def build_summary_policy_report(policy_report_list, repeated_stock_policy_report, is_validate):
+        if is_validate:
+            filter_policy_report_list = policy_report_list
+        else:
+            filter_policy_report_list = PolicyReportUtil.build_filter_report_list(policy_report_list)
         filter_sorted_policy_report_list = sorted(filter_policy_report_list, cmp=PolicyReportUtil.greater_policy_report_roi)
         if not filter_sorted_policy_report_list:
             return
@@ -215,7 +218,7 @@ class PolicyReportUtil:
             report.stock_hold_no_sell_times = 1
             buy_action_item = action_item.buy_stock_action[-1]
             the_last_stock_daily_info = PolicyReportUtil.get_the_last_stock_daily_info(stock_info, action_item)
-            the_stock_mean_price = (the_last_stock_daily_info.high + the_last_stock_daily_info.low) / 2.0
+            the_stock_mean_price = PolicyReportUtil.get_medium_price(the_last_stock_daily_info)
             if buy_action_item.at_price < the_stock_mean_price:
                 report.trade_profit_times += 1
             else:
@@ -263,7 +266,7 @@ class PolicyReportUtil:
         asset_value_taken_out = cash_value
         if len(action_item.sell_stock_action) < len(action_item.buy_stock_action):
             the_stock_daily_info = PolicyReportUtil.get_the_last_stock_daily_info(stock_info, action_item)
-            the_stock_mean_price = (the_stock_daily_info.high + the_stock_daily_info.low) / 2.0
+            the_stock_mean_price = PolicyReportUtil.get_medium_price(the_stock_daily_info)
             # 最后一笔持有的仍然计算手续费
             asset_value_taken_out += (the_stock_mean_price * action_item.buy_stock_action[-1].volumn - action_item.buy_stock_action[-1].stock_trade_cost)
         logging.debug("cash_value:%s, asset_value_out:%s", cash_value, asset_value_taken_out)
@@ -289,6 +292,20 @@ class PolicyReportUtil:
     def get_the_last_stock_daily_info(stock_info, action_item):
         # 以观察周期最后一天的下一天的close作为卖出价格
         return PolicyReportUtil.get_the_stock_daily_info(stock_info, action_item.trade_watch_end_date)
+
+
+    @staticmethod
+    def get_previous_stock_daily_info(stock_info, trade_watch_start_date_str, current_date_str):
+        begin_date = DatetimeUtil.from_date_str(trade_watch_start_date_str)
+        previous_date = DatetimeUtil.from_date_str(current_date_str) + datetime.timedelta(days=-1)
+        while begin_date <= previous_date:
+            the_daily_info = PolicyReportUtil.get_the_stock_daily_info(stock_info,
+                                                                       DatetimeUtil.to_datetime_str(previous_date))
+            if not the_daily_info:
+                previous_date += datetime.timedelta(days=-1)
+                continue
+            return the_daily_info
+        return None
 
 
     @staticmethod
@@ -371,3 +388,8 @@ class PolicyReportUtil:
             percent_policy_report.reports[0].report.stock_sell_times
         )
         return result
+
+
+    @staticmethod
+    def get_medium_price(stock_daily_info):
+        return (stock_daily_info.high + stock_daily_info.low) / 2.0

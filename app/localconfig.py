@@ -58,6 +58,8 @@ SELL_PROFIT_THOUSANDTH = PolicyValueRange([0, 10, 20, 50, 100, 150, 1000], [0, 1
 
 
 
+LAST_CLOSE_PRICE_PERCENT = PolicyValueRange([DEFAULT_CONFIG] + range(80, 120, 1), DEFAULT_CONFIG)
+
 
 TREND_MODE = PolicyValueRange([Policy.TradePolicy.Percent.LOW, Policy.TradePolicy.Percent.HIGH, Policy.TradePolicy.Percent.MEDIUM],
                               [Policy.TradePolicy.Percent.HIGH, Policy.TradePolicy.Percent.LOW])
@@ -127,7 +129,7 @@ end_date_str = "20171230"
 # end_date_str = "20161230"
 
 #
-select_stock_name_list = ["JD", "BABA"]
+# select_stock_name_list = ["JD", "BABA"]
 # DAYS_HOLD_FOR_SALE_LIST = [30]
 # start_date_str = "20170101"
 
