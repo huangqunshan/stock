@@ -80,7 +80,7 @@ class PolicyItem:
 
 
     @staticmethod
-    def build(repeated_policy, current_policy_dict, partial_policy_set, full_policy_set):
+    def build(repeated_policy, current_policy_dict, partial_policy_set, full_policy_set, is_random_for_best):
         if str(current_policy_dict) in partial_policy_set:
             return
         partial_policy_set.add(str(current_policy_dict))
@@ -100,14 +100,15 @@ class PolicyItem:
                         current_policy_dict[k] = item
                         if len(current_policy_dict) < len(PolicyFactory.policy_value_dict):
                             # 必须拷贝而非直接修改
-                            PolicyItem.build(repeated_policy, dict(current_policy_dict), partial_policy_set, full_policy_set)
+                            PolicyItem.build(repeated_policy, dict(current_policy_dict), partial_policy_set, full_policy_set, is_random_for_best)
                         else:
                             PolicyItem.build_core(repeated_policy, current_policy_dict, partial_policy_set, full_policy_set)
                 else:
                     assert best_item
-                    # TODO: 取random
-                    # current_policy_dict[k] = best_item[int(random.random()*100) % len(best_item)]
-                    current_policy_dict[k] = best_item[0]
+                    if is_random_for_best:
+                        current_policy_dict[k] = best_item[int(random.random()*100) % len(best_item)]
+                    else:
+                        current_policy_dict[k] = best_item[0]
                     if len(current_policy_dict) == len(PolicyFactory.policy_value_dict):
                         PolicyItem.build_core(repeated_policy, current_policy_dict, partial_policy_set, full_policy_set)
                         return
@@ -163,30 +164,30 @@ class PolicyFactory:
 
 
     @staticmethod
-    def generate_policy_list_for_train(repeated_policy):
+    def generate_policy_list_for_train(repeated_policy, is_random_for_best):
         logging.info("begin generate policy list for train")
         for policy_type, item_value in PolicyFactory.policy_value_dict.iteritems():
             assert isinstance(item_value.range, list)
-            PolicyFactory.generate_policy_list_with_policy_type(repeated_policy, policy_type, item_value.range)
+            PolicyFactory.generate_policy_list_with_policy_type(repeated_policy, policy_type, item_value.range, is_random_for_best)
         logging.info("end generate policy list for train")
 
 
     @staticmethod
-    def generate_policy_list_for_validate(repeated_policy):
+    def generate_policy_list_for_validate(repeated_policy, is_random_for_best):
         logging.info("begin generate policy list for validate")
-        PolicyItem.build(repeated_policy, {}, set(), set())
+        PolicyItem.build(repeated_policy, {}, set(), set(), is_random_for_best)
         logging.info("end generate policy list for validate")
 
 
     @staticmethod
-    def generate_policy_list_with_policy_type(repeated_policy, policy_type, policy_value_list):
+    def generate_policy_list_with_policy_type(repeated_policy, policy_type, policy_value_list, is_random_for_best):
         policy_str_set = set()
         policy_id_set = set()
         for policy_value in policy_value_list:
-            PolicyItem.build(repeated_policy, {policy_type: policy_value}, policy_str_set, policy_id_set)
+            PolicyItem.build(repeated_policy, {policy_type: policy_value}, policy_str_set, policy_id_set, is_random_for_best)
 
 
 if __name__ == "__main__":
     person = Person()
-    PolicyFactory.generate_policy_list_for_train(person.policy_info)
+    PolicyFactory.generate_policy_list_for_train(person.policy_info, False)
     print person.policy_info

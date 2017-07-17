@@ -20,6 +20,8 @@ def main():
                         help='if validate')
     parser.add_argument('--quick', dest='quick', action='store_true',
                         help='if quick')
+    parser.add_argument('--random', dest='is_random_for_best', action='store_true',
+                        help='if random')
     args = parser.parse_args()
 
     if args.quick:
@@ -38,10 +40,10 @@ def main():
     if args.validate:
         # person.max_train_watch_days = localconfig.max_train_watch_days
         # person.max_predict_watch_days = localconfig.max_predict_watch_days
-        PolicyFactory.generate_policy_list_for_validate(person.policy_info)
+        PolicyFactory.generate_policy_list_for_validate(person.policy_info, args.is_random_for_best)
         PolicyUtil.train(person, True)
     else:
-        PolicyFactory.generate_policy_list_for_train(person.policy_info)
+        PolicyFactory.generate_policy_list_for_train(person.policy_info, args.is_random_for_best)
         PolicyUtil.train(person)
     logging.info("begin write person to file")
     # fout = open('model_out', 'w')

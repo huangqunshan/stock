@@ -1,0 +1,516 @@
+-----------------------
+policy_group_report:	buy_days_watch:30	P20:(1.21085412667,18)	P50:(1.03635053333,5)	P80:(0.960952166667,3)	P100:(0.27448868,45)	P0:(3.67107756667,5)
+policy_group_report:	buy_days_watch:10	P20:(1.29278615,25)	P50:(1.07422728333,12)	P80:(0.932327936667,24)	P100:(0.413284266667,8)	P0:(1.51466210833,25)
+policy_group_report:	buy_days_watch:20	P20:(1.16219542333,16)	P50:(1.0161236,1)	P80:(0.96004988,9)	P100:(0.351024868333,45)	P0:(3.54433086667,0)
+policy_group_report:	buy_mode:1	P20:(1.18206853333,5)	P50:(1.02415293333,30)	P80:(0.96038136,2)	P100:(0.27448868,45)	P0:(3.67107756667,5)
+policy_group_report:	buy_mode:3	P20:(1.04221821667,32)	P50:(0.953553433333,44)	P80:(0.832477316667,35)	P100:(0.506031445,42)	P0:(1.30739873,41)
+policy_group_report:	buy_price_percent:20	P20:(1.23399521333,7)	P50:(1.13558473333,6)	P80:(1.01482373333,3)	P100:(0.437988633333,3)	P0:(1.69428286667,7)
+policy_group_report:	buy_price_percent:50	P20:(1.32626148333,7)	P50:(1.1580775,8)	P80:(1.03722163333,6)	P100:(0.6726089,8)	P0:(1.53544776667,7)
+policy_group_report:	buy_price_percent:30	P20:(1.20508086667,7)	P50:(1.09903542667,7)	P80:(1.00380387333,11)	P100:(0.644528753333,11)	P0:(1.41757373333,5)
+policy_group_report:	buy_price_percent:10	P20:(1.158112,8)	P50:(1.07327126667,6)	P80:(1.00285616333,5)	P100:(0.533602326667,9)	P0:(1.27946196667,7)
+policy_group_report:	buy_price_percent:40	P20:(1.2784981,6)	P50:(1.11983518333,8)	P80:(0.977596433333,9)	P100:(0.57374609,11)	P0:(1.49860971333,11)
+policy_group_report:	buy_price_percent:80	P20:(1.23138286667,16)	P50:(1.04097624667,11)	P80:(0.979754074667,1)	P100:(0.333595693333,47)	P0:(3.67107756667,5)
+policy_group_report:	buy_price_percent:90	P20:(1.15515733333,20)	P50:(1.01191233333,0)	P80:(0.940778333333,25)	P100:(0.27448868,45)	P0:(3.56677183333,1)
+policy_group_report:	buy_price_percent:70	P20:(1.16189471267,9)	P50:(1.02013866667,1)	P80:(0.97983068,1)	P100:(0.392214216,11)	P0:(3.54433086667,0)
+policy_group_report:	buy_price_percent:60	P20:(1.11824088267,16)	P50:(0.998268105333,29)	P80:(0.889270236,27)	P100:(0.384783926667,11)	P0:(1.42096224133,12)
+policy_group_report:	buy_price_percent:100	P20:(1.04089342667,38)	P50:(0.966544646667,28)	P80:(0.87185902,24)	P100:(0.487184573333,30)	P0:(1.3945217,46)
+policy_group_report:	buy_trend_days_watch:100	P20:(1.3215956,18)	P50:(1.13576188,16)	P80:(1.0331119,9)	P100:(0.7088965,11)	P0:(1.51356683333,10)
+policy_group_report:	buy_trend_days_watch:10	P20:(1.26306338333,10)	P50:(1.10828895,10)	P80:(0.959169391667,9)	P100:(0.483210166667,5)	P0:(1.45193193333,8)
+policy_group_report:	buy_trend_days_watch:60	P20:(1.21085412667,18)	P50:(1.07001903167,23)	P80:(0.918057731667,25)	P100:(0.43707928,30)	P0:(1.51564855333,23)
+policy_group_report:	buy_trend_days_watch:30	P20:(1.15168963333,27)	P50:(1.04166855333,24)	P80:(0.85001355,27)	P100:(0.425637203333,18)	P0:(1.48337182,26)
+policy_group_report:	buy_trend_days_watch:120	P20:(1.22251774,20)	P50:(1.06697121667,24)	P80:(0.892451293333,18)	P100:(0.438117983333,7)	P0:(1.38404602667,17)
+policy_group_report:	buy_trend_days_watch:40	P20:(1.17262958667,4)	P50:(1.02331198667,22)	P80:(0.9496724,1)	P100:(0.27448868,45)	P0:(3.67107756667,5)
+policy_group_report:	buy_trend_days_watch:20	P20:(1.184618,26)	P50:(1.02349013333,1)	P80:(0.975765266667,2)	P100:(0.351024868333,45)	P0:(3.54433086667,0)
+policy_group_report:	buy_trend_days_watch:50	P20:(1.20066934533,27)	P50:(1.02047576267,17)	P80:(0.941856372,22)	P100:(0.492092581333,27)	P0:(1.40013026533,23)
+policy_group_report:	buy_trend_days_watch:80	P20:(1.15612891467,12)	P50:(1.004291084,30)	P80:(0.910344909333,24)	P100:(0.392214216,11)	P0:(1.34635068067,18)
+policy_group_report:	buy_trend_percent:50	P20:(1.20417049333,14)	P50:(1.0853778,5)	P80:(1.00507103333,8)	P100:(0.569169106667,4)	P0:(1.42405866667,13)
+policy_group_report:	buy_trend_percent:60	P20:(1.146584,1)	P50:(1.07537116,8)	P80:(0.989259961667,6)	P100:(0.77627866,10)	P0:(1.302582015,10)
+policy_group_report:	buy_trend_percent:30	P20:(1.14442766667,5)	P50:(1.0742398,2)	P80:(0.994341666667,1)	P100:(0.65561918,4)	P0:(1.28422433333,2)
+policy_group_report:	buy_trend_percent:40	P20:(1.08133953333,9)	P50:(1.0330538,5)	P80:(0.949443033333,4)	P100:(0.741870366667,5)	P0:(1.25679843333,7)
+policy_group_report:	buy_trend_percent:-9999	P20:(1.18791323333,10)	P50:(1.02775723333,23)	P80:(0.955480133333,5)	P100:(0.27448868,45)	P0:(3.67107756667,5)
+policy_group_report:	buy_trend_percent:70	P20:(1.060322,7)	P50:(1.02710613333,4)	P80:(0.993358086667,2)	P100:(0.783184901667,6)	P0:(1.1247061,6)
+policy_group_report:	buy_trend_percent:20	P20:(1.01114573333,2)	P50:(1.0,0)	P80:(1.0,0)	P100:(0.809913066667,3)	P0:(1.07133426667,1)
+policy_group_report:	buy_trend_percent:80	P20:(1.01691033333,1)	P50:(1.0,0)	P80:(1.0,0)	P100:(0.89991872,1)	P0:(1.146067,3)
+policy_group_report:	buy_trend_percent:10	P20:(1.009486,1)	P50:(1.0,0)	P80:(1.0,0)	P100:(0.81228055,4)	P0:(1.13779966667,1)
+policy_group_report:	buy_trend_percent:0	P20:(1.0,0)	P50:(1.0,0)	P80:(1.0,0)	P100:(0.96038136,2)	P0:(1.01451933333,1)
+policy_group_report:	buy_trend_percent:90	P20:(1.0,0)	P50:(1.0,0)	P80:(1.0,0)	P100:(1.0,0)	P0:(1.0,0)
+policy_group_report:	buy_trend_percent:100	P20:(1.0,0)	P50:(1.0,0)	P80:(1.0,0)	P100:(1.0,0)	P0:(1.0,0)
+policy_group_report:	days_hold_for_sell:2	P20:(1.18553333333,0)	P50:(1.0271727,5)	P80:(0.9786524,13)	P100:(0.351024868333,45)	P0:(3.67107756667,5)
+policy_group_report:	days_hold_for_sell:10	P20:(1.1286899,5)	P50:(1.04781106667,22)	P80:(0.89037673,28)	P100:(0.45868971,35)	P0:(1.3474686,24)
+policy_group_report:	days_hold_for_sell:5	P20:(1.17450988267,2)	P50:(1.02279973333,3)	P80:(0.9496724,1)	P100:(0.27448868,45)	P0:(3.56677183333,1)
+policy_group_report:	last_buy_sequential_trend_count:2	P20:(1.16694906667,4)	P50:(1.0674107,5)	P80:(0.985988133333,5)	P100:(0.599842833333,2)	P0:(1.53348506667,7)
+policy_group_report:	last_buy_sequential_trend_count:-2	P20:(1.19519655,9)	P50:(1.08754316667,6)	P80:(0.955480133333,5)	P100:(0.598641916667,1)	P0:(1.38952833333,8)
+policy_group_report:	last_buy_sequential_trend_count:1	P20:(1.15405833333,10)	P50:(1.05831056667,9)	P80:(0.959201666667,5)	P100:(0.6189801,13)	P0:(1.30684153333,9)
+policy_group_report:	last_buy_sequential_trend_count:-4	P20:(1.05857606667,7)	P50:(1.02279973333,3)	P80:(0.986881833333,2)	P100:(0.679717566667,5)	P0:(1.26033406667,6)
+policy_group_report:	last_buy_sequential_trend_count:4	P20:(1.06181066667,2)	P50:(1.02844566667,1)	P80:(0.984218,3)	P100:(0.828618266667,5)	P0:(1.1250721,3)
+policy_group_report:	last_buy_sequential_trend_count:-9999	P20:(1.20137244533,17)	P50:(1.03433453733,30)	P80:(0.949863116667,1)	P100:(0.27448868,45)	P0:(3.67107756667,5)
+policy_group_report:	last_buy_sequential_trend_count:-1	P20:(1.17157847333,12)	P50:(1.060682565,11)	P80:(0.948840286667,15)	P100:(0.628174286667,15)	P0:(1.53350907667,21)
+policy_group_report:	last_buy_sequential_trend_count:3	P20:(1.059176064,4)	P50:(1.002767136,6)	P80:(0.979888192,1)	P100:(0.884658636,6)	P0:(1.15339546667,3)
+policy_group_report:	last_buy_sequential_trend_count:-3	P20:(1.04055976,5)	P50:(0.999963015333,6)	P80:(0.936624153333,9)	P100:(0.500168426667,2)	P0:(1.26433569333,6)
+policy_group_report:	last_buy_sequential_trend_count:-6	P20:(1.0143336,2)	P50:(1.0,0)	P80:(1.0,0)	P100:(0.809688333333,2)	P0:(1.103893,2)
+policy_group_report:	last_buy_sequential_trend_count:-5	P20:(1.02777206667,2)	P50:(0.991303485333,6)	P80:(0.96013548,2)	P100:(0.64645758,1)	P0:(1.10118608,3)
+policy_group_report:	last_buy_sequential_trend_count:-8	P20:(1.03218,1)	P50:(1.0,0)	P80:(1.0,0)	P100:(0.899364266667,1)	P0:(1.08790666667,1)
+policy_group_report:	last_buy_sequential_trend_count:-7	P20:(1.01936733333,1)	P50:(1.0,0)	P80:(1.0,0)	P100:(0.940221133333,3)	P0:(1.0694176,1)
+policy_group_report:	last_buy_sequential_trend_count:5	P20:(1.0,0)	P50:(1.0,0)	P80:(1.0,0)	P100:(0.960235066667,2)	P0:(1.10197166667,2)
+policy_group_report:	last_buy_sequential_trend_count:6	P20:(1.0,0)	P50:(1.0,0)	P80:(1.0,0)	P100:(0.960062196667,2)	P0:(1.04068693333,1)
+policy_group_report:	last_buy_sequential_trend_count:9	P20:(1.0,0)	P50:(1.0,0)	P80:(1.0,0)	P100:(0.949301933333,1)	P0:(1.0762972,1)
+policy_group_report:	last_buy_sequential_trend_count:7	P20:(1.0,0)	P50:(1.0,0)	P80:(1.0,0)	P100:(0.988297466667,0)	P0:(1.0559254,1)
+policy_group_report:	last_buy_sequential_trend_count:-10	P20:(1.0,0)	P50:(1.0,0)	P80:(1.0,0)	P100:(0.97994032,1)	P0:(1.03855573333,1)
+policy_group_report:	last_buy_sequential_trend_count:8	P20:(1.0,0)	P50:(1.0,0)	P80:(1.0,0)	P100:(0.97983068,1)	P0:(1.02726186667,1)
+policy_group_report:	last_buy_sequential_trend_count:-9	P20:(1.0,0)	P50:(1.0,0)	P80:(1.0,0)	P100:(0.97993048,1)	P0:(1.021488,1)
+policy_group_report:	last_buy_sequential_trend_count:10	P20:(1.0,0)	P50:(1.0,0)	P80:(1.0,0)	P100:(1.0,0)	P0:(1.00754963333,1)
+policy_group_report:	last_buy_sequential_trend_count:0	P20:(1.0,0)	P50:(1.0,0)	P80:(1.0,0)	P100:(1.0,0)	P0:(1.0,0)
+policy_group_report:	last_close_price_percent:99	P20:(1.16189471267,9)	P50:(1.07109579867,14)	P80:(1.01636335067,4)	P100:(0.581275589333,4)	P0:(1.38771872267,6)
+policy_group_report:	last_close_price_percent:102	P20:(1.11866313333,4)	P50:(1.071023,2)	P80:(1.00367763333,5)	P100:(0.768358016667,5)	P0:(1.3507786,5)
+policy_group_report:	last_close_price_percent:98	P20:(1.13278506667,5)	P50:(1.05596463333,7)	P80:(1.01033516667,3)	P100:(0.80594,5)	P0:(1.29323,6)
+policy_group_report:	last_close_price_percent:100	P20:(1.13407096667,6)	P50:(1.05048073333,6)	P80:(0.996201593333,6)	P100:(0.8316299,8)	P0:(1.37511496667,6)
+policy_group_report:	last_close_price_percent:87	P20:(1.0522004,1)	P50:(1.01968596667,1)	P80:(1.0,0)	P100:(0.899667066667,1)	P0:(1.13494893333,1)
+policy_group_report:	last_close_price_percent:94	P20:(1.03858233333,1)	P50:(1.00956786667,1)	P80:(1.0,0)	P100:(0.902163433333,2)	P0:(1.12937933333,1)
+policy_group_report:	last_close_price_percent:-9999	P20:(1.22899358667,17)	P50:(1.04382626667,7)	P80:(0.947466666667,0)	P100:(0.27448868,45)	P0:(3.67107756667,5)
+policy_group_report:	last_close_price_percent:104	P20:(1.11301466667,3)	P50:(1.04156436667,3)	P80:(0.960952166667,3)	P100:(0.669684616667,6)	P0:(1.47841653333,4)
+policy_group_report:	last_close_price_percent:111	P20:(1.0667648,1)	P50:(1.02474973333,1)	P80:(1.0,0)	P100:(0.8097775,2)	P0:(1.35401973333,5)
+policy_group_report:	last_close_price_percent:113	P20:(1.05068213333,1)	P50:(1.016368,1)	P80:(1.0,0)	P100:(0.808768366667,2)	P0:(1.31511233333,3)
+policy_group_report:	last_close_price_percent:103	P20:(1.07019413333,4)	P50:(1.01660933333,1)	P80:(0.947166166667,3)	P100:(0.7729504,5)	P0:(1.30148623333,5)
+policy_group_report:	last_close_price_percent:115	P20:(1.05584453333,1)	P50:(1.01274,1)	P80:(1.0,0)	P100:(0.726984666667,3)	P0:(1.23155546667,3)
+policy_group_report:	last_close_price_percent:117	P20:(1.0475772,1)	P50:(1.01125733333,3)	P80:(1.0,0)	P100:(0.90181823,2)	P0:(1.20613093333,2)
+policy_group_report:	last_close_price_percent:108	P20:(1.046116,1)	P50:(1.01092,1)	P80:(1.0,0)	P100:(0.81420445,4)	P0:(1.16662633333,2)
+policy_group_report:	last_close_price_percent:95	P20:(1.06347066667,1)	P50:(1.023975,1)	P80:(0.9500098,1)	P100:(0.855519883333,3)	P0:(1.15929233333,1)
+policy_group_report:	last_close_price_percent:101	P20:(1.09721596667,5)	P50:(1.02316116667,6)	P80:(0.9610945,8)	P100:(0.7688737,6)	P0:(1.1578083,4)
+policy_group_report:	last_close_price_percent:90	P20:(1.03778133333,1)	P50:(1.00728,1)	P80:(1.0,0)	P100:(0.9496724,1)	P0:(1.12937933333,1)
+policy_group_report:	last_close_price_percent:109	P20:(1.10916386667,1)	P50:(1.04461866667,1)	P80:(1.0,0)	P100:(0.808520666667,2)	P0:(1.40554333333,3)
+policy_group_report:	last_close_price_percent:107	P20:(1.07198916667,1)	P50:(1.01067433333,1)	P80:(0.98662865,4)	P100:(0.776794366667,3)	P0:(1.19890793333,3)
+policy_group_report:	last_close_price_percent:110	P20:(1.0484484,1)	P50:(1.0058604,1)	P80:(1.0,0)	P100:(0.812010633333,1)	P0:(1.1699716,2)
+policy_group_report:	last_close_price_percent:93	P20:(1.06740506667,1)	P50:(1.01580223333,1)	P80:(1.0,0)	P100:(0.808844333333,2)	P0:(1.16506933333,2)
+policy_group_report:	last_close_price_percent:85	P20:(1.04035733333,1)	P50:(1.00728,1)	P80:(1.0,0)	P100:(0.949644866667,1)	P0:(1.13494893333,1)
+policy_group_report:	last_close_price_percent:91	P20:(1.03858233333,1)	P50:(1.00728,1)	P80:(1.0,0)	P100:(0.9496724,1)	P0:(1.12937933333,1)
+policy_group_report:	last_close_price_percent:96	P20:(1.0288768,1)	P50:(1.00361866667,1)	P80:(1.0,0)	P100:(0.879719833333,3)	P0:(1.1143568,2)
+policy_group_report:	last_close_price_percent:118	P20:(1.03185093333,1)	P50:(1.0060628,1)	P80:(1.0,0)	P100:(0.933806633333,1)	P0:(1.07826545,2)
+policy_group_report:	last_close_price_percent:119	P20:(1.010904,1)	P50:(1.00051666667,1)	P80:(0.9990025,1)	P100:(0.902283553333,2)	P0:(1.0434931,1)
+policy_group_report:	last_close_price_percent:97	P20:(1.02606423333,1)	P50:(1.0,0)	P80:(0.97996792,1)	P100:(0.903217826667,5)	P0:(1.17499710667,8)
+policy_group_report:	last_close_price_percent:82	P20:(1.05726333333,1)	P50:(1.0,0)	P80:(1.0,0)	P100:(0.9496724,1)	P0:(1.15929233333,1)
+policy_group_report:	last_close_price_percent:106	P20:(1.01914326667,2)	P50:(1.0,0)	P80:(0.990600666667,2)	P100:(0.739558266667,7)	P0:(1.08603223333,2)
+policy_group_report:	last_close_price_percent:105	P20:(1.02580933333,3)	P50:(1.0,0)	P80:(0.95514115,4)	P100:(0.645776333333,8)	P0:(1.07726466667,3)
+policy_group_report:	last_close_price_percent:89	P20:(1.01352166667,1)	P50:(1.0,0)	P80:(1.0,0)	P100:(0.949569,1)	P0:(1.07198916667,1)
+policy_group_report:	last_close_price_percent:83	P20:(1.01266786667,1)	P50:(1.0,0)	P80:(0.9981,1)	P100:(0.949172666667,1)	P0:(1.07156683333,2)
+policy_group_report:	last_close_price_percent:114	P20:(1.01490933333,1)	P50:(1.0,0)	P80:(0.975765266667,2)	P100:(0.8118943,5)	P0:(1.0692716,1)
+policy_group_report:	last_close_price_percent:86	P20:(1.01490933333,1)	P50:(1.0,0)	P80:(1.0,0)	P100:(0.949604133333,1)	P0:(1.0692716,1)
+policy_group_report:	last_close_price_percent:88	P20:(1.01857833333,1)	P50:(1.0,0)	P80:(0.996157133333,1)	P100:(0.90146904,2)	P0:(1.066368,1)
+policy_group_report:	last_close_price_percent:81	P20:(1.0161236,1)	P50:(1.0,0)	P80:(0.993950666667,1)	P100:(0.899196,1)	P0:(1.0500256,1)
+policy_group_report:	last_close_price_percent:80	P20:(1.00583293333,1)	P50:(1.0,0)	P80:(0.987125333333,1)	P100:(0.9496724,1)	P0:(1.070526,1)
+policy_group_report:	last_close_price_percent:84	P20:(1.008536,1)	P50:(1.0,0)	P80:(0.999310666667,1)	P100:(0.9791616,1)	P0:(1.070526,1)
+policy_group_report:	last_close_price_percent:92	P20:(1.01187933333,1)	P50:(1.0,0)	P80:(0.986246,2)	P100:(0.728781633333,3)	P0:(1.06000773333,1)
+policy_group_report:	last_close_price_percent:112	P20:(1.03089493333,2)	P50:(1.0,0)	P80:(0.97991604,1)	P100:(0.92198454,4)	P0:(1.12568186667,2)
+policy_group_report:	last_close_price_percent:116	P20:(1.00293346667,1)	P50:(1.0,0)	P80:(0.979754074667,1)	P100:(0.532753466667,1)	P0:(1.03195166667,1)
+policy_group_report:	last_sell_sequential_trend_count:6	P20:(1.59476413333,2)	P50:(1.15947966667,0)	P80:(1.03406533333,2)	P100:(0.4570915,1)	P0:(3.48677,0)
+policy_group_report:	last_sell_sequential_trend_count:-8	P20:(1.58779933333,0)	P50:(1.1978482,0)	P80:(1.102831,0)	P100:(0.606746,0)	P0:(2.6025151,0)
+policy_group_report:	last_sell_sequential_trend_count:-9	P20:(1.5797878,1)	P50:(1.1838865,0)	P80:(1.08764033333,0)	P100:(0.6096046,0)	P0:(2.58326,0)
+policy_group_report:	last_sell_sequential_trend_count:-3	P20:(1.541088,2)	P50:(1.17450988267,2)	P80:(1.09365092667,2)	P100:(0.6052924,0)	P0:(2.5810354,0)
+policy_group_report:	last_sell_sequential_trend_count:-4	P20:(1.562716,0)	P50:(1.18553333333,0)	P80:(1.11914326667,0)	P100:(0.606497,0)	P0:(2.580391,0)
+policy_group_report:	last_sell_sequential_trend_count:8	P20:(1.592553,1)	P50:(1.18553333333,0)	P80:(1.07398506667,0)	P100:(0.603657666667,0)	P0:(2.5160163,2)
+policy_group_report:	last_sell_sequential_trend_count:-6	P20:(1.55156166667,0)	P50:(1.2028015,0)	P80:(1.078864,0)	P100:(0.608807466667,0)	P0:(2.48592546667,0)
+policy_group_report:	last_sell_sequential_trend_count:-5	P20:(1.57646702,1)	P50:(1.2062944,0)	P80:(1.08764033333,0)	P100:(0.612820533333,0)	P0:(2.33893426667,0)
+policy_group_report:	last_sell_sequential_trend_count:-1	P20:(1.46864813333,11)	P50:(1.17798006667,5)	P80:(1.04016766667,10)	P100:(0.584115933333,2)	P0:(2.27244936667,8)
+policy_group_report:	last_sell_sequential_trend_count:5	P20:(1.63823496667,3)	P50:(1.1928864,5)	P80:(1.07505226667,3)	P100:(0.6052924,0)	P0:(2.1826914,4)
+policy_group_report:	last_sell_sequential_trend_count:3	P20:(1.57577826667,5)	P50:(1.18098966667,7)	P80:(1.06896604667,6)	P100:(0.602616666667,1)	P0:(2.062946,5)
+policy_group_report:	last_sell_sequential_trend_count:-2	P20:(1.49505309333,7)	P50:(1.1863884,4)	P80:(1.0201665,6)	P100:(0.490508966667,2)	P0:(3.67107756667,5)
+policy_group_report:	last_sell_sequential_trend_count:0	P20:(1.56431573333,0)	P50:(1.17354973333,0)	P80:(1.024038,0)	P100:(0.448843333333,0)	P0:(3.48677,0)
+policy_group_report:	last_sell_sequential_trend_count:7	P20:(1.57617333333,0)	P50:(1.15947966667,0)	P80:(1.03585143333,2)	P100:(0.448843333333,0)	P0:(3.48677,0)
+policy_group_report:	last_sell_sequential_trend_count:-10	P20:(1.56431573333,0)	P50:(1.17354973333,0)	P80:(1.024038,0)	P100:(0.448843333333,0)	P0:(3.48677,0)
+policy_group_report:	last_sell_sequential_trend_count:10	P20:(1.55194833333,0)	P50:(1.163268,0)	P80:(1.03417333333,1)	P100:(0.448843333333,0)	P0:(3.44855976667,1)
+policy_group_report:	last_sell_sequential_trend_count:9	P20:(1.57418393333,0)	P50:(1.1711756,2)	P80:(1.0635375,0)	P100:(0.433375066667,0)	P0:(3.40041633333,0)
+policy_group_report:	last_sell_sequential_trend_count:-7	P20:(1.53629333333,0)	P50:(1.180455,0)	P80:(1.0635375,0)	P100:(0.431972266667,0)	P0:(3.40041633333,0)
+policy_group_report:	last_sell_sequential_trend_count:2	P20:(1.43194993333,7)	P50:(1.17531323333,8)	P80:(1.10675111667,6)	P100:(0.6138126,1)	P0:(2.0055781,7)
+policy_group_report:	last_sell_sequential_trend_count:4	P20:(1.44426675333,7)	P50:(1.17262958667,4)	P80:(1.05873793333,2)	P100:(0.423631114667,1)	P0:(1.95159033333,6)
+policy_group_report:	last_sell_sequential_trend_count:1	P20:(1.31512171333,20)	P50:(1.1217456,16)	P80:(0.9786524,13)	P100:(0.41348329,5)	P0:(2.45501994833,18)
+policy_group_report:	last_sell_sequential_trend_count:-9999	P20:(1.15515733333,20)	P50:(1.01376433333,5)	P80:(0.949883575,1)	P100:(0.27448868,45)	P0:(3.56677183333,1)
+policy_group_report:	loss_stop_thousandth:500	P20:(1.33785546667,10)	P50:(1.16950226667,8)	P80:(1.07695063333,10)	P100:(0.664486966667,5)	P0:(1.5459646,10)
+policy_group_report:	loss_stop_thousandth:100	P20:(1.23138286667,16)	P50:(1.06143476667,12)	P80:(0.986881833333,2)	P100:(0.27448868,45)	P0:(3.67107756667,5)
+policy_group_report:	loss_stop_thousandth:200	P20:(1.26104353333,8)	P50:(1.09917863333,13)	P80:(0.9912868,16)	P100:(0.491435533333,9)	P0:(1.48878056667,19)
+policy_group_report:	loss_stop_thousandth:50	P20:(1.16657296667,10)	P50:(1.01919433333,1)	P80:(0.9498636,1)	P100:(0.333595693333,47)	P0:(3.54433086667,0)
+policy_group_report:	loss_stop_thousandth:10	P20:(1.09187469067,15)	P50:(1.00354079533,38)	P80:(0.896000010667,21)	P100:(0.423302933333,9)	P0:(1.45197243867,32)
+policy_group_report:	loss_stop_thousandth:20	P20:(1.13433766667,0)	P50:(1.0,0)	P80:(0.955999012,31)	P100:(0.371467928,16)	P0:(3.48677,0)
+policy_group_report:	min_stock_price:20	P20:(1.188458645,14)	P50:(1.02950133333,0)	P80:(0.97983068,1)	P100:(0.333595693333,47)	P0:(2.6025151,0)
+policy_group_report:	min_stock_price:5	P20:(1.1681856,14)	P50:(1.02861296667,15)	P80:(0.9368446,20)	P100:(0.49514714,18)	P0:(1.66326882,21)
+policy_group_report:	min_stock_price:10	P20:(1.17396295267,25)	P50:(1.01919260133,14)	P80:(0.945252029333,32)	P100:(0.27448868,45)	P0:(3.67107756667,5)
+policy_group_report:	min_stock_price:50	P20:(1.10691523333,2)	P50:(1.01391673333,22)	P80:(0.92094246,12)	P100:(0.521426431333,32)	P0:(1.20944424133,26)
+policy_group_report:	prefer_max_splited_trade_unit:1	P20:(1.1813941,7)	P50:(1.024038,0)	P80:(0.960062196667,2)	P100:(0.27448868,45)	P0:(3.67107756667,5)
+policy_group_report:	prefer_max_stock_count:1	P20:(1.1813941,7)	P50:(1.024038,0)	P80:(0.960062196667,2)	P100:(0.27448868,45)	P0:(3.67107756667,5)
+policy_group_report:	sell_days_watch:30	P20:(1.17789876,14)	P50:(1.03017966667,1)	P80:(0.9797712,1)	P100:(0.333595693333,47)	P0:(3.56677183333,1)
+policy_group_report:	sell_days_watch:10	P20:(1.1838865,0)	P50:(1.01939199667,21)	P80:(0.944437133333,13)	P100:(0.27448868,45)	P0:(3.67107756667,5)
+policy_group_report:	sell_days_watch:20	P20:(1.15068067733,18)	P50:(1.008327014,14)	P80:(0.866085702,32)	P100:(0.392368597333,10)	P0:(1.30179480467,14)
+policy_group_report:	sell_mode:3	P20:(1.1571475,39)	P50:(1.03705656667,23)	P80:(0.960283233333,30)	P100:(0.6333375,23)	P0:(1.31136723333,34)
+policy_group_report:	sell_mode:2	P20:(1.1813941,7)	P50:(1.024038,0)	P80:(0.960062196667,2)	P100:(0.27448868,45)	P0:(3.67107756667,5)
+policy_group_report:	sell_price_percent:90	P20:(1.16981613333,0)	P50:(1.02073566,22)	P80:(0.977948866667,1)	P100:(0.384783926667,11)	P0:(3.56677183333,1)
+policy_group_report:	sell_price_percent:100	P20:(1.227702,0)	P50:(1.06152396867,12)	P80:(0.959201666667,5)	P100:(0.392214216,11)	P0:(3.54433086667,0)
+policy_group_report:	sell_price_percent:80	P20:(1.163268,0)	P50:(1.01266786667,1)	P80:(0.980652141333,11)	P100:(0.371467928,16)	P0:(3.67107756667,5)
+policy_group_report:	sell_price_percent:70	P20:(1.09948043333,22)	P50:(1.02905456667,26)	P80:(0.890287383333,24)	P100:(0.44273866,36)	P0:(1.3389247,26)
+policy_group_report:	sell_price_percent:40	P20:(1.08818256667,23)	P50:(1.02775723333,23)	P80:(0.910985533333,20)	P100:(0.488882433333,13)	P0:(1.22249513333,34)
+policy_group_report:	sell_price_percent:60	P20:(1.05705407067,4)	P50:(0.979395332,37)	P80:(0.853057899333,28)	P100:(0.405262987333,11)	P0:(1.29027305533,33)
+policy_group_report:	sell_price_percent:30	P20:(0.937176766667,40)	P50:(0.826465473333,34)	P80:(0.675896856667,49)	P100:(0.351024868333,45)	P0:(1.09729360333,32)
+policy_group_report:	sell_price_percent:50	P20:(0.969159656667,30)	P50:(0.881989616667,29)	P80:(0.7848343,38)	P100:(0.41482526,35)	P0:(1.06167257333,34)
+policy_group_report:	sell_price_percent:20	P20:(0.892056766667,26)	P50:(0.819658756667,40)	P80:(0.6740201,45)	P100:(0.333595693333,47)	P0:(1.00992213333,30)
+policy_group_report:	sell_price_percent:10	P20:(0.9167559,48)	P50:(0.8027041,43)	P80:(0.6151594,48)	P100:(0.27448868,45)	P0:(1.0097208,38)
+policy_group_report:	sell_profit_thousandth:10	P20:(1.35894473333,11)	P50:(1.1394193,17)	P80:(1.0,0)	P100:(0.506035866667,4)	P0:(1.58542256667,16)
+policy_group_report:	sell_profit_thousandth:150	P20:(1.25071759333,19)	P50:(1.11655936667,14)	P80:(1.0,0)	P100:(0.57348615,24)	P0:(1.46525271667,17)
+policy_group_report:	sell_profit_thousandth:20	P20:(1.242212805,18)	P50:(1.14667274,14)	P80:(0.97384806,13)	P100:(0.47274402,30)	P0:(1.42373438167,18)
+policy_group_report:	sell_profit_thousandth:0	P20:(1.2062944,0)	P50:(1.03433453733,30)	P80:(0.985333068,26)	P100:(0.410353753333,6)	P0:(3.67107756667,5)
+policy_group_report:	sell_profit_thousandth:1000	P20:(1.24709595,13)	P50:(1.08240606667,10)	P80:(0.963206931667,11)	P100:(0.438455916667,4)	P0:(1.49719876667,8)
+policy_group_report:	sell_profit_thousandth:50	P20:(1.17399,0)	P50:(1.01919260133,14)	P80:(0.959201666667,5)	P100:(0.27448868,45)	P0:(3.48677,0)
+policy_group_report:	sell_profit_thousandth:100	P20:(1.163268,0)	P50:(1.01521841067,29)	P80:(0.9498138,1)	P100:(0.351024868333,45)	P0:(3.48677,0)
+policy_group_report:	sell_trend_days_watch:50	P20:(1.20421236667,23)	P50:(1.11018692,20)	P80:(0.9956117,17)	P100:(0.633203833333,15)	P0:(1.46538757333,13)
+policy_group_report:	sell_trend_days_watch:60	P20:(1.24260601667,12)	P50:(1.09003773333,11)	P80:(0.936927971667,11)	P100:(0.438505146667,4)	P0:(1.46185116333,16)
+policy_group_report:	sell_trend_days_watch:40	P20:(1.1857857,11)	P50:(1.03147638667,4)	P80:(0.9504942,4)	P100:(0.27448868,45)	P0:(3.54433086667,0)
+policy_group_report:	sell_trend_days_watch:120	P20:(1.20539743333,23)	P50:(1.06648224333,17)	P80:(0.944437133333,13)	P100:(0.533648266667,8)	P0:(1.6271134,18)
+policy_group_report:	sell_trend_days_watch:30	P20:(1.17892007933,17)	P50:(1.07152032667,13)	P80:(0.923969608,25)	P100:(0.517502528,21)	P0:(1.37251748667,12)
+policy_group_report:	sell_trend_days_watch:80	P20:(1.15666666667,21)	P50:(1.04987938667,21)	P80:(0.878886533333,18)	P100:(0.516788106667,16)	P0:(1.3650922,22)
+policy_group_report:	sell_trend_days_watch:20	P20:(1.16657296667,10)	P50:(1.016743754,24)	P80:(0.96957618,3)	P100:(0.371467928,16)	P0:(3.67107756667,5)
+policy_group_report:	sell_trend_days_watch:100	P20:(1.184618,26)	P50:(1.02415293333,30)	P80:(0.940778333333,25)	P100:(0.502669533333,11)	P0:(1.4598405,24)
+policy_group_report:	sell_trend_days_watch:10	P20:(1.07651259333,25)	P50:(0.979843530667,17)	P80:(0.826835797333,31)	P100:(0.420577993333,9)	P0:(1.36569652533,26)
+policy_group_report:	sell_trend_percent:10	P20:(1.562716,0)	P50:(1.18553333333,0)	P80:(1.0855364,0)	P100:(0.606497,0)	P0:(2.580391,0)
+policy_group_report:	sell_trend_percent:70	P20:(1.5115464,1)	P50:(1.18553333333,0)	P80:(1.08593933333,1)	P100:(0.606497,0)	P0:(2.46489113333,4)
+policy_group_report:	sell_trend_percent:80	P20:(1.60412306667,1)	P50:(1.241522,0)	P80:(1.08764033333,0)	P100:(0.612820533333,0)	P0:(2.44892973333,3)
+policy_group_report:	sell_trend_percent:40	P20:(1.4992205,3)	P50:(1.21600106667,3)	P80:(1.0676111,4)	P100:(0.603640333333,4)	P0:(2.20105016667,2)
+policy_group_report:	sell_trend_percent:100	P20:(1.55194833333,0)	P50:(1.1595971,0)	P80:(1.040186,0)	P100:(0.448843333333,0)	P0:(3.56677183333,1)
+policy_group_report:	sell_trend_percent:0	P20:(1.58779933333,0)	P50:(1.1774888,0)	P80:(1.02504373333,0)	P100:(0.448843333333,0)	P0:(3.54433086667,0)
+policy_group_report:	sell_trend_percent:90	P20:(1.562716,0)	P50:(1.16981613333,0)	P80:(1.02730333333,0)	P100:(0.448843333333,0)	P0:(3.48677,0)
+policy_group_report:	sell_trend_percent:20	P20:(1.57418393333,0)	P50:(1.17399,0)	P80:(1.0635375,0)	P100:(0.433375066667,0)	P0:(3.40041633333,0)
+policy_group_report:	sell_trend_percent:30	P20:(1.4976262,2)	P50:(1.2136254,1)	P80:(1.09117216667,0)	P100:(0.565983853333,7)	P0:(2.34908873333,0)
+policy_group_report:	sell_trend_percent:60	P20:(1.31522716533,18)	P50:(1.15513003333,9)	P80:(1.01447048667,10)	P100:(0.596672106667,2)	P0:(1.89011582733,11)
+policy_group_report:	sell_trend_percent:50	P20:(1.3435544,9)	P50:(1.13107865,10)	P80:(1.03160436667,4)	P100:(0.6361987,5)	P0:(1.86615466667,14)
+policy_group_report:	sell_trend_percent:-9999	P20:(1.16529666667,0)	P50:(1.01812593333,4)	P80:(0.95514115,4)	P100:(0.27448868,45)	P0:(3.67107756667,5)
+policy_group_report:	trend_mode:3	P20:(1.22977066667,15)	P50:(1.11904213333,18)	P80:(1.01442313333,14)	P100:(0.630054606667,10)	P0:(1.46535403333,11)
+policy_group_report:	trend_mode:2	P20:(1.182595972,42)	P50:(1.02580933333,3)	P80:(0.94989115,1)	P100:(0.27448868,45)	P0:(3.56677183333,1)
+policy_group_report:	trend_mode:1	P20:(1.17891201667,12)	P50:(1.02145146667,1)	P80:(0.97445742,4)	P100:(0.333595693333,47)	P0:(3.67107756667,5)
+-----------------------
+
+
+sorted_summary_policy_report {
+  policy_id: "sell_days_watch:10,trend_mode:2,buy_days_watch:30,buy_price_percent:80,buy_mode:1,last_sell_sequential_trend_count:-1,prefer_max_stock_count:1,sell_price_percent:90,sell_profit_thousandth:100,buy_trend_days_watch:20,buy_trend_percent:-9999,sell_trend_percent:-9999,last_buy_sequential_trend_count:-9999,days_hold_for_sell:2,min_stock_price:20,loss_stop_thousandth:100,last_close_price_percent:-9999,sell_mode:2,sell_trend_days_watch:40,prefer_max_splited_trade_unit:1"
+  policy_id_md5: "229de31d7b8580d55f0eefc32dffd471"
+  roi_more_than_one_rate: 0.9
+  reports {
+    position: 0
+    report {
+      stock_watch_days: 176
+      roi: 2.27244936667
+      cash_taken_in: 30000
+      cash_taken_out: 68173.481
+      stock_buy_times: 9
+      stock_sell_times: 8
+      stock_hold_no_sell_times: 1
+      trade_profit_times: 8
+      trade_loss_times: 1
+      stock_hold_days: 126
+      stock_hold_profit_days: 48
+      stock_hold_loss_days: 78
+    }
+  }
+
+sorted_summary_policy_report {
+  policy_id: "loss_stop_thousandth:500,trend_mode:1,buy_days_watch:30,buy_price_percent:80,buy_mode:1,sell_days_watch:30,prefer_max_stock_count:1,sell_price_percent:90,last_sell_sequential_trend_count:-9999,sell_profit_thousandth:0,buy_trend_days_watch:40,buy_trend_percent:-9999,sell_trend_percent:-9999,last_buy_sequential_trend_count:-9999,days_hold_for_sell:5,min_stock_price:20,last_close_price_percent:-9999,sell_mode:2,sell_trend_days_watch:40,prefer_max_splited_trade_unit:1"
+  policy_id_md5: "40a35f703742e32023247ab0c79aeb0e"
+  roi_more_than_one_rate: 0.9
+  reports {
+    position: 0
+    report {
+      stock_watch_days: 176
+      roi: 1.5459646
+      cash_taken_in: 30000
+      cash_taken_out: 46378.938
+      stock_buy_times: 11
+      stock_sell_times: 10
+      stock_hold_no_sell_times: 1
+      trade_profit_times: 10
+      trade_loss_times: 1
+      stock_hold_days: 98
+      stock_hold_profit_days: 14
+      stock_hold_loss_days: 84
+    }
+  }
+}
+sorted_summary_policy_report {
+  policy_id: "sell_days_watch:30,trend_mode:1,buy_days_watch:20,buy_price_percent:90,buy_mode:1,last_sell_sequential_trend_count:2,prefer_max_stock_count:1,sell_price_percent:100,sell_profit_thousandth:0,buy_trend_days_watch:40,buy_trend_percent:-9999,sell_trend_percent:-9999,last_buy_sequential_trend_count:-9999,days_hold_for_sell:5,min_stock_price:20,loss_stop_thousandth:100,last_close_price_percent:-9999,sell_mode:2,sell_trend_days_watch:40,prefer_max_splited_trade_unit:1"
+  policy_id_md5: "b0b50413e61e3b4244e140ff74c3dd93"
+  roi_more_than_one_rate: 0.81
+  reports {
+    position: 0
+    report {
+      stock_watch_days: 176
+      roi: 2.0055781
+      cash_taken_in: 30000
+      cash_taken_out: 60167.343
+      stock_buy_times: 8
+      stock_sell_times: 7
+      stock_hold_no_sell_times: 1
+      trade_profit_times: 7
+      trade_loss_times: 1
+      stock_hold_days: 147
+      stock_hold_profit_days: 73
+      stock_hold_loss_days: 74
+    }
+  }
+}
+sorted_summary_policy_report {
+  policy_id: "sell_days_watch:10,trend_mode:1,buy_days_watch:20,buy_price_percent:80,buy_mode:1,last_sell_sequential_trend_count:4,prefer_max_stock_count:1,sell_price_percent:90,sell_profit_thousandth:0,buy_trend_days_watch:40,buy_trend_percent:-9999,sell_trend_percent:-9999,last_buy_sequential_trend_count:-9999,days_hold_for_sell:2,min_stock_price:10,loss_stop_thousandth:20,last_close_price_percent:-9999,sell_mode:2,sell_trend_days_watch:40,prefer_max_splited_trade_unit:1"
+  policy_id_md5: "a0ab9b43e302be6ee62bf188d3db2048"
+  roi_more_than_one_rate: 0.81
+  reports {
+    position: 0
+    report {
+      stock_watch_days: 181
+      roi: 1.95159033333
+      cash_taken_in: 30000
+      cash_taken_out: 58547.71
+      stock_buy_times: 7
+      stock_sell_times: 6
+      stock_hold_no_sell_times: 1
+      trade_profit_times: 6
+      trade_loss_times: 1
+      stock_hold_days: 137
+      stock_hold_profit_days: 96
+      stock_hold_loss_days: 41
+    }
+  }
+}
+sorted_summary_policy_report {
+  policy_id: "sell_days_watch:10,trend_mode:2,buy_days_watch:30,buy_price_percent:90,buy_mode:1,loss_stop_thousandth:20,prefer_max_stock_count:1,sell_price_percent:80,last_sell_sequential_trend_count:-9999,sell_profit_thousandth:100,buy_trend_days_watch:20,buy_trend_percent:-9999,sell_trend_percent:60,last_buy_sequential_trend_count:-9999,days_hold_for_sell:5,min_stock_price:20,last_close_price_percent:-9999,sell_mode:2,sell_trend_days_watch:20,prefer_max_splited_trade_unit:1"
+  policy_id_md5: "ddadcd57cd89b3239ba27630224801b8"
+  roi_more_than_one_rate: 0.81
+  reports {
+    position: 0
+    report {
+      stock_watch_days: 176
+      roi: 1.89011582733
+      cash_taken_in: 30000
+      cash_taken_out: 56703.47482
+      stock_buy_times: 12
+      stock_sell_times: 11
+      stock_hold_no_sell_times: 1
+      trade_profit_times: 9
+      trade_loss_times: 3
+      stock_hold_days: 89
+      stock_hold_profit_days: 60
+      stock_hold_loss_days: 29
+    }
+  }
+}
+sorted_summary_policy_report {
+  policy_id: "sell_days_watch:30,trend_mode:2,buy_days_watch:30,buy_price_percent:80,buy_mode:1,loss_stop_thousandth:50,prefer_max_stock_count:1,sell_price_percent:80,last_sell_sequential_trend_count:-9999,sell_profit_thousandth:50,buy_trend_days_watch:20,buy_trend_percent:-9999,sell_trend_percent:50,last_buy_sequential_trend_count:-9999,days_hold_for_sell:2,min_stock_price:20,last_close_price_percent:-9999,sell_mode:2,sell_trend_days_watch:40,prefer_max_splited_trade_unit:1"
+  policy_id_md5: "d611e0e0ae2382fee9379b4c445300df"
+  roi_more_than_one_rate: 0.81
+  reports {
+    position: 0
+    report {
+      stock_watch_days: 176
+      roi: 1.86615466667
+      cash_taken_in: 30000
+      cash_taken_out: 55984.64
+      stock_buy_times: 14
+      stock_sell_times: 14
+      stock_hold_no_sell_times: 0
+      trade_profit_times: 11
+      trade_loss_times: 3
+      stock_hold_days: 130
+      stock_hold_profit_days: 75
+      stock_hold_loss_days: 55
+    }
+  }
+}
+sorted_summary_policy_report {
+  policy_id: "sell_days_watch:30,trend_mode:1,buy_days_watch:20,buy_price_percent:90,buy_mode:1,loss_stop_thousandth:100,prefer_max_stock_count:1,sell_price_percent:100,last_sell_sequential_trend_count:-9999,sell_profit_thousandth:50,buy_trend_days_watch:40,buy_trend_percent:-9999,sell_trend_percent:-9999,last_buy_sequential_trend_count:-9999,days_hold_for_sell:2,min_stock_price:20,last_close_price_percent:-9999,sell_mode:2,sell_trend_days_watch:20,prefer_max_splited_trade_unit:1"
+  policy_id_md5: "7fe31a3b1c4ce61b85600f683066a27a"
+  roi_more_than_one_rate: 0.81
+  reports {
+    position: 0
+    report {
+      stock_watch_days: 176
+      roi: 1.73126138333
+      cash_taken_in: 30000
+      cash_taken_out: 51937.8415
+      stock_buy_times: 13
+      stock_sell_times: 12
+      stock_hold_no_sell_times: 1
+      trade_profit_times: 11
+      trade_loss_times: 2
+      stock_hold_days: 84
+      stock_hold_profit_days: 35
+      stock_hold_loss_days: 49
+    }
+  }
+}
+sorted_summary_policy_report {
+  policy_id: "sell_days_watch:30,trend_mode:1,buy_days_watch:20,buy_price_percent:20,buy_mode:1,loss_stop_thousandth:100,prefer_max_stock_count:1,sell_price_percent:100,last_sell_sequential_trend_count:-9999,sell_profit_thousandth:50,buy_trend_days_watch:20,buy_trend_percent:-9999,sell_trend_percent:-9999,last_buy_sequential_trend_count:-9999,days_hold_for_sell:2,min_stock_price:10,last_close_price_percent:-9999,sell_mode:2,sell_trend_days_watch:40,prefer_max_splited_trade_unit:1"
+  policy_id_md5: "29e24b8b3918840e6d02724fa9185bbf"
+  roi_more_than_one_rate: 0.81
+  reports {
+    position: 0
+    report {
+      stock_watch_days: 176
+      roi: 1.69428286667
+      cash_taken_in: 30000
+      cash_taken_out: 50828.486
+      stock_buy_times: 8
+      stock_sell_times: 7
+      stock_hold_no_sell_times: 1
+      trade_profit_times: 7
+      trade_loss_times: 1
+      stock_hold_days: 81
+      stock_hold_profit_days: 33
+      stock_hold_loss_days: 48
+    }
+  }
+}
+sorted_summary_policy_report {
+  policy_id: "loss_stop_thousandth:100,trend_mode:2,buy_days_watch:30,buy_price_percent:70,buy_mode:1,sell_days_watch:30,prefer_max_stock_count:1,sell_price_percent:100,last_sell_sequential_trend_count:-9999,sell_profit_thousandth:50,buy_trend_days_watch:40,buy_trend_percent:-9999,sell_trend_percent:-9999,last_buy_sequential_trend_count:-9999,days_hold_for_sell:5,min_stock_price:10,last_close_price_percent:-9999,sell_mode:2,sell_trend_days_watch:40,prefer_max_splited_trade_unit:1"
+  policy_id_md5: "76316d99ebacb601f86e32ef697bd4c0"
+  roi_more_than_one_rate: 0.81
+  reports {
+    position: 0
+    report {
+      stock_watch_days: 176
+      roi: 1.62158208667
+      cash_taken_in: 30000
+      cash_taken_out: 48647.4626
+      stock_buy_times: 11
+      stock_sell_times: 11
+      stock_hold_no_sell_times: 0
+      trade_profit_times: 7
+      trade_loss_times: 4
+      stock_hold_days: 115
+      stock_hold_profit_days: 48
+      stock_hold_loss_days: 67
+    }
+  }
+}
+sorted_summary_policy_report {
+  policy_id: "sell_days_watch:30,trend_mode:1,buy_days_watch:20,buy_price_percent:50,buy_mode:1,loss_stop_thousandth:100,prefer_max_stock_count:1,sell_price_percent:100,last_sell_sequential_trend_count:-9999,sell_profit_thousandth:0,buy_trend_days_watch:20,buy_trend_percent:-9999,sell_trend_percent:-9999,last_buy_sequential_trend_count:-9999,days_hold_for_sell:5,min_stock_price:20,last_close_price_percent:-9999,sell_mode:2,sell_trend_days_watch:20,prefer_max_splited_trade_unit:1"
+  policy_id_md5: "60ea346d375890abe5c2849510bd207b"
+  roi_more_than_one_rate: 0.81
+  reports {
+    position: 0
+    report {
+      stock_watch_days: 176
+      roi: 1.53544776667
+      cash_taken_in: 30000
+      cash_taken_out: 46063.433
+      stock_buy_times: 8
+      stock_sell_times: 7
+      stock_hold_no_sell_times: 1
+      trade_profit_times: 7
+      trade_loss_times: 1
+      stock_hold_days: 109
+      stock_hold_profit_days: 45
+      stock_hold_loss_days: 64
+    }
+  }
+}
+sorted_summary_policy_report {
+  policy_id: "sell_days_watch:30,trend_mode:2,buy_days_watch:30,buy_price_percent:90,buy_mode:1,loss_stop_thousandth:100,prefer_max_stock_count:1,sell_price_percent:80,last_sell_sequential_trend_count:-9999,sell_profit_thousandth:50,buy_trend_days_watch:40,buy_trend_percent:-9999,sell_trend_percent:-9999,last_buy_sequential_trend_count:-9999,days_hold_for_sell:2,min_stock_price:20,last_close_price_percent:-9999,sell_mode:2,sell_trend_days_watch:40,prefer_max_splited_trade_unit:1"
+  policy_id_md5: "f50ed1e30d5b41bf8ed12174590dc8e0"
+  roi_more_than_one_rate: 0.81
+  reports {
+    position: 0
+    report {
+      stock_watch_days: 176
+      roi: 1.51742236667
+      cash_taken_in: 30000
+      cash_taken_out: 45522.671
+      stock_buy_times: 24
+      stock_sell_times: 24
+      stock_hold_no_sell_times: 0
+      trade_profit_times: 24
+      trade_loss_times: 0
+      stock_hold_days: 71
+      stock_hold_profit_days: 25
+      stock_hold_loss_days: 46
+    }
+  }
+}
+sorted_summary_policy_report {
+  policy_id: "sell_days_watch:30,trend_mode:1,buy_days_watch:30,buy_price_percent:80,buy_mode:1,loss_stop_thousandth:100,prefer_max_stock_count:1,sell_price_percent:80,last_sell_sequential_trend_count:-9999,sell_profit_thousandth:0,buy_trend_days_watch:100,buy_trend_percent:-9999,sell_trend_percent:-9999,last_buy_sequential_trend_count:-9999,days_hold_for_sell:5,min_stock_price:20,last_close_price_percent:-9999,sell_mode:2,sell_trend_days_watch:20,prefer_max_splited_trade_unit:1"
+  policy_id_md5: "b511a18292e18cdd2c7911642e81695f"
+  roi_more_than_one_rate: 0.81
+  reports {
+    position: 0
+    report {
+      stock_watch_days: 176
+      roi: 1.51356683333
+      cash_taken_in: 30000
+      cash_taken_out: 45407.005
+      stock_buy_times: 11
+      stock_sell_times: 10
+      stock_hold_no_sell_times: 1
+      trade_profit_times: 10
+      trade_loss_times: 1
+      stock_hold_days: 52
+      stock_hold_profit_days: 16
+      stock_hold_loss_days: 36
+    }
+  }
+}
+sorted_summary_policy_report {
+  policy_id: "sell_days_watch:10,trend_mode:3,buy_days_watch:20,buy_price_percent:80,buy_mode:1,loss_stop_thousandth:100,prefer_max_stock_count:1,sell_price_percent:100,last_sell_sequential_trend_count:-9999,sell_profit_thousandth:0,buy_trend_days_watch:40,buy_trend_percent:-9999,sell_trend_percent:-9999,last_buy_sequential_trend_count:-9999,days_hold_for_sell:5,min_stock_price:20,last_close_price_percent:-9999,sell_mode:2,sell_trend_days_watch:40,prefer_max_splited_trade_unit:1"
+  policy_id_md5: "ac1e7db7bfea4bc0d713c6b710be00bc"
+  roi_more_than_one_rate: 0.81
+  reports {
+    position: 0
+    report {
+      stock_watch_days: 181
+      roi: 1.46535403333
+      cash_taken_in: 30000
+      cash_taken_out: 43960.621
+      stock_buy_times: 12
+      stock_sell_times: 11
+      stock_hold_no_sell_times: 1
+      trade_profit_times: 11
+      trade_loss_times: 1
+      stock_hold_days: 58
+      stock_hold_profit_days: 27
+      stock_hold_loss_days: 31
+    }
+  }
+}
+sorted_summary_policy_report {
+  policy_id: "sell_days_watch:10,trend_mode:2,buy_days_watch:20,buy_price_percent:70,buy_mode:1,loss_stop_thousandth:100,prefer_max_stock_count:1,sell_price_percent:100,last_sell_sequential_trend_count:-9999,sell_profit_thousandth:0,buy_trend_days_watch:20,buy_trend_percent:-9999,sell_trend_percent:-9999,last_buy_sequential_trend_count:-9999,days_hold_for_sell:2,min_stock_price:20,last_close_price_percent:-9999,sell_mode:2,sell_trend_days_watch:40,prefer_max_splited_trade_unit:1"
+  policy_id_md5: "d0f767d0ecd3470baab29ddd76db199e"
+  roi_more_than_one_rate: 0.81
+  reports {
+    position: 0
+    report {
+      stock_watch_days: 181
+      roi: 1.45457553333
+      cash_taken_in: 30000
+      cash_taken_out: 43637.266
+      stock_buy_times: 9
+      stock_sell_times: 8
+      stock_hold_no_sell_times: 1
+      trade_profit_times: 9
+      trade_loss_times: 0
+      stock_hold_days: 50
+      stock_hold_profit_days: 19
+      stock_hold_loss_days: 31
+    }
+  }
+}
+sorted_summary_policy_report {
+  policy_id: "sell_days_watch:30,trend_mode:2,buy_days_watch:20,buy_price_percent:80,buy_mode:1,loss_stop_thousandth:100,prefer_max_stock_count:1,sell_price_percent:80,last_sell_sequential_trend_count:-9999,sell_profit_thousandth:50,buy_trend_days_watch:40,buy_trend_percent:50,sell_trend_percent:-9999,last_buy_sequential_trend_count:-9999,days_hold_for_sell:2,min_stock_price:20,last_close_price_percent:-9999,sell_mode:2,sell_trend_days_watch:40,prefer_max_splited_trade_unit:1"
+  policy_id_md5: "5b2c38fbb157aacd485730f3e7c055f3"
+  roi_more_than_one_rate: 0.81
+  reports {
+    position: 0
+    report {
+      stock_watch_days: 176
+      roi: 1.42405866667
+      cash_taken_in: 30000
+      cash_taken_out: 42721.76
+      stock_buy_times: 13
+      stock_sell_times: 13
+      stock_hold_no_sell_times: 0
+      trade_profit_times: 13
+      trade_loss_times: 0
+      stock_hold_days: 72
+      stock_hold_profit_days: 25
+      stock_hold_loss_days: 47
+    }
+  }
+}

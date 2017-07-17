@@ -154,10 +154,13 @@ class PolicyReportUtil:
 
     @staticmethod
     def build_summary_policy_report(policy_report_list, repeated_stock_policy_report, is_validate):
-        if is_validate:
-            filter_policy_report_list = policy_report_list
-        else:
-            filter_policy_report_list = PolicyReportUtil.build_filter_report_list(policy_report_list)
+        # TODO
+        # if is_validate:
+        #     filter_policy_report_list = policy_report_list
+        # else:
+        #     filter_policy_report_list = PolicyReportUtil.build_filter_report_list(policy_report_list)
+        filter_policy_report_list = policy_report_list
+
         filter_sorted_policy_report_list = sorted(filter_policy_report_list, cmp=PolicyReportUtil.greater_policy_report_roi)
         if not filter_sorted_policy_report_list:
             return
