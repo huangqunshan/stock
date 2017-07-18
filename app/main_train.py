@@ -18,13 +18,13 @@ def main():
     parser = argparse.ArgumentParser(description='')
     parser.add_argument('--validate', dest='validate', action='store_true',
                         help='if validate')
-    parser.add_argument('--quick', dest='quick', action='store_true',
-                        help='if quick')
-    parser.add_argument('--random', dest='is_random_for_best', action='store_true',
-                        help='if random')
+    parser.add_argument('--quick_stock', dest='quick_stock', action='store_true',
+                        help='if quick_stock')
+    parser.add_argument('--quick_policy', dest='quick_policy', action='store_true',
+                        help='if need all fields generate')
     args = parser.parse_args()
 
-    if args.quick:
+    if args.quick_stock:
         select_stock_name_list = localconfig.short_stock_name_list
     else:
         select_stock_name_list = localconfig.select_stock_name_list
@@ -40,10 +40,10 @@ def main():
     if args.validate:
         # person.max_train_watch_days = localconfig.max_train_watch_days
         # person.max_predict_watch_days = localconfig.max_predict_watch_days
-        PolicyFactory.generate_policy_list_for_validate(person.policy_info, args.is_random_for_best)
+        PolicyFactory.generate_policy_list_for_validate(person.policy_info, args.quick_policy)
         PolicyUtil.train(person, True)
     else:
-        PolicyFactory.generate_policy_list_for_train(person.policy_info, args.is_random_for_best)
+        PolicyFactory.generate_policy_list_for_train(person.policy_info, args.quick_policy)
         PolicyUtil.train(person)
     logging.info("begin write person to file")
     # fout = open('model_out', 'w')

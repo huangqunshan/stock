@@ -80,7 +80,7 @@ class PolicyItem:
 
 
     @staticmethod
-    def build(repeated_policy, current_policy_dict, partial_policy_set, full_policy_set, is_random_for_best):
+    def build(repeated_policy, current_policy_dict, partial_policy_set, full_policy_set, quick_policy):
         if str(current_policy_dict) in partial_policy_set:
             return
         partial_policy_set.add(str(current_policy_dict))
@@ -95,17 +95,18 @@ class PolicyItem:
                 continue
             best_item = v.best
             if isinstance(best_item, list):
+                # TODO: xxxx and False
                 if 1 < len(best_item) and False:
                     for item in best_item:
                         current_policy_dict[k] = item
                         if len(current_policy_dict) < len(PolicyFactory.policy_value_dict):
                             # 必须拷贝而非直接修改
-                            PolicyItem.build(repeated_policy, dict(current_policy_dict), partial_policy_set, full_policy_set, is_random_for_best)
+                            PolicyItem.build(repeated_policy, dict(current_policy_dict), partial_policy_set, full_policy_set, quick_policy)
                         else:
                             PolicyItem.build_core(repeated_policy, current_policy_dict, partial_policy_set, full_policy_set)
                 else:
                     assert best_item
-                    if is_random_for_best:
+                    if quick_policy:
                         current_policy_dict[k] = best_item[int(random.random()*100) % len(best_item)]
                     else:
                         current_policy_dict[k] = best_item[0]
@@ -137,6 +138,13 @@ class PolicyItem:
             full_policy_set.add(policy_id)
 
 
+    @staticmethod
+    def build_raw(repeated_policy, current_policy_dict):
+        policy_item = PolicyItem(current_policy_dict)
+        policy = repeated_policy.add()
+        policy_item.build_policy(policy)
+
+
 class PolicyFactory:
     # [policy_key] = [policy_value]
     policy_value_dict = {
@@ -164,7 +172,7 @@ class PolicyFactory:
 
 
     @staticmethod
-    def generate_policy_list_for_train(repeated_policy, is_random_for_best):
+    def generate_policy_list_for_train_old(repeated_policy, is_random_for_best):
         logging.info("begin generate policy list for train")
         for policy_type, item_value in PolicyFactory.policy_value_dict.iteritems():
             assert isinstance(item_value.range, list)
@@ -173,9 +181,98 @@ class PolicyFactory:
 
 
     @staticmethod
-    def generate_policy_list_for_validate(repeated_policy, is_random_for_best):
+    def generate_policy_list_for_train(repeated_policy, quick_policy):
+        logging.info("begin generate policy list for train")
+        policy_dict_list = [{}]
+        if quick_policy:
+            check_field_list = PolicyFactory.get_check_field_list_quick()
+        else:
+            check_field_list = PolicyFactory.get_check_field_list_full()
+        for policy_type, item_value in PolicyFactory.policy_value_dict.iteritems():
+            assert isinstance(item_value.range, list)
+            if policy_type in check_field_list and item_value.range:
+                policy_dict_list = PolicyFactory.expand(policy_dict_list, policy_type, item_value.range)
+            else:
+                if isinstance(item_value.best, list):
+                    policy_dict_list = PolicyFactory.expand(policy_dict_list, policy_type, item_value.best[:1])
+                else:
+                    policy_dict_list = PolicyFactory.expand(policy_dict_list, policy_type, [item_value.best])
+        PolicyFactory.build(repeated_policy, policy_dict_list)
+        logging.info("end generate policy list for train")
+
+
+    @staticmethod
+    def build(repeated_policy, policy_dict_list):
+        for policy_dict in policy_dict_list:
+            PolicyItem.build_raw(repeated_policy, policy_dict)
+
+
+    @staticmethod
+    def expand(policy_dict_list, policy_type, policy_value_list):
+        result = []
+        for policy_dict in policy_dict_list:
+            for policy_value in policy_value_list:
+                cur_dict = dict(policy_dict)
+                cur_dict[policy_type] = policy_value
+                result.append(cur_dict)
+        return result
+
+    @staticmethod
+    def get_check_field_list_quick():
+        return [
+            # BUY_DAYS_WATCH,
+            # SELL_DAYS_WATCH,
+            # DAYS_HOLD_FOR_SELL,
+            # BUY_MODE,
+            # SELL_MODE,
+            # BUY_PRICE_PERCENT,
+            # SELL_PRICE_PERCENT,
+            # BUY_TREND_PERCENT,
+            # SELL_TREND_PERCENT,
+            # LOSS_STOP_THOUSANDTH,
+            # LAST_BUY_SEQUENTIAL_TREND_COUNT,
+            # LAST_SELL_SEQUENTIAL_TREND_COUNT,
+            # TREND_MODE,
+            # PREFER_MAX_SPLITED_TRADE_UNIT,
+            # PREFER_MAX_STOCK_COUNT,
+            # MIN_STOCK_PRICE,
+            # SELL_PROFIT_THOUSANDTH,
+            # BUY_TREND_DAYS_WATCH,
+            # SELL_TREND_DAYS_WATCH,
+            # LAST_CLOSE_PRICE_PERCENT,
+        ]
+
+    @staticmethod
+    def get_check_field_list_full():
+        return [
+            BUY_DAYS_WATCH,
+            SELL_DAYS_WATCH,
+            DAYS_HOLD_FOR_SELL,
+            BUY_MODE,
+            SELL_MODE,
+            BUY_PRICE_PERCENT,
+            SELL_PRICE_PERCENT,
+            BUY_TREND_PERCENT,
+            SELL_TREND_PERCENT,
+            LOSS_STOP_THOUSANDTH,
+            LAST_BUY_SEQUENTIAL_TREND_COUNT,
+            LAST_SELL_SEQUENTIAL_TREND_COUNT,
+            TREND_MODE,
+            PREFER_MAX_SPLITED_TRADE_UNIT,
+            PREFER_MAX_STOCK_COUNT,
+            MIN_STOCK_PRICE,
+            SELL_PROFIT_THOUSANDTH,
+            BUY_TREND_DAYS_WATCH,
+            SELL_TREND_DAYS_WATCH,
+            LAST_CLOSE_PRICE_PERCENT,
+        ]
+
+
+
+    @staticmethod
+    def generate_policy_list_for_validate(repeated_policy, quick_policy):
         logging.info("begin generate policy list for validate")
-        PolicyItem.build(repeated_policy, {}, set(), set(), is_random_for_best)
+        PolicyItem.build(repeated_policy, {}, set(), set(), quick_policy)
         logging.info("end generate policy list for validate")
 
 

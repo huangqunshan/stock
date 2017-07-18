@@ -122,23 +122,27 @@ class PolicyReportUtil:
 
         sorted_stock_policy_report_list = sorted(person.stock_policy_report, cmp=compare_method)
         sorted_stock_policy_report_list = sorted(sorted_stock_policy_report_list, key=attrgetter('stock_id'), reverse=False)
+        sorted_stock_policy_report_list = PolicyReportUtil.build_filter_percent_report_list(sorted_stock_policy_report_list)
         del person.stock_policy_report[:]
         person.sorted_stock_policy_report.extend(sorted_stock_policy_report_list)
         sorted_policy_stock_report_list = sorted(sorted_stock_policy_report_list, cmp=compare_method)
         del sorted_stock_policy_report_list[:]
         sorted_policy_stock_report_list = sorted(sorted_policy_stock_report_list, key=attrgetter('policy_id'), reverse=False)
+        sorted_policy_stock_report_list = PolicyReportUtil.build_filter_percent_report_list(sorted_policy_stock_report_list)
         person.sorted_policy_stock_report.extend(sorted_policy_stock_report_list)
         del sorted_policy_stock_report_list[:]
 
 
         sorted_summary_policy_report_list = sorted(person.summary_policy_report, cmp=compare_method)
         del person.summary_policy_report[:]
+        sorted_summary_policy_report_list = PolicyReportUtil.build_filter_percent_report_list(sorted_summary_policy_report_list)
         person.sorted_summary_policy_report.extend(sorted_summary_policy_report_list)
         del sorted_summary_policy_report_list[:]
 
         sorted_policy_group_report_list = sorted(person.policy_group_report, cmp=compare_method)
         del person.policy_group_report[:]
         sorted_policy_group_report_list = sorted(sorted_policy_group_report_list, key=attrgetter('policy_group_type'), reverse=False)
+        sorted_policy_group_report_list = PolicyReportUtil.build_filter_percent_report_list(sorted_policy_group_report_list)
         person.sorted_policy_group_report.extend(sorted_policy_group_report_list)
 
         del sorted_policy_group_report_list[:]
@@ -147,6 +151,7 @@ class PolicyReportUtil:
         del person.stock_policy_group_report[:]
         sorted_stock_policy_group_report_list = sorted(sorted_stock_policy_group_report_list, key=attrgetter('policy_group_type'), reverse=False)
         sorted_stock_policy_group_report_list = sorted(sorted_stock_policy_group_report_list, key=attrgetter('stock_id'), reverse=False)
+        sorted_stock_policy_group_report_list = PolicyReportUtil.build_filter_percent_report_list(sorted_stock_policy_group_report_list)
         person.sorted_stock_policy_group_report.extend(sorted_stock_policy_group_report_list)
         del sorted_stock_policy_group_report_list[:]
         logging.info("end build_sort_report")
@@ -247,6 +252,20 @@ class PolicyReportUtil:
 
 
     @staticmethod
+    def build_filter_percent_report_list(percent_report_list):
+        result = []
+        for item in percent_report_list:
+            report = item.reports[0].report
+            min_sell_day = report.stock_watch_days * localconfig.MIN_TRADE_DAYS_PERCENT / 100.0
+            if max(min_sell_day,localconfig.MIN_TRADE_DAYS) <= report.stock_sell_times \
+                    and (float(report.stock_hold_days)/report.stock_buy_times <= localconfig.MAX_MEAN_DAYS_HOLD_FOR_SALE):
+                result.append(item)
+            else:
+                logging.debug("ignore item:%s", item)
+        return result
+
+
+    @staticmethod
     def build_filter_report_list(policy_report_list):
         result = []
         for report in policy_report_list:
@@ -255,6 +274,7 @@ class PolicyReportUtil:
                     and (float(report.stock_hold_days)/report.stock_buy_times <= localconfig.MAX_MEAN_DAYS_HOLD_FOR_SALE):
                 result.append(report)
         return result
+
 
     @staticmethod
     def build_watch_days(repeated_daily_info, action_item):
