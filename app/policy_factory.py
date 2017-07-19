@@ -182,12 +182,17 @@ class PolicyFactory:
 
     @staticmethod
     def generate_policy_list_for_train(repeated_policy, quick_policy):
-        logging.info("begin generate policy list for train")
-        policy_dict_list = [{}]
         if quick_policy:
             check_field_list = PolicyFactory.get_check_field_list_quick()
         else:
             check_field_list = PolicyFactory.get_check_field_list_full()
+        PolicyFactory.generate_policy_list_for_train_internal(repeated_policy, check_field_list)
+
+
+    @staticmethod
+    def generate_policy_list_for_train_internal(repeated_policy, check_field_list):
+        logging.info("begin generate policy list for train")
+        policy_dict_list = [{}]
         for policy_type, item_value in PolicyFactory.policy_value_dict.iteritems():
             assert isinstance(item_value.range, list)
             if policy_type in check_field_list and item_value.range:

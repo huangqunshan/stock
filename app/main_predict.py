@@ -60,17 +60,22 @@ def main():
         sell_max = np.percentile(sell_np_array, 100)
         sell_profit = sell_final / float(last_close_price)
         
-        buy_msg = "%s\ttrend:%s-sequential:%s\tbuy:%s-sell:%s\tbuy_prob:%s\tprofit_rate:%s\t%s\tbuy:f-0-100\t%s@%s:%s" % (
-            stock_id, trend, trend_sequential, trend_buy, trend_sell, buy_prob, sell_profit, predict_date_str, buy_min, buy_final, buy_max)
-        sell_msg = "\tsell:f-0-100\t%s@%s:%s" % (
-            sell_min, sell_final, sell_max)
-        result.append((sell_profit, trend_buy, trend_sell, buy_msg, sell_msg))
+        # buy_msg = "%s\ttrend:%s-sequential:%s\tbuy:%s-sell:%s\tbuy_prob:%s\tprofit_rate:%s\t%s\tbuy:f-0-100\t%s@%s:%s" % (
+        #     stock_id, trend, trend_sequential, trend_buy, trend_sell, buy_prob, sell_profit, predict_date_str, buy_min, buy_final, buy_max)
+        # sell_msg = "\tsell:f-0-100\t%s@%s:%s" % (
+        #     sell_min, sell_final, sell_max)
+
+        stop_price = (1.0-localconfig.LOSS_STOP_THOUSANDTH.best[0]/1000.0) * buy_final
+
+        msg = "%s\t%s\tbuysign-trend-sequential:(%s-%s-%s)\tbuy_prob-profit_rate:%s-%s\tbuy-sell-stop:%s-%s-%s" % (
+            predict_date_str, stock_id, trend_buy, trend, trend_sequential, buy_prob, sell_profit, buy_final, sell_final, stop_price)
+        result.append((sell_profit, trend_buy, trend_sell, msg))
     result = sorted(result, key=itemgetter(2), reverse=True)
     result = sorted(result, key=itemgetter(0), reverse=True)
     result = sorted(result, key=itemgetter(1), reverse=True)
     for item in result:
-        sell_profit, trend_buy, trend_sell, buy_msg, sell_msg = item
-        print buy_msg, sell_msg
+        sell_profit, trend_buy, trend_sell, msg = item
+        print msg
 
 
 if __name__ == "__main__":

@@ -28,8 +28,8 @@ EXPIRE_AFTER_MS = 10000
 end_date_str = DatetimeUtil.to_datetime_str(datetime.datetime.now())
 cash_taken_in = 30000
 TOP_PERCENT = 0
-MIN_TRADE_DAYS_PERCENT = 10
-MIN_TRADE_DAYS = 5
+MIN_TRADE_DAYS_PERCENT = 5
+MIN_TRADE_DAYS = 4
 MAX_MEAN_DAYS_HOLD_FOR_SALE = 15
 # max_train_watch_days = 0
 # max_predict_watch_days = 0
@@ -52,17 +52,17 @@ BUY_MODE = PolicyValueRange([Policy.TradePolicy.Percent.LOW, Policy.TradePolicy.
 SELL_MODE = PolicyValueRange([Policy.TradePolicy.Percent.HIGH, Policy.TradePolicy.Percent.MEDIUM],
                              [Policy.TradePolicy.Percent.HIGH])
 
-BUY_WATCH_DAYS = PolicyValueRange([10, 20, 30], [10, 20, 30])
-SELL_WATCH_DAYS = PolicyValueRange([10, 20, 30], [20, 30, 10])
+BUY_WATCH_DAYS = PolicyValueRange([10, 20, 30], [20, 10] + [30])
+SELL_WATCH_DAYS = PolicyValueRange([10, 20, 30], [20, 30] + [10])
 
-BUY_PRICE_PERCENT = PolicyValueRange(range(50, 100 + 1, 10), [80, 90, 100])
-SELL_PRICE_PERCENT = PolicyValueRange(range(70, 100 + 1, 10), [100, 90, 80])
+BUY_PRICE_PERCENT = PolicyValueRange(range(70, 100 + 1, 10), [90, 70, 80] + [100])
+SELL_PRICE_PERCENT = PolicyValueRange(range(70, 100 + 1, 10), [100, 90, 80] + [70])
 
 LOSS_STOP_THOUSANDTH = PolicyValueRange([10, 20, 50, 100, 200, 500], [100, 50, 20])
 SELL_PROFIT_THOUSANDTH = PolicyValueRange([0, 10, 20, 50, 100, 150, 1000], [0, 100, 50])
 
 
-
+# best: 100
 LAST_CLOSE_PRICE_PERCENT = PolicyValueRange([DEFAULT_CONFIG] + range(80, 120, 1), DEFAULT_CONFIG)
 
 
@@ -70,19 +70,19 @@ TREND_MODE = PolicyValueRange([Policy.TradePolicy.Percent.LOW, Policy.TradePolic
                               [Policy.TradePolicy.Percent.HIGH, Policy.TradePolicy.Percent.LOW])
 
 
-BUY_TREND_DAYS_WATCH = PolicyValueRange(range(10, 50+1, 10) + range(60, 120+1, 20),
+BUY_TREND_DAYS_WATCH = PolicyValueRange([DEFAULT_CONFIG] + range(10, 50+1, 10) + range(60, 120+1, 20),
                                         [40, 20])
 SELL_TREND_DAYS_WATCH = PolicyValueRange([40],
                                         [40])
-BUY_TREND_PERCENT = PolicyValueRange(range(0, 100 + 1, 10),
+BUY_TREND_PERCENT = PolicyValueRange([DEFAULT_CONFIG] + range(0, 100 + 1, 10),
                                      DEFAULT_CONFIG,
-                                     None)
-SELL_TREND_PERCENT = PolicyValueRange(range(0, 100 + 1, 10),
+                                     [50])
+SELL_TREND_PERCENT = PolicyValueRange([DEFAULT_CONFIG] + range(0, 100 + 1, 10),
                                       DEFAULT_CONFIG,
                                       None)
-LAST_BUY_SEQUENTIAL_TREND_COUNT = PolicyValueRange(range(-20, 20 + 1, 1),
+LAST_BUY_SEQUENTIAL_TREND_COUNT = PolicyValueRange([DEFAULT_CONFIG] + range(-20, 20 + 1, 1),
                                                    DEFAULT_CONFIG,
-                                                   [-1, 1]
+                                                   [1] + [-1, -2]
                                                    # None
                                                    )
 LAST_SELL_SEQUENTIAL_TREND_COUNT = PolicyValueRange(range(-20, 20 + 1, 1),
